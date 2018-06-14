@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="${basePath?if_exists}">
+		<meta charset="UTF-8">
+		<title>人员整改数据表</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<!-- <script type="text/javascript" src="resources/ezfm/js/quality/datastatistics/persrectification/persrectification.js"></script> -->
+		<script type="text/javascript" src="resources/ezfm/js/pub/list.commons.js"></script>
+		<script type="text/javascript">
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+			var pc = '${crop?if_exists}';
+			//加载区域
+			function loadArea(){
+				var url = "ezfm/baseinfo/pub/query/dictionary/area/query";
+				var simpleFormat = {valueField: 'pk_area',textField: 'area_name'};
+				initDictionaryCombobox("queray_main_area_id",url,null,simpleFormat);
+			}
+			function areaChange(newValue,oldValue){
+				loadProject(newValue);
+			}
+			
+			//加载项目
+			function loadProject(areaId){
+				var url = "ezfm/baseinfo/pub/query/dictionary/project/query";
+				var param = {areaId:areaId};
+				var simpleFormat = {valueField: 'pk_project',textField: 'project_name'};
+				initDictionaryCombobox("queray_main_project_id",url,param,simpleFormat); 
+			}
+			function projectChange(newValue,oldValue){
+				loadStation(newValue);
+			}
+			
+			//加载岗位
+			function loadStation(projectId){
+				var url = "ezfm/baseinfo/pub/query/dictionary/station/query";
+				var param = {projectId:projectId};
+				var simpleFormat = {valueField: 'pk_station',textField: 'station_name'};
+				initDictionaryCombobox("queray_main_station_id",url,param,simpleFormat); 
+			}
+			
+			//加载下拉框查询条件
+			function initLoadQueryMainData(){
+				loadArea();
+				loadProject();
+			}
+			
+			var jsonData = {};
+			$(function(){
+				// 验证时间区间
+				$('#rectification_startTime1').datebox({
+					onSelect: function(date){
+						
+						$('#rectification_EndTime1').datebox().datebox('calendar').calendar({
+							validator: function(dateAfter){
+								
+								var startDate = $("#rectification_startTime1").datebox('getValue');
+								if(startDate == ""){
+									return true;
+								}
+								var s =startDate+' 00:00:00';
+								s = s.replace(/-/g,"/");
+								var dateBefore = new Date(s );
+																
+								return dateBefore <= dateAfter;
+		
+							}
+						});
+						
+						
+						$('#rectification_startTime2').datebox().datebox('calendar').calendar({
+							validator: function(dateAfter){								
+								var startDate = $("#rectification_startTime1").datebox('getValue');
+								if(startDate == ""){
+									return true;
+								}
+								var s =startDate+' 00:00:00';
+								s = s.replace(/-/g,"/");
+								var dateBefore = new Date(s );
+																
+								return dateBefore <= dateAfter;		                      						
+							}
+						    
+						});
+						
+						
+
+					}
+				});
+				
+				$('#rectification_startTime2').datebox({
+					onSelect: function(date){
+						
+						$('#rectification_EndTime2').datebox().datebox('calendar').calendar({
+							validator: function(dateAfter){
+								
+								var startDate = $("#rectification_startTime2").datebox('getValue');
+								if(startDate == ""){
+									return true;
+								}
+								var s =startDate+' 00:00:00';
+								s = s.replace(/-/g,"/");
+								var dateBefore = new Date(s );
+																
+								return dateBefore <= dateAfter;
+		
+							}
+						});
+
+					}
+				});
+				
+				
+				
+				var queryUrl = "${basePath?if_exists}ezfm/quality/datastatistics/persrectification/query";
+				//初始化grid
+				initLoadGridDataByCustom("yjwy_main_grid",queryUrl,jsonData);
+				//初始化查询条件值
+				initLoadQueryMainData();
+				//查询
+				$("#btn_mainquery").click(function(){
+					jsonData =  $("#yjwy_query_mianform").serializeObject();
+					initLoadGridDataByCustom("yjwy_main_grid",queryUrl,jsonData);
+					//$('#yjwy_main_grid').datagrid('reload');
+				});
+				//重置并查询
+				$("#btn_resetQuery").click(function(){
+					
+					$("#queray_main_area_id").combobox("setValue","");
+				    $("#queray_main_project_id").combobox("setValue","");
+				    $("#queray_main_station_id").combobox("setValue","");
+				    
+				    $("#rectification_startTime1").datebox("setValue","");
+				    $("#rectification_EndTime1").datebox("setValue","");
+				    $("#rectification_startTime2").datebox("setValue","");
+				    $("#rectification_EndTime2").datebox("setValue","");
+				    
+					
+					
+					jsonData =  $("#yjwy_query_mianform").serializeObject();
+					initLoadGridDataByCustom("yjwy_main_grid",queryUrl,jsonData);
+					//$("#yjwy_main_grid").datagrid('reload');
+				});
+				//根据条件导出excel
+				$("#export_mainbtn").click(function(){
+					var url = "ezfm/quality/datastatistics/persrectification/export?param="+JSON.stringify(jsonData);
+					window.location.href=url;
+				});
+				
+				//调用浏览器打印
+				$("#print_mainbtn").click(function(){
+					window.print();
+				});
+				
+				//初始化分组列表
+				//datagridInit('datagrid_unfinishedList', null, null, null, true, false);
+				
+			});
+			
+		</script>
+	</head>
+	<body class="easyui-layout szw_page_body">
+		<div id="yjwy_main_grid_tb" style="height:auto">
+			<fieldset id="query_main_id" style="border-color: currentColor;border-width: inherit;border-bottom-width: thin;">
+				<legend style="display:none;">标准查询</legend>
+				<form id ="yjwy_query_mianform"  method="post">
+				<table class="dv-table" style="margin-top:5px;">
+					<tr>
+						<td style="text-align: end;padding-right: 20px;">
+							<label>区域:</label>
+							<select class="easyui-combobox" name="area_id" id="queray_main_area_id" style="width:205px;" data-options="editable:false,onChange:areaChange">
+								<option value="">请选择</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 20px;">
+							<label>项目:</label>
+							<select class="easyui-combobox" name="project_id" id="queray_main_project_id" style="width:205px;" data-options="editable:false,onChange:projectChange">
+								<option value="">请选择</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 20px;">
+							<label>岗位:</label>
+							<select class="easyui-combobox" name="station_id" id="queray_main_station_id" style="width:205px;" data-options="editable:false" >
+								<option value="">请选择</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: end;padding-right: 20px;">
+							<label>任务创建时间:</label>
+							<input class="easyui-datebox" data-options="editable:false,buttons:buttons" style="width:93px;" name="start_time" id="rectification_startTime1"></input>
+							<input style="width:11px;border:none;text-align: center;background-color: #F5F5F5;" value="~" ></input>
+							<input class="easyui-datebox" data-options="editable:false,buttons:buttons" style="width:93px;" name="end_time" id="rectification_EndTime1"></input>
+						</td>
+						<td style="text-align: end;padding-right: 20px;">
+							<label>任务起始时间:</label>
+							<input class="easyui-datebox" data-options="editable:false,buttons:buttons" style="width:93px;" name="task_start_time" id="rectification_startTime2"></input>
+							<input style="width:11px;border:none;text-align: center;background-color: #F5F5F5;" value="~" ></input>
+							<input class="easyui-datebox" data-options="editable:false,buttons:buttons" style="width:93px;" name="task_end_time" id="rectification_EndTime2"></input>
+						</td>
+						<td>
+							<a id="btn_mainquery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+							<a id="btn_resetQuery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-mini-refresh'">重置</a>
+						</td>
+					</tr>
+				</table>
+				</form>
+			</fieldset>
+			<div style="margin-bottom:5px;margin-top:5px">
+				<a id="print_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-print',plain:true">报表打印</a>
+				<a id="export_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-excel_export',plain:true">图表导出</a>
+			</div>
+				
+		</div>
+		
+		<div data-options="region:'center'">	
+			<table id="yjwy_main_grid" class="easyui-datagrid" title="">
+				<thead>
+					<tr>
+						<th data-options="field:'project_name',width:160,align:'center'">项目名称</th>
+						<th data-options="field:'rectify_user_name',width:80,align:'center'">整改人</th>
+						<th data-options="field:'station_name',width:160,align:'center'">岗位名称</th>
+						<!-- <th data-options="field:'unfinished_num',width:80,align:'center',formatter: clickUnfinishedDetails">未完成整改</th>
+						<th data-options="field:'finished_num',width:80,align:'center',formatter: clickFinishedDetails">已完成整改</th>
+						<th data-options="field:'expire_finished_num',width:80,align:'center',formatter: clickExpireDetails">过期完成整改</th>
+						<th data-options="field:'total_task_num',width:80,align:'center',formatter: clickTotalDetails">总任务</th>
+						<th data-options="field:'check_task_num',width:80,align:'center',formatter: clickCheckDetails">考核总任务</th> -->
+						<th data-options="field:'unfinished_num',width:80,align:'center'">未完成整改</th>
+						<th data-options="field:'finished_num',width:80,align:'center'">已完成整改</th>
+						<th data-options="field:'expire_finished_num',width:80,align:'center'">过期完成整改</th>
+						<th data-options="field:'total_task_num',width:80,align:'center'">总任务</th>
+						<th data-options="field:'check_task_num',width:80,align:'center'">考核总任务</th>
+						<th data-options="field:'finish_rate',width:80,align:'center'">整改完成率</th>
+						<th data-options="field:'timely_rate',width:90,align:'center'">整改完成及时率</th>
+						<th data-options="field:'should_rec_num',width:80,align:'center'">应整改量</th>
+						<!-- 以下为隐藏列 -->
+						<th data-options="field:'project_id',hidden:true">项目id</th>
+						<th data-options="field:'rectify_user_id',hidden:true">整改人id</th>
+						<!-- 以上为隐藏列 -->
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<script>
+			$("#yjwy_main_grid").attr("title", parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle);
+		</script>
+	</body>
+</html>

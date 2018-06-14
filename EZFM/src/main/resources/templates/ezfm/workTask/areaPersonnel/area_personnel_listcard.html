@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<base href="${basePath?if_exists}">
+		<title>片区人员</title>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/workTask/areaPersonnel/workTask.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/workTask/workTaskUtil.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/css/problem/classAdmin.css"></link>
+		<script type="text/javascript">
+		var notRoleButtons = "${notRoleButtons?if_exists}";
+		var roleButtons = "${roleButtons?if_exists}";
+		var queryParam = { 
+				metas: ['yjwy_worktask_area_personnel'],
+			}
+		$(function() {
+			//行列样式设置
+			$("td,th").attr("valign", "top");
+
+			//初始化列表
+			initLoadGridDatas('datagrid_areaPersonnelList', 'ezfm/worktask/areapersonnel/query',"toolbar_datagrid_areaPersonnelList",parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle,queryParam);
+			//加载参数
+			var url = "ezfm/baseinfo/pub/query/dictionary/dict/query";
+			var param = {code:"engineer_specialtys",state:1};
+			initDictionaryCombobox("query_major_one",url,param); 
+			initDictionaryCombobox("query_major_two",url,param); 
+			initDictionaryCombobox("query_major_three",url,param); 
+			initDictionaryCombobox("query_major_four",url,param); 
+			initDictionaryCombobox("query_major_five",url,param); 
+			var param1 = {code:"engineer_certificate",state:1};
+			initDictionaryCombobox("query_certificate",url,param1); 
+			
+			//判断是否有按钮权限
+//			if(roleButtons==""){
+//				document.getElementById("worktask_area_personnel_button").style.display="none";
+//			}
+			//查询
+			$("#btn_area_personnel_query").click(function(){
+				var query_major_one =  $("#query_major_one").combobox("getValue");
+				var query_major_two =  $("#query_major_two").combobox("getValue");
+				var query_major_three =  $("#query_major_three").combobox("getValue");
+				var query_major_four =  $("#query_major_four").combobox("getValue");
+				var query_major_five =  $("#query_major_five").combobox("getValue");
+				var query_certificate =  $("#query_certificate").combobox("getValue");
+				var andList="";
+				if(query_major_one!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{ key: 'major_one', operator: 'eq',value:'"+query_major_one+"'}"
+				}
+				if(query_major_two!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'major_two',operator: 'eq',value:'"+query_major_two+"'}"
+				}
+				if(query_major_three!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'major_three',operator: 'eq',value:'"+query_major_three+"'}"
+				}
+				if(query_major_four!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'major_four',operator: 'eq',value:'"+query_major_four+"'}"
+				}
+				if(query_major_five!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'major_five',operator: 'eq',value:'"+query_major_five+"'}"
+				}
+				if(query_certificate!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'certificate',operator: 'eq',value:'"+query_certificate+"'}"
+				}
+				andList = "["+andList+"]";
+				queryParam.andList=eval(andList);
+				//初始化列表
+				initLoadGridDatas('datagrid_areaPersonnelList', 'ezfm/worktask/areapersonnel/query',"toolbar_datagrid_areaPersonnelList",parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle,queryParam);
+				//$('#datagrid_areaPersonnelList').datagrid('reload');
+			});
+			
+			
+			//重置
+			$("#reset_query").click(function(){
+				
+// 				$("#query_major_one").combobox("setText","区域选择");
+				$("#query_major_one").combobox("setValue","");
+			    $("#query_major_two").combobox("setValue","");
+			    $("#query_major_three").combobox("setValue","");
+			    $("#query_major_four").combobox("setValue","");
+			    $("#query_major_five").combobox("setValue","");
+			    $("#query_certificate").combobox("setValue","");
+				
+				var query_major_one =  $("#query_major_one").combobox("getValue");
+				var query_major_two =  $("#query_major_two").combobox("getValue");
+				var query_major_three =  $("#query_major_three").combobox("getValue");
+				var query_major_four =  $("#query_major_four").combobox("getValue");
+				var query_major_five =  $("#query_major_five").combobox("getValue");
+				var query_certificate =  $("#query_certificate").combobox("getValue");
+				var andList="";
+				if(query_major_one!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{ key: 'major_one', operator: 'eq',value:'"+query_major_one+"'}"
+				}
+				if(query_major_two!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'major_two',operator: 'eq',value:'"+query_major_two+"'}"
+				}
+				if(query_major_three!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'major_three',operator: 'eq',value:'"+query_major_three+"'}"
+				}
+				if(query_major_four!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'major_four',operator: 'eq',value:'"+query_major_four+"'}"
+				}
+				if(query_major_five!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'major_five',operator: 'eq',value:'"+query_major_five+"'}"
+				}
+				if(query_certificate!=""){
+					if(andList!=""){
+						andList+=",";
+					}
+					andList +="{key: 'certificate',operator: 'eq',value:'"+query_certificate+"'}"
+				}
+				andList = "["+andList+"]";
+				queryParam.andList=eval(andList);
+				//初始化列表
+				initLoadGridDatas('datagrid_areaPersonnelList', 'ezfm/worktask/areapersonnel/query',"toolbar_datagrid_areaPersonnelList",parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle,queryParam);
+				//$('#datagrid_areaPersonnelList').datagrid('reload');
+			});
+		});
+		
+		</script>
+	</head>
+
+	<body>
+		<!--列表-->
+		<table id="datagrid_areaPersonnelList">
+			<thead>
+				<tr>
+				<th data-options="field:'checkbox',checkbox:true"></th>
+				<th
+					data-options="field:'pk_personnel_id',width:100,hidden:true,align:'center'">ID</th>
+				<th
+					data-options="field:'user_name',width:100,hidden:false,align:'center'">姓名</th>
+				<th
+					data-options="field:'user_phone',width:100,hidden:false,align:'center'">电话</th>
+				<th
+					data-options="field:'major_one_name',width:100,hidden:false,align:'center'">第一专业</th>
+				<th
+					data-options="field:'major_two_name',width:100,hidden:false,align:'center'">第二专业</th>
+				<th
+					data-options="field:'major_three_name',width:100,hidden:false,align:'center'">第三专业</th>
+				<th
+					data-options="field:'major_four_name',width:100,hidden:false,align:'center'">第四专业</th>
+				<th
+					data-options="field:'major_five_name',width:100,hidden:false,align:'center'">第五专业</th>
+				<th
+					data-options="field:'certificate_name',width:100,hidden:false,align:'center'">证书</th>
+				<th
+					data-options="field:'area_name',width:100,hidden:false,align:'center'">片区</th>
+				<th
+					data-options="field:'operate_',width:200,hidden:false,align:'center',formatter: formatDetails">操作</th>
+			</tr>
+			</thead>
+		</table>
+		<!--工具栏-->
+		
+		<div id="toolbar_datagrid_areaPersonnelList" style="height:auto">
+			<fieldset style="border-color: currentColor;border-width: inherit;border-bottom-width: thin;">
+				<legend style="display:none;">查询</legend>
+				<form id ="yjwy_query_mianform"  method="post">
+				<table class="dv-table" style="margin-top:5px;">
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>专业一:</label>
+							<input id="query_major_one"
+								class="easyui-combobox" name="query_major_one"  data-options="editable:false"
+								style="width: 205px;" />
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>专业二:</label>
+							<input id="query_major_two"
+								class="easyui-combobox" name="query_major_two" data-options="editable:false"
+								style="width: 205px;" />
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>专业三:</label>
+							<input id="query_major_three"
+								class="easyui-combobox" name="query_major_three" data-options="editable:false"
+								style="width: 205px;" />
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>专业四:</label>
+							<input id="query_major_four"
+								class="easyui-combobox" name="query_major_four" data-options="editable:false"
+								style="width: 205px;" />
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>专业五:</label>
+							<input id="query_major_five"
+								class="easyui-combobox" name="query_major_five" data-options="editable:false"
+								style="width: 205px;" />
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>证书:</label>
+							<input id="query_certificate"
+								class="easyui-combobox" name="query_certificate" data-options="editable:false"
+								style="width: 205px;" />
+						</td>
+						<td><a id="btn_area_personnel_query" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="margin-right:5px;">查询</a>
+						    <a id="reset_query" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-mini-refresh'">重置</a>
+						</td>
+					</tr>
+				</table>
+				</form>
+			</fieldset>
+			<div id="worktask_area_personnel_button" style="margin-bottom:5px;margin-top:5px">
+				<a class="easyui-linkbutton" id="add_personnel_user" data-options="iconCls:'icon-add',plain:true" onclick="openSaveDialog()">新增人员</a>
+			</div>
+		</div>
+		<!--封装表单-->
+	<div id="dialog_areaPersonnel" class="szw_window">
+		<form id="form_areaPersonnel" method="post">
+			<div id="areaPersonnel_information">
+					<table id="areaPersonnel_tab" 
+						style="padding: 10px 10px 0px 50px;text-align:right;" height="380px">
+						<tr>
+							<th>人员名称:</th>
+							<td>
+								<select id = "user_account" name="user_name" style="width: 205px;height:26px;" required>
+
+								</select>
+
+								<!--<input >-->
+								<!--<input type="text" id="user_account" name="user_account" class="easyui-textbox" required="true" maxlength='10' style="width: 205px;height:26px;"/>-->
+								<input id="user_aa" type="hidden" name="user_aa"
+										maxlength='10' style="width: 205px;height:26px;"/>
+								<input id="user_id" type="hidden" name="user_id"
+										maxlength='10' style="width: 205px;height:26px;"/>
+							</td>
+						</tr>
+						<!--<tr>-->
+							<!--<th>姓名:</th>-->
+							<!--<td><input id="user_name_disabled" class="easyui-textbox" disabled="true"-->
+								<!--name="user_name_disabled" style="width: 205px;height:26px;" /></td>-->
+						<!--</tr>-->
+						<tr>
+							<th>第一专业:</th>
+							<td><input id="major_one"
+								class="easyui-combobox" name="major_one"
+								style="width: 205px;height:26px;" />
+							</td>
+						</tr>
+						<tr>
+							<th>第二专业:</th>
+							<td><input id="major_two"
+								class="easyui-combobox" name="major_two"
+								style="width: 205px;height:26px;"/></td>
+						</tr>
+						<tr>
+							<th>第三专业:</th>
+							<td><input id="major_three"
+								class="easyui-combobox" name="major_three"
+								style="width: 205px;height:26px;"/></td>
+						</tr>
+						<tr>
+							<th>第四专业:</th>
+							<td><input id="major_four"
+								class="easyui-combobox" name="major_four"
+								style="width: 205px;height:26px;"/></td>
+						</tr>
+						<tr>
+							<th>第五专业:</th>
+							<td><input id="major_five"
+								class="easyui-combobox" name="major_five"
+								style="width: 205px;height:26px;"/></td>
+						</tr>
+						<tr>
+							<th>适用所有专业:</th>
+							<td><select
+								id="whether_apply_all" class="easyui-combobox"
+								name="whether_apply_all" style="width: 205px;height:26px;" data-options="editable:false">
+									<option value="1">是</option>
+									<option value="2">否</option>
+							</select></td>
+						</tr>
+						<tr>
+							<th>操作证书:</th>
+ 							<td><input id="certificate"
+								class="easyui-combobox" name="certificate"
+								style="width: 205px;height:26px;"></td>
+						</tr>
+						<tr>
+							<th>备注:</th>
+							<td>
+								<input style="width: 205px;height:50px;" type="text" multiline="true"
+							 	name="remarks" class="easyui-textbox"/>
+							</td>
+						</tr>
+						<!-- 隐藏属性 -->
+						<tr style="display: none">
+							<th>隐藏属性:</th>
+							<td><input type="text" name="pk_crop" class="easyui-textbox"
+								value='${crop?if_exists}' /><input type="text"
+								id="pk_personnel_id" name="pk_personnel_id" class="easyui-textbox"/></td>
+						</tr>
+					</table>
+			</div>
+		</form>
+	</div>
+	<!--封装表单按钮-->
+	<div id="toolbar_areaPersonnel">
+		<a class="easyui-linkbutton"
+			onclick="submitFormAreaPersonnel('datagrid_areaPersonnelList','dialog_areaPersonnel','form_areaPersonnel','ezfm/worktask/areapersonnel/')"
+			data-options="iconCls:'icon-ok'">保&nbsp;存</a> <a
+			class="easyui-linkbutton"
+			onclick="closeDialogProblem('dialog_areaPersonnel','form_areaPersonnel')"
+			data-options="iconCls:'icon-cancel'">关&nbsp;闭</a>
+	</div> 
+</body>
+

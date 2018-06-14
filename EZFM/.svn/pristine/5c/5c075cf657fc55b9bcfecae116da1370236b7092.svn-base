@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<base href="${basePath?if_exists}">
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>关联地点</title>
+	<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+	<script type="text/javascript" src="resources/ezfm/all.js"></script>
+</head>
+<body>
+	<style type="text/css">
+		#toolbar_classAndProjectInfo { 
+		    position: absolute;
+		    right: 10px;
+		    bottom: 10px;
+		}
+	</style>
+	<div id="dialog_repairPlaceInfo">
+		<form id="form_repairPlaceInfo" method="post">
+			<ul id="repairPlaceAdmin_tree" class="ztree"></ul>
+		</form>
+	</div>
+<script type="text/javascript">
+var notRoleButtons = "${notRoleButtons?if_exists}";
+var zTreeObj;
+
+var zNodes;
+//操作符，save 和 update;
+var operation;
+// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+var setting = {
+		edit: {
+			enable: true,
+			showRemoveBtn: false,
+			showRenameBtn: false
+		},
+		data: {
+			simpleData: {
+				enable: true,
+			}
+		},
+		 callback: {
+			 onExpand: zTreeOnExpand,
+			 onDblClick: zTreeOnDblClick
+		},
+		view:{
+			selectedMulti:false
+		}
+	};
+//tree查询展示
+function showClassAdmintTree(id,type) {
+	$.ajax({  
+        async : false,  
+        cache:false,  
+        type: 'POST',  
+        dataType : "json",
+        data:{id:id,type:type},
+        url: "ezfm/baseinfo/resources/query/tree",//请求的action路径  
+        error: function () {//请求失败处理函数  
+            alert('请求失败');  
+        },  
+        success:function(data){ //请求成功后处理函数。
+            zNodes = data.rows;   //把后台封装好的简单Json格式赋给treeNodes  
+        }  
+    });  
+    zTreeObj = $.fn.zTree.init($("#repairPlaceAdmin_tree"), setting, zNodes);
+}
+$(function(){ 
+    showClassAdmintTree("${pk_project?if_exists}","3");
+});
+//树节点展开事件
+function zTreeOnExpand(event, treeId, treeNode){
+	var nodes;
+	var treeObj = $.fn.zTree.getZTreeObj("repairPlaceAdmin_tree");
+	treeObj.removeChildNodes(treeNode);
+	$.ajax({  
+        async : false,  
+        cache:false,  
+        type: 'POST',  
+        dataType : "json",
+        data:{id:treeNode.id,type:treeNode.type},
+        url: "ezfm/baseinfo/resources/query/tree",//请求的action路径  
+        error: function () {//请求失败处理函数  
+            alert('请求失败');  
+        },  
+        success:function(data){ //请求成功后处理函数。
+            nodes = data.rows;   //把后台封装好的简单Json格式赋给treeNodes  
+        }  
+    });
+	nodes = treeObj.addNodes(treeNode, nodes);
+}
+function zTreeOnDblClick(event, treeId, treeNode) {
+	if(!treeNode.isParent){
+		//判断是从工单界面过来，还是从报事界面过来
+		if("${type?if_exists}"=="workTask"){
+			$("input[id=fk_repair_address]").val(treeNode.id);
+			$("#fk_repair_address_name").textbox('setText',treeNode.name);
+			$("#workTaskPlaceId").window('close');
+		}else if("${type?if_exists}"=="problemWorkTask"){
+			$("input[id=work_fk_repair_address]").val(treeNode.id);
+			$("#work_fk_repair_address_name").textbox('setText',treeNode.name);
+			$("#problemPlaceId").window('close');
+		}else if("${type?if_exists}"=="problem"){
+			$("input[id=fk_house_address_id]").val(treeNode.id);
+			$("#fk_house_address_name").textbox('setText',treeNode.name);
+			$("#problemPlaceId").window('close');
+		}else{
+			$("input[id=fk_repair_address_repair]").val(treeNode.id);
+			$("#fk_repair_address_repair_name").textbox('setText',treeNode.name);
+			$("#problemRepairPlaceId").window('close');
+		}
+		
+	}
+};
+</script>
+</body>
+</html>

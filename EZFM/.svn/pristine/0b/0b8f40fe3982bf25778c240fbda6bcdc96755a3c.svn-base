@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="${basePath?if_exists}">
+    <meta charset="UTF-8">
+    <title>资源类型管理</title>
+    <link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+    <script type="text/javascript" src="resources/ezfm/all.js"></script>
+	<script type="text/javascript" src="/resources/ezfm/js/baseinfo/type.js"></script>
+
+    
+    <script type="text/javascript">
+        var pc = '${crop?if_exists}';
+        var notRoleButtons = "${notRoleButtons?if_exists}";
+    </script>
+
+</head>
+<body class="easyui-layout">
+<!--<div id="center_info" class="easyui-layout" data-options="region:'center'" style="border: 0;">-->
+    <!--<div data-options="region:'center', title: '岗位信息'">-->
+        <!--<table id="station-propertygrid" class="easyui-propertygrid" style="width: 500px" scrollbarSize="0" data-options="showGroup:false,showHeader:false"></table>-->
+    <!--</div>-->
+
+<!--</div>-->
+<div id="north_treebar" data-options="region:'north'" style="overflow: hidden;">
+    <div id="treebar" style="height:28px;" class="datagrid-toolbar">
+        <a onclick="window.location.reload()"  class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:'true'">刷新</a>
+        <a id="btnNew" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>
+        <a id="btnEdit" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a id="btnDelete" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+    </div>
+</div>
+<div id="treepanel" data-options="region:'west',title:'资源类型',split:true,collapsible:false" style="width: 280px; padding: 0px;">
+    <ul id="stationtree" class="ztree" style="margin-left: 5px;"></ul>
+</div>
+<div data-options="region:'center', title: '资源类型信息'">
+    <table id="station-propertygrid" class="easyui-propertygrid" style="width: 500px" scrollbarSize="0" data-options="showGroup:false,showHeader:false"></table>
+</div>
+
+<div id="stationdlg" class="szw_window" data-options="closed:true">
+    <form id="form" class="base_main_form" method="post">
+     <input type="hidden" name="type_id">
+     <input type="hidden" name="type_pid">
+     <input type="hidden" name="type_flag">
+        <table style="margin: 10px 30px;" border="0" cellspacing="0" cellpadding="0" width="500px" height="500px">
+            <tr>
+                <th>资源类型编码:</th>
+                <td colspan="3">
+                    <input style="width: 300px;height:26px;" type="text" name="type_code" id="form_textbox_code" class="easyui-textbox" required="true" maxlength="50" />
+                    <span style="color:red;">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th>资源类型名称:</th>
+                <td colspan="3">
+                    <input style="width: 300px;height:26px;" type="text" name="type_name" id="form_textbox_name" maxlength="10"  class="easyui-textbox" required="true" />
+                    <span style="color:red;">*</span>
+                </td>
+            </tr>
+<!--  			 <tr> -->
+<!--            		<th>资源属性选择:</th> -->
+<!--            		<td></td> -->
+<!--            	</tr> -->
+           	<tr>
+           		<th>资源属性选择:</th>
+           		<td id="checkbox">
+           		  
+           		
+           		
+           		<!-- 
+           				 <input class="easyui-checkbox" type="checkbox" name="attribute_code" value="pay_floor_time_"   />交楼时间
+           				 <input type="checkbox" name="attribute_code" value="duilde_area_"   />建筑面积
+           				 <input type="checkbox" name="attribute_code" value="green_area_"   />绿化面积
+           				 <input type="checkbox" name="attribute_code" value="garden_area_"   />花园面积</br>
+           				 <input type="checkbox" name="attribute_code" value="topfloor_green_area_"   />楼顶绿化面积
+           				 <input type="checkbox" name="attribute_code" value="underground_garage_area_"   />地下车库面积
+           				 <input type="checkbox" name="attribute_code" value="praking_room_area_"   />停车房面积
+           				 <input type="checkbox" name="attribute_code" value="sell_permit_time_"   />预售许可证日期</br>
+           				 <input type="checkbox" name="attribute_code" value="basement_floor_"   />地下楼层
+           				 <input type="checkbox" name="attribute_code" value="plies_munber_"   />总层数
+           				 <input type="checkbox" name="attribute_code" value="bespeak_house_time_"   />预约交房日期
+           				 <input type="checkbox" name="attribute_code" value="category_"   />品类</br>
+           				 <input type="checkbox" name="attribute_code" value="auxiliary_ban_code_"   />辅助楼栋编码
+           				 <input type="checkbox" name="attribute_code" value="project_code_"   />项目编码
+           				 <input type="checkbox" name="attribute_code" value="stages_code_"   />分期编码
+           				 <input type="checkbox" name="attribute_code" value="ban_name_"   />楼栋名称</br>
+           				 <input type="checkbox" name="attribute_code" value="ban_abbreviation_"   />楼栋简称
+           				 <input type="checkbox" name="attribute_code" value="builde_type_"   />建筑类型
+           				 <input type="checkbox" name="attribute_code" value="sale_renovation_type_"   />销售装修类型
+           				 <input type="checkbox" name="attribute_code" value="builde_hight_"   />楼高</br>
+           				 <input type="checkbox" name="attribute_code" value="onground_loor_"   />地上楼层
+           				 <input type="checkbox" name="attribute_code" value="interlayer_"   />夹层
+           				 <input type="checkbox" name="attribute_code" value="bespeak_sell_permit_"   />预售许可证
+           				 <input type="checkbox" name="attribute_code" value="unit_mnumber_"   />单元数</br>
+           				 <input type="checkbox" name="attribute_code" value="complete_time_"   />竣工时间
+           				 <input type="checkbox" name="attribute_code" value="property_shape_"   />物业形态
+           				 <input type="checkbox" name="attribute_code" value="indoor_area_"   />室内面积
+           				 <input type="checkbox" name="attribute_code" value="is_virtual_space_"   />是否虚拟空间</br>
+           				 <input type="checkbox" name="attribute_code" value="house_abbreviation_"   />房屋简称
+           				 <input type="checkbox" name="attribute_code" value="house_code_"   />房屋编码
+           				 <input type="checkbox" name="attribute_code" value="unit_"   />隶属单元
+           				 <input type="checkbox" name="attribute_code" value="floor_"   />隶属楼层</br>
+           				 <input type="checkbox" name="attribute_code" value="terrace_area_"   />露台面积
+           				 <input type="checkbox" name="attribute_code" value="presell_builde_area_"   />预售建筑面积
+           				 <input type="checkbox" name="attribute_code" value="presell_setin_area_"   />预售套内面积
+           				 <input type="checkbox" name="attribute_code" value="fact_builde_area_"   />实测建筑面积</br>
+           				 <input type="checkbox" name="attribute_code" value="fact_setin_area_"   />实测套内面积
+           				 <input type="checkbox" name="attribute_code" value="fact_pool_area_"   />实测公摊面积
+           				 
+           				 <input type="checkbox" name="attribute_code" value="fact_basement_area_"   />实测地下室面积</br>
+           				 <input type="checkbox" name="attribute_code" value="pay_floor_area_"   />交楼面积
+           				 <input type="checkbox" name="attribute_code" value="check_data_"   />入住日期
+           				 <input type="checkbox" name="attribute_code" value="occupation_charging_data_"   />入伙计费日期
+           				 <input type="checkbox" name="attribute_code" value="handle_decoration_data_"   />办理装修日期</br>
+           				 <input type="checkbox" name="attribute_code" value="decoration_complete_data_"   />装修竣工日期
+           				 <input type="checkbox" name="attribute_code" value="room_number_"   />房屋号
+           				 <input type="checkbox" name="attribute_code" value="house_area_"   />房屋面积
+           				 <input type="checkbox" name="attribute_code" value="setin_area_"   />套内面积</br>
+           				 <input type="checkbox" name="attribute_code" value="pool_area_"   />公摊面积
+           				 <input type="checkbox" name="attribute_code" value="basement_area_"   />地下室面积
+           				 <input type="checkbox" name="attribute_code" value="garage_area_"   />车库面积
+           				 <input type="checkbox" name="attribute_code" value="floor_hight_"   />层高</br>
+           				  <input type="checkbox" name="attribute_code" value="house_category_"   />房屋类别
+           				 <input type="checkbox" name="attribute_code" value="is_second_hand_house_"   />是否二手房
+           				 <input type="checkbox" name="attribute_code" value="orientation_"   />朝向
+           				 <input type="checkbox" name="attribute_code" value="apartment_layout_"   />户型</br>
+           				 <input type="checkbox" name="attribute_code" value="property_type_"   />产权类型
+           				 <input type="checkbox" name="attribute_code" value="unit_alias_"   />单元别名
+           				 <input type="checkbox" name="attribute_code" value="floor_alias_"   />楼层别名
+           				 <input type="checkbox" name="attribute_code" value="room_number_alias_"   />房号别名</br>
+           				 <input type="checkbox" name="attribute_code" value="property_area_"   />物业面积
+           				 <input type="checkbox" name="attribute_code" value="sale_builder_price_"   />销售装修单价
+           				 <input type="checkbox" name="attribute_code" value="street_length_"   />街道长度
+           				 <input type="checkbox" name="attribute_code" value="station_number_"   />工位数</br>
+           			 -->
+           			
+           		</td>
+           </tr>
+           </table>
+           </form>
+</div>
+<script>
+
+</script>
+</body>
+</html>

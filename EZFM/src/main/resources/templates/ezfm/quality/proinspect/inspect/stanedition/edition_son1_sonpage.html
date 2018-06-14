@@ -1,0 +1,113 @@
+<body>
+	<div class="easyui-tabs" data-options="tabWidth:112" style="overflow:hidden;height:100%">
+		<div title="标准列表">
+			<div id="yjwy_son1_son_grid_tb" style="height:auto">
+				<form id ="yjwy_query_mianform"  method="post">
+				<table class="dv-table" style="margin-top:5px;">
+					<tr>
+						<td style="text-align: end;padding-right: 20px;">
+							<span>标准编码:</span>
+							<input name="inspstan_code" id="query_son_sinspstan_code_id" class="easyui-textbox"></input>
+						</td>
+						<td style="text-align: end;padding-right: 20px;">
+							<span>专业:</span>
+							<select class="easyui-combobox" name="specialty" id="query_son_specialty_id" style="width:200px;" data-options="editable:false">
+							</select>
+						</td>
+						<td><a id="btn_sonquery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></td>
+					</tr>
+				</table>
+				</form>
+			</div>
+			<table id="yjwy_son1_son_grid" class="easyui-datagrid" data-options="onBeforeLoad:function(){closewin_flg = false;}" title="核查管理>标准版本=>标准列表">
+				<thead>
+					<tr>
+						<th data-options="field:'inspstan_code',width:160,align:'center'">标准编码</th>
+						<th data-options="field:'specialty',width:160,align:'center'">专业</th>
+						<th data-options="field:'inspstan_category',width:120,align:'center'">标准类别</th>
+						<th data-options="field:'inspstan_scorevalue',width:80,align:'center'">分值</th>
+						<th data-options="field:'yjwy_oprator',width:120,align:'center',formatter:standardOperationFormatter">操作</th>
+						<!-- 以下为隐藏列 -->
+						<th data-options="field:'pk_inspstan',hidden:true">主键</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var notRoleButtons = "${notRoleButtons?if_exists}";
+		var queryParam = { 
+			metas: ['yjwy_quality_inspectstandard'],
+			'andList': [],
+		}
+		//加载专业
+		function loadSecialty(){
+			var url = "ezfm/baseinfo/pub/query/dictionary/dict/query";
+			var param = {code:"qualitySpecialty",state:1};
+			initDictionaryCombobox("query_son_specialty_id",url,param); 
+		}
+		//加载下拉框查询条件
+		function initLoadQueryMainData(){
+			loadSecialty();
+		}
+		$(function(){
+			var queryUrl = "ezfm/quality/proinspect/inspect/standard/edition/standard/query";
+			//初始化grid
+			initLoadGridData("yjwy_son1_son_grid",queryUrl,queryParam);
+
+			//查询
+			$("#btn_sonquery").click(function(){
+				var andList = [];
+				var inspstan_code = $("#query_son_sinspstan_code_id").textbox("getValue");
+				var specialty =  $("#query_son_specialty_id").combobox("getValue");
+				if(inspstan_code){
+					var condition={
+						key: 'inspstan_code',
+						operator: 'like',
+						value: inspstan_code
+					}
+					andList.push(condition);
+				}
+				if(specialty){
+					var condition={
+						key: 'specialty',
+						operator: 'eq',
+						value: specialty
+					}
+					andList.push(condition);
+				}
+				queryParam.andList=andList;
+				$('#yjwy_son1_son_grid').datagrid('reload');
+			});
+			initLoadQueryMainData();
+		});
+		function addStandardList(id){
+			var addStandard = "ezfm/quality/proinspect/inspect/standard/edition/add/"+id+"/"+"${mainmodel_id?if_exists}";
+			$.ajax({
+		        type:'get',
+		        url:addStandard,
+		        async:false,
+		        success:function(result){
+		        	if(result.success){
+		        		$.messager.show({
+							title:'提示',
+							msg:'标准加入版本成功',
+							timeout:2000,
+							showType:'slide'
+						});
+		        	}
+		        }
+		    })
+			$('#yjwy_son1_son_grid').datagrid('reload');
+			$('#yjwy_son1_grid').datagrid('reload');
+		}
+		
+		function standardOperationFormatter(value,row,index){
+			if(row.fk_standardedition){
+				return "已加入";
+			}else{
+				return "<a href='javascript:void(0);' onclick='addStandardList(\""+row.pk_inspstan+"\")'>加入</a>";
+			}
+		}
+	</script>
+</body>

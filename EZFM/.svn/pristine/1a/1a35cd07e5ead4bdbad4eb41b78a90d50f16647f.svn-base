@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>附件详情</title>
+		<base href="${basePath?if_exists}">
+		<link type="text/css" rel="stylesheet" href="resources/ezfm/css/files/swiper.min.css">
+		<link type="text/css" rel="stylesheet" href="resources/ezfm/css/files/pic.css">
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/jquery-easyui-1.4.5/themes/bootstrap/easyui.css"/>
+		<script type="text/javascript" src="resources/ezfm/js/files/jquery-1.11.2.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/files/swiper.min.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/files/pic_list.js"></script>
+		<script type="text/javascript" src="resources/ezfm/jquery-easyui-1.4.5/jquery.easyui.min.js"></script>
+		<script type="text/javascript">
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+			var query_table;
+			var flag;
+			var queryUrl = "ezfm/file/query";
+			var downUrl = "ezfm/file/download";
+			window.onload = function() {
+				query_table = GetQueryString('query_table');
+				var table_name = GetQueryString('table_name');
+				var record_id = GetQueryString('record_id');
+				flag = GetQueryString('flag');
+				//json格式的请求参数
+				var obj = new Object();
+				obj.query_table = query_table;
+				obj.table_name = table_name;
+				obj.record_id = record_id;
+				obj.flag = flag;
+				getFiles(JSON.stringify(obj));
+			}
+		</script>
+	</head>
+
+	<body>
+		<div class="wrap-left">
+			<ul class="top">
+				<li class="pic">
+					<a href="javascript:void(0)">图片文件(<span id="count">0</span>)
+					</a>
+				</li>
+			</ul>
+			<ul class="detail">
+				<li>
+					<h3>记录时间</h3>
+					<p id="create_time"></p>
+				</li>
+				<li>
+					<h3>文件大小</h3>
+					<p id="file_size"></p>
+				</li>
+			</ul>
+		</div>
+		<div class="wrap-right">
+			<div class="pic-box">
+				<div class="list">
+					<div class="swiper-container">
+						<div class="swiper-wrapper"></div>
+						<div class="swiper-button-next swiper-button-black"></div>
+						<div class="swiper-button-prev swiper-button-black"></div>
+					</div>
+				</div>
+				<div class="tool">
+					<img src="resources/ezfm/images/files/icon-restore.png" class="restore"> <img src="resources/ezfm/images/files/icon-bigger.png" class="bigger">
+					<img src="resources/ezfm/images/files/icon-smaller.png" class="smaller"> <img src="resources/ezfm/images/files/icon-rotate.png" class="rotate-left">
+					<img src="resources/ezfm/images/files/icon-rotate1.png" class="rotate-right"> <img src="resources/ezfm/images/files/icon-download.png" class="download">
+				</div>
+			</div>
+			<div class="nav-box">
+				<ul id="serial"></ul>
+			</div>
+
+		</div>
+	</body>
+
+</html>

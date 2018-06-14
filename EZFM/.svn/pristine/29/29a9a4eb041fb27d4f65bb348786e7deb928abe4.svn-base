@@ -1,0 +1,297 @@
+<body>
+	<style type="text/css">
+		.table_field_label {
+			height: 30px;
+			background-color: #F9F7F9 !important;
+			font-weight: bold;
+			width: 100px;
+			text-align:end;
+		}
+		
+		.table_field_value {
+			height: 30px;
+			background: #FFF;
+			width: "300px";
+		}
+		
+		.yjwy_table_panel {
+			margin: 0 auto;
+			background-color: #ddd;
+			border: 0px;
+			width: 900px;
+			margin-bottom:20px;
+		}
+		.yjwy_table_panel tbody tr {
+			height:30px;
+		}
+	</style>
+	<div class="easyui-tabs" data-options="tabWidth:112" style="overflow:hidden;height:100%">
+		<div title="任务详情">
+			<!-- 详细详细 -->
+			<div data-options="region:'center'" style="padding:10px;">
+				<table class="yjwy_table_panel">
+					<tbody>
+						<tr>
+							<td  class="table_field_label">任务编码：</td>
+							<td class="table_field_value" >${mainmodel?if_exists.task_code?if_exists}</td>
+							<td class="table_field_label">标准编码：</td>
+							<td class="table_field_value">${mainmodel?if_exists.inspstan_code?if_exists}</td>
+						</tr>
+						<tr>
+							<td  class="table_field_label" style="width:120px;">任务状态：</td>
+							<td class="table_field_value" style="width:300px;">${mainmodel?if_exists.task_statename?if_exists}</td>
+							<td class="table_field_label">分值：</td>
+							<td class="table_field_value">${mainmodel?if_exists.task_score?if_exists}</td>
+						</tr>
+						<tr>
+							<td class="table_field_label">任务生成方式：</td>
+							<td class="table_field_value">${mainmodel?if_exists.task_generate_mode?if_exists}</td>
+							<td class="table_field_label" style="width:120px;">任务频次：</td>
+							<td class="table_field_value" style="width:300px;">${mainmodel?if_exists.task_pc_name?if_exists}</td>
+						</tr>
+						<tr>
+							<td  class="table_field_label">项目名称：</td>
+							<td class="table_field_value">${mainmodel?if_exists.project_name?if_exists}</td>
+							<td class="table_field_label">所属专业：</td>
+							<td class="table_field_value">${mainmodel?if_exists.specialty?if_exists}</td>
+						</tr>
+						<tr>
+							<td  class="table_field_label" rowspan="2">标准类别描述：</td>
+							<td class="table_field_value" colspan="3" rowspan="2">${mainmodel?if_exists.inspstan_category_description?if_exists}</td>
+						</tr>
+						<tr>
+						</tr>
+						<tr>
+							<td  class="table_field_label" rowspan="2">质量绩效指标：</td>
+							<td class="table_field_value" colspan="3" rowspan="2">${mainmodel?if_exists.inspstan_performance_norm?if_exists}</td>
+						</tr>
+						<tr>
+						</tr>
+						<tr>
+							<td  class="table_field_label" rowspan="2">核查方法：</td>
+							<td class="table_field_value" colspan="3" rowspan="2">${mainmodel?if_exists.inspstan_inpectmethod?if_exists}</td>
+						</tr>
+						<tr>
+						</tr>
+						<tr>
+							<td  class="table_field_label">开始时间：</td>
+							<td class="table_field_value">${mainmodel?if_exists.task_start_time?if_exists}</td>
+							<td class="table_field_label">结束时间：</td>
+							<td class="table_field_value">${mainmodel?if_exists.task_end_time?if_exists}</td>
+						</tr>
+						<tr>
+							<td  class="table_field_label">完成期限：</td>
+							<td class="table_field_value" colspan="3">${mainmodel?if_exists.task_deadline_date?if_exists}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div title="核查记录">
+			<div data-options="region:'center'" style="padding:10px;" id="task_prcess_info_id">
+					
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var notRoleButtons = "${notRoleButtons?if_exists}";
+		//审阅提交操作	
+		function checkOpration(){
+			var check_state = $("#check_state_id").combobox("getValue");
+			var check_content = $("#check_content_id").textbox("getValue");
+			var param = {
+				task_id : "${mainmodel?if_exists.pk_task?if_exists}",	
+				check_state : check_state,
+				check_content : check_content
+			}
+			var checkUrl = "ezfm/quality/proinspect/inspect/insptask/check/update";
+			$.ajax({
+				url: checkUrl,
+		        type: "post",
+		        data: param,
+		        dataType: "json",
+		        async:false,
+		        success:function(result){
+		        	if(result.success){
+		        		var record = result.data[0];
+		        		$("#check_submmit_btn").hide();
+		        		$("#check_state_flag").html("已审阅");
+		        		if("1"==record.check_state){
+		        			$("#check_state_html").html("合格");
+		        		}else{
+		        			$("#check_state_html").html("不合格");
+		        		}
+		        		$("#check_content_html").html(record.check_content);
+		        	}
+		        }
+			});
+		}	
+	
+		//加载流程信息	
+		function loadProcessInfo(data){
+			var numMap = {
+					"1":"一",
+					"2":"二",
+					"3":"三",
+					"4":"四",
+					"5":"五",
+					"6":"六",
+					"7":"七",
+					"8":"八",
+					"9":"九",
+					"10":"十"
+			}
+			var processesFlag = "";
+			for(var i=0; i<data.length; i++){
+				var record = data[i];
+				var numKey = ""+(i+1);
+				var tableFlag = '<table class="yjwy_table_panel"> <tbody>';
+				var title = '<tr>'+
+								'<td  class="table_field_label" style="text-align:center" colspan="2">记录'+numMap[numKey]+'</td>'+
+							'</tr>';
+				tableFlag = tableFlag+title;
+				if(record.sumimi_time){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">提交时间：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.sumimi_time+'</td>'+
+								'</tr>';
+				}
+				if(record.rectify_deadline_time){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">整改期限：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.rectify_deadline_time+'</td>'+
+								'</tr>';
+				}
+				if(record.finish_deadline_time){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">完成期限：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.finish_deadline_time+'</td>'+
+								'</tr>';
+				}
+				if(record.record_inspect_user){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">核查人：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.record_inspect_user+'</td>'+
+								'</tr>';
+				}
+				if(record.stations){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">核查人所属岗位：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.stations+'</td>'+
+								'</tr>';
+				}
+				if(record.record_status){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">流程状态：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.record_status+'</td>'+
+								'</tr>';
+				}
+				if(record.record_sample_desc){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">抽样记录：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.record_sample_desc+'</td>'+
+								'</tr>';
+				}
+				if(record.record_inspect_result){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">核查结论：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.record_inspect_result+'</td>'+
+								'</tr>';
+				}
+				if(record.problem_type){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">问题类型：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.problem_type+'</td>'+
+								'</tr>';
+				}
+				if(record.follow_user){
+					tableFlag=tableFlag+'<tr>'+
+									'<td  class="table_field_label" style="width:200px">跟进人：</td>'+
+									'<td class="table_field_value"  style="width:500px">'+record.follow_user+'</td>'+
+								'</tr>';
+				}
+				tableFlag=tableFlag+"</tbody></table>";
+				processesFlag = processesFlag+tableFlag;
+			}
+			var check_state = "${mainmodel?if_exists.check_state?if_exists}";
+			if(check_state && (check_state=='1' || check_state=='0')){
+				var quelified = "合格";
+				if(check_state=='0'){
+					quelified="不合格";
+				}
+				var tableFlag = '<table class="yjwy_table_panel"> <tbody>';
+				var title = '<tr>'+
+								'<td  class="table_field_label" style="text-align:center" colspan="2">检阅</td>'+
+							'</tr>'+
+							'<tr>'+
+								'<td  class="table_field_label" style="width:200px">审阅状态：</td>'+
+								'<td class="table_field_value"  style="width:500px">已审阅</td>'+
+							'</tr>'+
+							'<tr>'+
+								'<td  class="table_field_label" style="width:200px">是否合格：</td>'+
+								'<td class="table_field_value"  style="width:500px">'+quelified+'</td>'+
+							'</tr>'+
+							'<tr>'+
+								'<td  class="table_field_label" style="width:200px">检阅结论：</td>'+
+								'<td class="table_field_value"  style="width:500px">${mainmodel?if_exists.check_content?if_exists}</td>'+
+							'</tr>'+
+							'<tr>'+
+								'<td  class="table_field_label" style="width:200px">检阅时间：</td>'+
+								'<td class="table_field_value"  style="width:500px">${mainmodel?if_exists.check_time?if_exists}</td>'+
+							'</tr>';
+				tableFlag = tableFlag+title;
+				tableFlag=tableFlag+"</tbody></table>";
+				processesFlag = processesFlag+tableFlag;
+			}else{
+				var state = "${mainmodel?if_exists.task_state?if_exists}";
+				state = eval(state);
+				if(state>20){
+					var tableFlag = '<table class="yjwy_table_panel"> <tbody>';
+					var title = '<tr>'+
+									'<td  class="table_field_label" style="text-align:center" colspan="2">检阅</td>'+
+								'</tr>'+
+								'<tr>'+
+									'<td  class="table_field_label" style="width:200px">检阅状态：</td>'+
+									'<td class="table_field_value"  style="width:500px" id="check_state_flag">未审阅</td>'+
+								'</tr>'+
+								'<tr>'+
+									'<td  class="table_field_label" style="width:200px">是否合格：</td>'+
+									'<td class="table_field_value"  style="width:500px" id="check_state_html"><select class="easyui-combobox" data-options="width:120,panelHeight:60,editable:false" name="check_state" id="check_state_id"><option value="1">合格</option><option value="0">不合格</option></select></td>'+
+								'</tr>'+
+								'<tr>'+
+									'<td  class="table_field_label" style="width:200px">检阅结论：</td>'+
+									'<td class="table_field_value"  style="width:500px" id="check_content_html"><input class="easyui-textbox" type="text" name="check_content" id="check_content_id" data-options="multiline:true" style="height:60px;width:300px;font-size:16px;"></input></td>'+
+								'</tr>'+
+								'<tr id="check_submmit_btn">'+
+									'<td  class="table_field_label" colspan="2" style="text-align: center;"><a href="javascript:void(0)" id="save_mainbtn" class="easyui-linkbutton" style="text-align:center;width:100px" onclick="checkOpration();">提交</a></td>'+
+								'</tr>';
+					tableFlag = tableFlag+title;
+					tableFlag=tableFlag+"</tbody></table>";
+					processesFlag = processesFlag+tableFlag;
+				}
+			}
+			$("#task_prcess_info_id").html(processesFlag);
+			//$("#task_prcess_info_id").append(processesFlag);
+		}
+		$(function(){
+			var taskId = "${mainmodel?if_exists.pk_task?if_exists}";
+			var queryUrl = "ezfm/quality/proinspect/inspect/insptask/process/task/query";
+			var param = {taskId:taskId};
+			$.ajax({
+				url: queryUrl,
+		        type: "get",
+		        data: param,
+		        dataType: "json",
+		        async:false,
+		        success:function(result){
+		        	if(result.success){
+		        		var data = result.data;
+		        		loadProcessInfo(data);
+		        	}else{
+		        		$("#task_prcess_info_id").append(result.message);
+		        	}
+		        }
+			});
+		});
+	</script>
+</body>

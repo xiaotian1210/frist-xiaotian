@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="fdabbd53cc3c43628af0bbf9b5c376f3" package="com.shareworx.ezfm.quality.proinspect.inspect.insptask.model" version="20160714-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_quality_inspecttask" name="核查与整改任务" table="yjwy_quality_inspecttask" class="InspectTaskModel" init="false" dynamic="false" location="286,47,125,415">
+    <property id="pk_task" name="主键ID" column="pk_task" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="fk_standard" name="外键(核查标准)" column="fk_standard" type="1" define="" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="fk_project" name="外键(项目)" column="fk_project" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="fk_job" name="外键(岗位)" column="fk_job" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="fk_area" name="外键(区域)" column="fk_area" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="fk_dept" name="外键(部门)" column="fk_dept" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="fk_taskuser" name="外键(任务所属人)" column="fk_taskuser" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_currentuser_pk" name="任务当前人ID" column="task_currentuser_pk" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_rectifyuser_pk" name="任务整改人ID" column="task_rectifyuser_pk" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_start_time" name="任务开始日期" column="task_start_time" type="5" define="char" length="10" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_end_time" name="任务结束时间" column="task_end_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_generate_mode" name="任务生成方式（0:达美盛资产云后台系统生成，1：手机终端核查任务）" column="task_generate_mode" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="0" code="" mode="0"/>
+    <property id="task_score" name="分值" column="task_score" type="3" define="decimal" length="0" precision="15" scale="1" empty="true" persist="true" unique="false" dynamic="false" value="0" code="" mode="0"/>
+    <property id="task_subtract_score" name="扣分" column="task_subtract_score" type="3" define="decimal" length="0" precision="15" scale="1" empty="true" persist="true" unique="false" dynamic="false" value="0" code="" mode="0"/>
+    <property id="task_deadline_date" name="完成期限(日期)" column="task_deadline_date" type="5" define="char" length="10" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="check_state" name="审阅状态（0不合格；1合格，2未审阅）" column="check_state" type="0" define="char" length="1" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="2" code="" mode="0"/>
+    <property id="task_type" name="任务类型（1.核查任务，2.巡逻任务）" column="task_type" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="1" code="" mode="0"/>
+    <property id="task_inspectresult" name="任务核查结果" column="task_inspectresult" type="1" define="" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_code" name="任务编码" column="task_code" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="specialty" name="专业" column="specialty" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_rectify_starttime" name="任务整改开始时间" column="task_rectify_starttime" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_rectify_finishtime" name="任务整改完成时间" column="task_rectify_finishtime" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_qualified_time" name="整改确认时间" column="task_qualified_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_iscq" name="任务整改是否超期" column="task_iscq" type="0" define="char" length="1" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="0" code="" mode="0"/>
+    <property id="task_state" name="任务状态(10待办，20待整改，30已办，40正常过期，50休假关闭，60手动关闭)" column="task_state" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="10" code="" mode="0"/>
+    <property id="create_user" name="创建人" column="create_user" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="create_time" name="创建时间" column="create_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="update_user" name="修改人" column="update_user" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="update_time" name="修改时间" column="update_time" type="0" define="char" length="13" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="is_valid" name="是否有效" column="is_valid" type="0" define="char" length="1" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="1" code="" mode="0"/>
+    <property id="task_pc_name" name="任务频次NAME" column="task_pc_name" type="1" define="" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="record_finish_lat" name="纬度" column="record_finish_lat" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="record_finish_lon" name="经度" column="record_finish_lon" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_execute_site" name="任务执行地点" column="task_execute_site" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_rectify_deadline_time" name="任务整改截止日期" column="task_rectify_deadline_time" type="6" define="char" length="10" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_crop" name="所属公司" column="pk_crop" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="is_sign" name="是否签到" column="is_sign" type="0" define="char" length="1" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="0" code="" mode="0"/>
+    <property id="check_content" name="审阅内容" column="check_content" type="1" define="" length="300" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="check_user_pk" name="审阅人" column="check_user_pk" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="check_time" name="审阅时间" column="check_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="is_rectify" name="是否整改" column="is_rectify" type="0" define="char" length="1" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="0" code="" mode="0"/>
+    <index id="pk_task" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

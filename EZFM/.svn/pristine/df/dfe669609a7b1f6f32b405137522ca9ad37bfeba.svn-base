@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<base href="${basePath?if_exists}">
+<title>项目定义</title>
+<script type="text/javascript"
+	src="resources/ezfm/all.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="resources/ezfm/all.css"></link>
+<link rel="stylesheet" type="text/css"
+	href="resources/ezfm/css/problem/classAdmin.css"></link>
+<script type="text/javascript">
+var notRoleButtons = "${notRoleButtons?if_exists}";
+	//定义项目tree变量
+	var proZTreeObj;
+	var proZNodes;
+	// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+	var proSetting = {
+		data : {
+			simpleData : {
+				enable : true,
+			}
+		},
+		callback : {
+			onClick : onNodeClick,
+			onExpand: zTreeOnExpand
+		},
+		view : {
+			selectedMulti : false
+		}
+	};
+
+	//设置分类tree属性
+	var classZTreeObj;
+	var classZNodes;
+	// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+	var classSetting = {
+		check : {
+			enable : true
+		},
+		data : {
+			simpleData : {
+				enable : true,
+			}
+		},
+		callback : {
+			onExpand: zTreeOnExpandClass
+		},
+		check: {
+			enable: true,
+			chkStyle: "checkbox",
+			chkboxType: { "Y": "", "N": "" }
+		},
+		view : {
+			selectedMulti : false
+		}
+	};
+	//项目tree查询展示
+	function showprojectInfotTree() {
+		$.ajax({
+			async : false,
+			cache : false,
+			type : 'POST',
+			dataType : "json",
+			data : {
+				class_id : ''
+			},
+			url : "ezfm/nexus/proandclass/query",//请求的action路径  
+			error : function() {//请求失败处理函数  
+				alert('请求失败');
+			},
+			success : function(data) { //请求成功后处理函数。
+				proZNodes = data.rows; //把后台封装好的简单Json格式赋给treeNodes  
+			}
+		});
+		proZTreeObj = $.fn.zTree.init($("#projectInfo_tree"), proSetting,
+				proZNodes);
+	}
+	//页面加载完成，加载项目tree
+	$(function() {
+		showprojectInfotTree();
+		$("#datagrid_pro_users").datagrid({
+			loadMsg: "正在加载数据...", // 数据加载中显示信息
+			rownumbers: true, //显示行号列
+			singleSelect: false, // 只允许选择一行
+			striped: true, // 显示斑马线效果
+			fit: true, // 使表格铺满容器
+			pagination: false, // 显示分页工具栏
+			border: false,
+		});
+	});
+
+	//树节点展开事件
+	function zTreeOnExpand(event, treeId, treeNode){
+		var nodes;
+		var treeObj = $.fn.zTree.getZTreeObj("projectInfo_tree");
+		treeObj.removeChildNodes(treeNode);
+		$.ajax({  
+	        async : false,  
+	        cache:false,  
+	        type: 'POST',  
+	        dataType : "json",
+	        data:{class_id:treeNode.id},
+	        url: "ezfm/nexus/proandclass/query",//请求的action路径  
+	        error: function () {//请求失败处理函数  
+	            alert('请求失败');  
+	        },  
+	        success:function(data){ //请求成功后处理函数。
+	            nodes = data.rows;   //把后台封装好的简单Json格式赋给treeNodes  
+	        }  
+	    });
+		nodes = treeObj.addNodes(treeNode, nodes);
+	}
+	
+	
+	
+	//单击树节点时，展示详细信息
+	function onNodeClick(event, treeId, treeNode) {
+		var space = "&nbsp;&nbsp;";
+		if (treeNode.type == 2) {
+			$("#project_name").html(space + treeNode.name);
+			$("#classnames").html(space + treeNode.classnames);
+			$("#usr").html(space + treeNode.usr);
+
+		}
+	}
+
+	//分类tree查询展示
+	function showClassAdmintTree(project_id) {
+		$.ajax({
+			async : false,
+			cache : false,
+			type : 'POST',
+			dataType : "json",
+			data : {
+				class_id : "",
+				project_id : project_id
+			},
+			url : "ezfm/problem/classadmin/projectClassquery",//请求的action路径  
+			error : function() {//请求失败处理函数  
+				alert('请求失败');
+			},
+			success : function(data) { //请求成功后处理函数。
+				classZNodes = data.rows; //把后台封装好的简单Json格式赋给treeNodes  
+			}
+		});
+		classZTreeObj = $.fn.zTree.init($("#classAdmin_tree"), classSetting,
+				classZNodes);
+		var nodes = classZTreeObj.getNodesByFilter(filter);
+		//遍历每一个节点然后动态更新nocheck属性值  
+		for (var i = 0; i < nodes.length; i++) {
+			var node = nodes[i];
+			//非子节点，checkbox禁用
+			/* if (node.nocheck) {
+				classZTreeObj.setChkDisabled(node, true);
+			} else {
+				classZTreeObj.setChkDisabled(node, false);
+			} */
+			if (node.selected) {
+				node.checked = true;
+			}
+			node.nocheck = false; //表示显示checkbox  
+			classZTreeObj.updateNode(node);
+		}
+	}
+
+	
+	//树节点展开事件
+	function zTreeOnExpandClass(event, treeId, treeNode){
+		var nodes;
+		var treeObj = $.fn.zTree.getZTreeObj("classAdmin_tree");
+		treeObj.removeChildNodes(treeNode);
+		$.ajax({  
+	        async : false,  
+	        cache:false,  
+	        type: 'POST',  
+	        dataType : "json",
+	        data:{class_id:treeNode.id,project_id:treeNode.project_id},
+	        url: "ezfm/problem/classadmin/projectClassquery",//请求的action路径  
+	        error: function () {//请求失败处理函数  
+	            alert('请求失败');  
+	        },  
+	        success:function(data){ //请求成功后处理函数。
+	            nodes = data.rows;   //把后台封装好的简单Json格式赋给treeNodes  
+	        }  
+	    });
+		//遍历每一个节点然后动态更新nocheck属性值  
+		for (var i = 0; i < nodes.length; i++) {
+			var node = nodes[i];
+			if (node.selected) {
+				node.checked = true;
+			}
+			node.nocheck = false; //表示显示checkbox  
+		}
+		nodes = treeObj.addNodes(treeNode, nodes);
+	}
+	//过滤节点的机制 直接return node表示不做任何过滤  
+	function filter(node) {
+		return node;
+	}
+
+	//打开新增窗口
+	function openSaveDialog() {
+		var pNode = proZTreeObj.getSelectedNodes();
+		if (pNode.length > 0 && pNode[0].type == 2) {
+			$("#project_id").textbox('setValue', pNode[0].id);
+		} else {
+			$.messager.alert("提示", "请选择您要关联的项目！", "info");
+			return;
+		}
+		$("#dialog_projectInfo_save").dialog({
+			title : '关联分类',
+			width : 500,
+			height : 300,
+			modal : true,
+			cache : false,
+			buttons : "#toolbar_projectInfo_save",
+		});
+		showClassAdmintTree(pNode[0].id);
+	};
+
+	//提交表单
+	function submitForm(formName) {
+		var treeObj = $.fn.zTree.getZTreeObj("classAdmin_tree");
+		var nodes = treeObj.getCheckedNodes(true);
+		var formdata = $("#form_projectInfo_save").serializeObject();
+		formdata.classids = nodes;
+		var saveUrl = '${basePath?if_exists}ezfm/nexus/proandclass/save';
+			$.messager.confirm("确认", "此操作关联性较强，请慎重！确定保存？", function(r) {
+				if(r) {
+						$.request.restPost({
+							url : saveUrl,
+							data : formdata,
+							contentType : 'application/json',
+							success : function(result) {
+								if (result.success) {
+									$("#dialog_projectInfo_save").dialog("close");
+									$.messager.show({
+										title : '提示',
+										msg : '数据已保存',
+										timeout : 2000,
+										showType : 'slide'
+									});
+									showprojectInfotTree();
+								}
+							}
+						});
+					}
+				});
+	};
+
+	/**
+	 * datagrid打开人员列表
+	 * @param {Object} index
+	 */
+	function userList() {
+		var pNode = proZTreeObj.getSelectedNodes();
+		var project_id;
+		if (pNode.length > 0 && pNode[0].type == 2) {
+			project_id = pNode[0].id;
+		} else {
+			$.messager.alert("提示", "请选择您要关联的项目！", "info");
+			return;
+		}
+		var addProjectUrl = "ezfm/nexus/proandclass/sonAddProjectUser/"+project_id;
+		showSon1SonPageInfo("关联用户",addProjectUrl);
+	};
+
+	//关闭窗口
+	function closeDialog(formName, dialogName) {
+		if (formName != null) {
+			$("#" + formName).form("clear");
+		}
+		$("#" + dialogName).window("close");
+	};
+</script>
+
+</head>
+
+<body class="easyui-layout">
+	<div data-options="region:'north'" style="height:auto;overflow: hidden;">
+		<div id="treebar" style="height:28px;" class="datagrid-toolbar">
+			<a class="easyui-linkbutton" id="relation_problem_class" data-options="iconCls:'icon-add',plain:true" onclick="openSaveDialog()">关联分类</a> 
+			<a class="easyui-linkbutton" id="relation_problem_user" data-options="iconCls:'icon-add',plain:true" onclick="userList()">关联接口人</a>
+		</div>
+	</div>
+	<div class="easyui-layout" data-options="fit:true">
+		<!-- 项目定义树 -->
+		<div data-options="region:'west',split:true" title="区域项目架构"
+			style="width: 200px;">
+			<ul id="projectInfo_tree" class="ztree"></ul>
+		</div>
+		<!-- 详细详细 -->
+		<div data-options="region:'center',title:'详细信息',iconCls:'icon-ok'">
+			<table border="0" id="classAdmin_tab" cellpadding="2" cellspacing="1"
+				width="98%" align="center"
+				style="background-color: rgb(149, 184, 231);">
+				<tbody>
+					<tr style="">
+						<td width="25%" align="right" class="classAdmin_td_title">项目名称：</td>
+						<td class="classAdmin_td_con" width="75%" id="project_name"></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" align="right" class="classAdmin_td_title">项目类型：</td>
+						<td class="classAdmin_td_con" id="parent_type"></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" align="right" class="classAdmin_td_title">报事分类：</td>
+						<td class="classAdmin_td_con" id="classnames"></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" align="right" class="classAdmin_td_title">接口人：</td>
+						<td class="classAdmin_td_con" id="usr"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 新增表单 -->
+	<div id="dialog_projectInfo_save">
+		<form id="form_projectInfo_save" method="post">
+			<ul id="classAdmin_tree" class="ztree"></ul>
+			<!-- 隐藏属性div -->
+			<div style="display: none">
+				<input type="text" name="pk_crop" class="easyui-textbox"
+					value='${pk_crop?if_exists}' /> <input type="text" id="project_id"
+					name="project_id" class="easyui-textbox" />
+			</div>
+		</form>
+	</div>
+	<!--新增表单按钮-->
+	<div id="toolbar_projectInfo_save">
+		<a class="easyui-linkbutton"
+			onclick="submitForm('form_projectInfo_save')"
+			data-options="iconCls:'icon-ok'">保&nbsp;存</a> <a
+			class="easyui-linkbutton"
+			onclick="closeDialog('form_projectInfo_save','dialog_projectInfo_save')"
+			data-options="iconCls:'icon-cancel'">关&nbsp;闭</a>
+	</div>
+
+	<!--人员列表-->
+		<div id="dialog_pro_users">
+			<form id="form_executor" method="post">
+				<div class='easyui-panel' style="width: 500px; height: 280px;" data-options="border:false">
+					<div class="easyui-layout" data-options="fit:true">
+						<table id="datagrid_pro_users">
+							<thead>
+								<tr>
+									<th data-options="field:'pk_user',width:100,hidden:true,align:'center'">人员id</th>
+									<th data-options="field:'em_code',width:100,hidden:false,align:'center'">工号</th>
+									<th data-options="field:'user_name',width:100,hidden:false,align:'center'">人员姓名</th>
+									<th data-options="field:'email',width:100,hidden:false,align:'center'">邮箱</th>
+									<th data-options="field:'phone',width:100,hidden:false,align:'center'">电话</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--封装表单按钮-->
+		<div id="toolbar_executor">
+			<a class="easyui-linkbutton" onclick="beforSubmitForm('datagrid_executor','dialog_executor','form_executor','ezfm/basic/executor/')" data-options="iconCls:'icon-ok'">保&nbsp;存</a>
+			<a class="easyui-linkbutton" onclick="closeDialog('datagrid_pro_users','dialog_pro_users')" data-options="iconCls:'icon-cancel'">关&nbsp;闭</a>
+		</div>
+	
+</body>
+</html>

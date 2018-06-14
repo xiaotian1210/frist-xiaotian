@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="682d19dfbb8546c684f5a754eddcda69" package="com.shareworx.ezfm.device.fmdata.model" version="20160721-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_fmdata_pmp" name="工艺程序主表" table="yjwy_fmdata_pmp" class="YJWYPmpModel" init="false" dynamic="false" location="93,-10,120,120">
+    <property id="pmp_id" name="程序id" column="pmp_id" type="2" define="int" length="0" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="description" name="程序名称" column="description" type="1" define="varchar" length="250" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="bus_type" name="作业类型" column="bus_type" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pmp_type" name="设备/设施" column="pmp_type" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="flag" name="有效标识" column="flag" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_crop" name="所属公司" column="pk_crop" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <index id="pmp_id" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

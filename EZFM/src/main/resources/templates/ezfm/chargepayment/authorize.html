@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="${basePath?if_exists}">
+		<meta charset="UTF-8">
+		<title>最大授权数操作</title>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css">
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/css/baseinfo/baseinfo.css"></link>
+		<script type="text/javascript" src="resources/ezfm/js/chargepayment/authorize.js"></script>
+		<script type="text/javascript">
+	          var notRoleButtons = "${notRoleButtons?if_exists}";
+        </script>
+	</head>
+	<body class="easyui-layout">			
+		<div class="easyui-layout" data-options="region:'center'" style="border:0;">
+			<div data-options="region:'north'" style="height:auto;overflow: hidden;">
+				<div id="treebar" class="datagrid-toolbar">
+					<a id="change_authorize" href="javascript:void(0);" onclick="changeAuthorize();" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+					 
+				</div>
+			</div>
+			<div data-options="region:'center',fit:true">
+				<div class="easyui-panel" style="width:500px;border:0">
+					<div style="padding:20px 20px 20px 20px">
+					    原最大授权数: <span id="count"></span>
+					  <br>
+					  <br>
+					   修改最大授权数:  <input class="easyui-numberspinner" value="0" data-options="min:0,max:9,increment:1,onChange:changeCount" style="width:40px;"></input>
+					    <input class="easyui-numberspinner" value="1" data-options="min:1,max:9,increment:1,onChange:changeCount" style="width:40px;"></input>
+					    <input class="easyui-numberspinner" value="0" data-options="min:0,max:9,increment:1,onChange:changeCount" style="width:40px;"></input>
+					  <br>
+					  <br>
+					     需补差价:  <span id="difference_price"></span>
+					    <div id="form_btn_id" style="text-align:center;padding:10px;">
+					    	<!--  <a href="javascript:void(0)" id="save_mainbtn" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="saveUserInfo()" style="text-align:center;margin:5px;font-size:18px;">保存</a>
+					    	<a href="javascript:void(0)" id="reset_mainbtn" class="easyui-linkbutton" data-options="iconCls:'icon-clear'" onclick="formReadOnly(true);"  style="text-align:center;margin:5px;font-size:18px;">取消</a>-->
+					    </div>
+				    </div>
+				</div>
+			</div>
+		</div>	
+	</body>
+</html>

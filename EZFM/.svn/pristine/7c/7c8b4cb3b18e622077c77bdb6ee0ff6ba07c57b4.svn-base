@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<base href="${basePath?if_exists}">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>片区维修种类统计表</title>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/device/deviceUtil.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/workTask/statistics/maintclass.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<script type="text/javascript">
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+			$(function() {
+// 				验证时间
+				$('#datebox_start_time').datebox({
+					onSelect: function(date){
+						
+						$('#datebox_end_time').datebox().datebox('calendar').calendar({
+							validator: function(dateAfter){
+								
+								var startDate = $("#datebox_start_time").datebox('getValue');
+								if(startDate == ""){
+									return true;
+								}
+								var s =startDate+' 00:00:00';
+								s = s.replace(/-/g,"/");
+								var dateBefore = new Date(s );
+																
+								return dateBefore <= dateAfter;
+		
+							}
+						});
+
+					}
+				});
+				
+				
+				//根据条件导出excel
+				$("#export_mainbtn").click(function() {
+					var jsonData = $("#yjwy_query_mianform").serializeObject();
+					var url = "ezfm/worktask/maintclass/export?param=" + JSON.stringify(jsonData);
+					window.location.href = url;
+				});
+				//调用浏览器打印
+				$("#print_mainbtn").click(function() {
+					window.print();
+				});
+				//初始化数据表格
+				datagridInit('datagrid_maintclass', null, parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle, 'toolbar_datagrid_maintclass', true, false);
+				querySubmit();
+				//初始化下拉框
+				initAreaProject('combobox_area');
+
+				//设置默认时间
+// 				var d = new Date();
+// 				var start_date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-01";
+// 				var end_date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+// 				$("#datebox_start_time").datebox('setValue', start_date);
+// 				$("#datebox_end_time").datebox('setValue', end_date);
+			});
+		</script>
+	</head>
+
+	<body>
+		<table id="datagrid_maintclass"></table>
+		<!--工具栏-->
+		<div id="toolbar_datagrid_maintclass">
+			<form id="yjwy_query_mianform" method="post">
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<select class="easyui-combobox" name="pk_area" id="combobox_area" data-options="editable:false,width:210">
+					<option value="default">区域选择</option>
+				</select>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<!--<input id="combobox_project" class="easyui-combobox" name="pk_project" data-options="" />-->
+				<!--<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>-->
+				<span>生成时间:</span>
+				<input style="width: 100px;" name="start_time" id="datebox_start_time" type="text" class="easyui-datebox" data-options="editable:false,buttons:buttons"></input>
+				-
+				<input style="width: 100px;" name="end_time" id="datebox_end_time" type="text" class="easyui-datebox" data-options="editable:false,buttons:buttons"></input>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<a class="easyui-linkbutton" onclick="querySubmit()" data-options="iconCls:'icon-search',plain:'true'">查询</a>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<a class="easyui-linkbutton" onclick="resetSubmit()" data-options="iconCls:'icon-mini-refresh',plain:'true'">重置</a>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+			</form>
+			<hr/>
+			<a id="print_mainbtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-print',plain:true">报表打印</a>
+			<a id="export_mainbtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-excel_export',plain:true">图表导出</a>
+		</div>
+	</body>
+
+</html>

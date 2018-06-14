@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<base href="${basePath?if_exists}">
+		<title>工单管理</title>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/workTask/details/workTaskDetails.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/workTask/workTaskUtil.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/pub/list.commons.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/css/problem/classAdmin.css"></link>
+		<script type="text/javascript">
+		var notRoleButtons = "${notRoleButtons?if_exists}";
+		var jsonData = {};
+		var worktask_timing_refresh = false;
+		var queryUrl ="ezfm/worktask/details/queryModels";
+		var options = {
+				singleSelect:true,
+				checkOnSelect:true,
+				selectOnCheck:true
+			};
+		var worktask_timer;
+		$(function() {
+			jsonData.operation_flag="${operation_flag}";
+			var queryUrl ="ezfm/worktask/details/queryModels";
+			//行列样式设置
+			//$("td,th").attr("valign", "top");
+			//初始化grid
+			initLoadGridDataByCustom("datagrid_detailsList",queryUrl,jsonData,options);
+			initLoadQueryMainData();
+			
+			$('#create_time1').datebox({
+				onSelect: function(date){
+					
+					$('#create_time2').datebox().datebox('calendar').calendar({
+						validator: function(dateAfter){
+							
+							var startDate = $("#create_time1").datebox('getValue');
+							if(startDate == ""){
+								return true;
+							}
+							var s =startDate+' 00:00:00';
+							s = s.replace(/-/g,"/");
+							var dateBefore = new Date(s );
+															
+							return dateBefore <= dateAfter;
+	
+						}
+					});
+
+				}
+			});
+			
+			
+			
+			
+			//查询
+			$("#btn_workTask").click(function(){
+				jsonData =  $("#yjwy_datagrid_worktask_query_mianform").serializeObject();
+				jsonData.operation_flag="${operation_flag}";
+				initLoadGridDataByCustom("datagrid_detailsList",queryUrl,jsonData,options);
+				//$('#datagrid_detailsList').datagrid('reload');
+			});
+			
+			//重置 后 查询
+			$("#btn_resetWorkTask").click(function(){
+				
+				$("#worktask_main_area_id").combobox("setValue","default");     //区域
+			    $("worktask_main_project_id").combobox("setValue","default");     //项目
+			    $("#worktask_repair_class_id").combobox("setValue","");     //维修种类
+			    $("#task_state").combobox("setValue","");                   //维修状态
+			    $("#worktask_service_type").combobox("setValue","");        //服务类别
+			    $('#create_time1').datebox('setValue', '');                  //下单时间
+			    $('#create_time2').datebox('setValue', '');				    
+			    $("#worktask_worktask_type").combobox("setValue","");        //保修来源
+			    $("#content").textbox('setValue','')                        //内容
+				
+				jsonData =  $("#yjwy_datagrid_worktask_query_mianform").serializeObject();
+				jsonData.operation_flag="${operation_flag}";
+				initLoadGridDataByCustom("datagrid_detailsList",queryUrl,jsonData,options);
+				//$('#datagrid_detailsList').datagrid('reload');
+			});
+			if(worktask_timing_refresh){
+				$("#worktask_timing_refresh").text("关闭定时刷新");
+			}else{
+				$("#worktask_timing_refresh").text("开启定时刷新");
+			}
+	});
+		function worktask_download_mainbtn(){ 
+			if(worktask_timing_refresh){
+				jsonData =  $("#yjwy_datagrid_worktask_query_mianform").serializeObject();
+				jsonData.operation_flag="${operation_flag}";
+				initLoadGridDataByCustom("datagrid_detailsList",queryUrl,jsonData,options);
+				//$('#datagrid_detailsList').datagrid('reload');
+			}
+		}
+		
+		function worktask_mainbtn(){
+			if(worktask_timing_refresh){
+				worktask_timing_refresh = false;
+				$("#worktask_timing_refresh").text("开启定时刷新");
+				clearInterval(worktask_timer);
+			}else{
+				worktask_timing_refresh = true;
+				$("#worktask_timing_refresh").text("关闭定时刷新");
+				worktask_timer = setInterval(worktask_download_mainbtn,20000); 
+			}
+		}
+			//加载区域
+			function loadArea(){
+				var url = "ezfm/device/query/area";
+				queryData("worktask_main_area_id",url,"pk_area","area_name");
+			}
+			//区域选中
+			function workTaskAreaChange(newValue,oldValue){
+				loadProject(newValue);
+			}
+			//加载项目
+			function loadProject(areaId){
+				var url = 'ezfm/device/query/project?pk_area='+areaId;
+				queryData("worktask_main_project_id",url,"pk_project","project_name"); 
+			}
+			//加载种类
+			function projectChange(newValue,oldValue){
+				debugger;
+				var url = "ezfm/orktask/repairclass/queryClassByProject";
+				var param = {projectId:newValue.pk_project};
+				var simpleFormat = {valueField: 'pk_class_id',textField: 'class_name'};
+				initDictionaryCombobox("worktask_repair_class_id",url,param,simpleFormat); 
+			}
+			//加载服务种类
+			function loadServiceType(){
+				var url = "ezfm/baseinfo/pub/query/dictionary/dict/query";
+				var param = {code:"maintainServiceCate",state:1};
+				initDictionaryCombobox("worktask_service_type",url,param); 
+			}
+			//加载来源
+			function loadWorktaskType(){
+				var url = "ezfm/baseinfo/pub/query/dictionary/dict/query";
+				var param = {code:"taskSource",state:1};
+				initDictionaryCombobox("worktask_worktask_type",url,param); 
+			} 
+			//加载下拉框查询条件
+			function initLoadQueryMainData(){
+				loadArea();
+				loadProject();
+				loadServiceType();
+				loadWorktaskType();
+			}
+		</script>
+	</head>
+
+	<body>
+		<!--列表-->
+		<table id="datagrid_detailsList">
+			<thead>
+				<tr>
+					<th
+						data-options="field:'pk_details_id',width:100,hidden:true,align:'center'">ID</th>
+					<th
+						data-options="field:'datails_code',width:200,hidden:false,align:'center', formatter:showDetailsSon">工单单号</th>
+					<th
+						data-options="field:'create_time',width:100,hidden:false,align:'center'">创建时间</th>
+					<th
+						data-options="field:'project_name',width:200,hidden:false,align:'center'">所属项目</th>
+					<th
+						data-options="field:'project_id',width:200,hidden:true,align:'center'">所属项目</th>
+					<th
+						data-options="field:'repair_user',width:100,hidden:false,align:'center'">报修人</th>
+					<th
+						data-options="field:'state_name',width:80,hidden:false,align:'center'">任务状态</th>
+					<th
+						data-options="field:'update_time_string',width:100,hidden:false,align:'center'">操作时间</th>
+					<th
+						data-options="field:'user_name',width:100,hidden:false,align:'center'">跟进人</th>
+					<th
+						data-options="field:'operate_',width:225,hidden:false,align:'center',formatter: formatOperate">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<!--工具栏-->
+		<div id="datagrid_detailsList_tb" style="height:auto">
+			<fieldset style="border-color: currentColor;border-width: inherit;border-bottom-width: thin;">
+				<legend style="display:none;">查询</legend>
+				<form id ="yjwy_datagrid_worktask_query_mianform"  method="post">
+				<table class="dv-table" style="margin-top:5px;">
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>区域:</label>
+							<select class="easyui-combobox" name="area_id" id="worktask_main_area_id" style="width:200px;" data-options="editable:false,onChange:workTaskAreaChange">
+								<option value="">请选择</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>项目:</label>
+							<select class="easyui-combobox" name="project_id" id="worktask_main_project_id" style="width:200px;" data-options="editable:false,onSelect:projectChange">
+								<option value="">请选择</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>维修种类:</label>
+							<select class="easyui-combobox" name="repair_class_id" id="worktask_repair_class_id" style="width:210px;" data-options="editable:false">
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>维修状态:</label>
+							<select class="easyui-combobox" name="task_state" style="width:200px;" data-options="editable:false" id="task_state">
+								<option value="">请选择</option>
+								<option value="0">未派单</option>
+								<option value="1">待接单</option>
+								<option value="2">维修中</option>
+								<option value="3">完成</option>
+								<option value="4">已拒单</option>
+								<option value="5">已取消</option>
+								<option value="6">已关闭</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>服务类别:</label>
+							<select class="easyui-combobox" data-options="editable:false" name="service_type" id="worktask_service_type" style="width:200px;">
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>下单时间:</label>
+							<input class="easyui-datebox" data-options="editable:false,buttons:buttons" name="create_time1" style="width:100px;" id="create_time1"></input>~<input class="easyui-datebox" data-options="editable:false,buttons:buttons" name="create_time2" id="create_time2" style="width:100px;"></input>						    
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>报修来源:</label>
+							<select class="easyui-combobox" data-options="editable:false" name="worktask_type" id="worktask_worktask_type" style="width:200px;">
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>内容:</label>
+							<input style="width: 200px;" type="text" prompt="维修单号/维修内容/维修地址" name="content" class="easyui-textbox" id="content"/>
+						</td>
+						<td><a id="btn_workTask" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+						    <a id="btn_resetWorkTask" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-mini-refresh'">重置</a>
+						</td>
+					</tr>
+				</table>
+				</form>
+			</fieldset>
+			<!-- <div id="worktask_details_button" style="margin-bottom:5px;margin-top:5px;height:28px;">
+				<a class="easyui-linkbutton" id="add_worktask_details" data-options="iconCls:'icon-add',plain:true" onclick="openSaveDialog()">新增工单</a>
+				<div style="float: right;margin-right: 10px;">
+					<a id="worktask_timing_refresh" href="javascript:void(0);" onclick="worktask_mainbtn()" class="easyui-linkbutton" data-options="iconCls:'icon_launch',plain:true"></a>
+				</div>
+			</div> -->
+		</div>
+		<!--封装表单-->
+	<div id="dialog_details" class="szw_window">
+		<form id="form_details" method="post">
+			<!-- 维修内容 -->
+				<div id="repair_information">
+					<fieldset id='problem_fieldset'>
+						<legend>工单内容</legend>
+						<table  style="padding: 10px 10px 0px 10px;">
+							<tr>
+								<th>所属项目：</th>
+								<td>
+								<input id="problem_area" class="easyui-combobox" name="problem_area"  required="true" style="width: 100px;"/>
+								<input id="fk_project_id" class="easyui-combobox" name="fk_project_id" required="true" style="width: 100px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th>维修类别：</th>
+								<td>
+									<input id="service_type" class="easyui-combobox" name="service_type" required="true"  style="width: 205px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th>维修种类：</th>
+								<td>
+									<input id="repair_class_id" class="easyui-combobox" name="repair_class_id" required="true"  style="width: 205px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th>维修地点：</th>
+								<td>
+									<input style="width: 205px;" type="hidden" id="fk_repair_address" name="fk_repair_address"/>
+									<input style="width: 205px;" type="text" disabled='true' readonly='true' id="fk_repair_address_name" name="fk_repair_address_name" class="easyui-textbox"/>
+									<a id="searchInterfaceUserBtn" onclick="addPlace()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">地点</a>  
+								</td>
+							</tr>
+							<tr>
+								<th>详细地点：</th>
+								<td><input style="width: 205px;" type="text" id="repair_details" name="repair_details" required="true" class="easyui-textbox" /></td>
+							</tr>
+							<tr>
+								<th>维修机房：</th>
+								<td>
+									<input id="fk_repair_equipment_room"  data-options="editable:true" class="easyui-combobox" name="fk_repair_equipment_room" style="width: 205px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th>维修设备：</th>
+								<td>
+									<input id="fk_repair_equipment"  data-options="editable:true" class="easyui-combobox" name="fk_repair_equipment" style="width: 205px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th>报修人姓名：</th>
+								<td><input style="width: 205px;" type="text" required="true" 
+									name="repair_user" id="repair_user" class="easyui-textbox"/></td>
+							</tr>
+							<tr>
+								<th>联系电话：</th>
+								<td><input style="width: 205px;" type="text"
+									name="contact_number" class="easyui-textbox" /></td>
+							</tr>
+							<tr>
+								<th>内容：</th>
+								<td>
+									<input style="width: 205px;height:50px;" type="text" multiline="true"
+								 	name="repair_content" class="easyui-textbox" />
+								</td>
+							</tr>
+							<tr>
+								<th>跟进人：</th>
+								<td>
+									<input style="width: 205px;" type="hidden" id="duty_user_type" name="duty_user_type"/>
+									<input style="width: 205px;" type="hidden" id="duty_user_id" name="duty_user_id"/>
+									<input style="width: 205px;" type="text" disabled='true' readonly='true' id="duty_user_name" name="duty_user_name" class="easyui-textbox"/>
+									<a id="searchInterfaceUserBtn" onclick="addDutyUser(1)" class="easyui-linkbutton" data-options="iconCls:'icon-search'">接口人员</a>  
+									<a id="searchAreaUserBtn" onclick="addDutyUser(2)" class="easyui-linkbutton" data-options="iconCls:'icon-search'">维修人员</a>  
+								</td>
+							</tr>
+							<tr>
+								<th>图片：</th>
+								<td>
+								<input class="easyui-filebox" name="file2" data-options="prompt:'请选择一个文件...'" buttonText="选择文件..." style="width: 205px;">
+								<!-- <input style="width: 205px;" name="workTaskModel.file" type="text" name="fier" class="easyui-textbox" /> -->
+								
+								</td>
+							</tr>
+							<tr>
+								<th>是否预约：</th>
+								<td>
+									<select id="whether_appointment" class="easyui-combobox" name="whether_appointment" style="width: 205px;" >   
+									    <option value="2">否</option>
+									    <option value="1">是</option>    
+									</select> 
+								</td>
+							</tr>
+							<tr id="appointment_time">
+								<th>预约时间：</th>
+								<td>
+									<input class="easyui-datetimebox" data-options="editable:false,buttons:buttons" name="bookings_time" style="width:205px;">
+								</td>
+							</tr>
+							<tr style="display: none">
+							<th>隐藏属性：</th>
+							<td><input type="text" name="pk_crop" class="easyui-textbox"
+								value='${crop?if_exists}' /><input type="text"
+								id="pk_details_id" name="pk_details_id" class="easyui-textbox" /></td>
+						</tr>
+						</table>
+					</fieldset>
+				</div>
+			</form>
+	</div>
+	<!--封装表单按钮-->
+	<div id="toolbar_details">
+		<a class="easyui-linkbutton"
+			onclick="submitForm('datagrid_detailsList','dialog_details','form_details','ezfm/worktask/details/save')"
+			data-options="iconCls:'icon-ok'">保&nbsp;存</a> <a
+			class="easyui-linkbutton"
+			onclick="closeDialogProblem('dialog_details','form_details')"
+			data-options="iconCls:'icon-cancel'">关&nbsp;闭</a>
+	</div> 
+	
+	<!-- 人员列表 -->
+	<div id="datagrid_unselectUsers">
+		<!--列表-->
+		<table id="datagrid_detailsAddUserList">
+			<thead>
+				<tr>
+					<th
+						data-options="field:'user_id',width:200,hidden:true,align:'center'">人员id</th>
+					<th
+						data-options="field:'em_code',width:60,hidden:false,align:'center'">工号</th>
+					<th
+						data-options="field:'user_name',width:80,hidden:false,align:'center'">人员姓名</th>
+					<th
+						data-options="field:'user_code',width:200,hidden:true,align:'center'">用户账号</th>
+					<th
+						data-options="field:'email',width:100,hidden:false,align:'center'">邮箱</th>
+					<th
+						data-options="field:'phone',width:100,hidden:false,align:'center'">电话</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<script>
+		$("#datagrid_detailsList").attr("title", parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle);
+	</script>
+</body>
+

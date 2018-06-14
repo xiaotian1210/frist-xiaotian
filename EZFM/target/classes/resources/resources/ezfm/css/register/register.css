@@ -1,0 +1,40 @@
+body,ul,h2,p,input,h1,h4,h3{margin: 0;padding: 0;}
+li{list-style: none;}
+a{text-decoration: none;}
+img{vertical-align: top;}
+
+body{background: url("../../images/register/register_bg.jpg") no-repeat center center;background-size:1920px 1080px;-moz-background-size:1920px 1080px;position: relative;min-height: 500px;font-family: "Microsoft Yahei";font-weight: normal;}
+
+.con{width:1004px;margin:0 auto;}
+.con:after{content: "";display: block;height:0;clear:both;}
+.con .con-left{width:502px;float:left;}
+.con .con-left .dms-logo{height:30px;margin:50px 0 20px 0;}
+.con .swiper-container{width:502px;height:750px;}
+.con .swiper-container img{width:502px;height:750px;}
+.con .con-right{width:482px;height:790px;float:left;background: url("../../images/register/register_border.png") no-repeat left;padding-left:20px;margin-top:80px;display: inline;}
+.con-right .info{width:400px;background: #fff;height:710px;padding:40px;}
+.info h4{background: url("../../images/register/register_titBg.jpg") no-repeat;width:100%;height: 48px;font-size: 24px;line-height: 48px;text-align: center;color: #fff;font-family: "Microsoft Yahei";font-weight: normal;}
+
+.info li{width:100%;border-bottom: 1px solid #f0f0f0;height:24px;padding: 36px 0 12px 0;position:relative;}
+.info li .tit{width:82px;float:left;text-align: right;padding-right: 16px;border-right:1px solid #f0f0f0;font-size: 16px;color: #333333;}
+.info li input{border:none;height:24px;width:268px;padding: 0 16px;}
+.info li input[type="file"]{opacity: 0;filter:alpha(opacity=0);}
+.info li .upload{position:absolute;left:116px;height:24px;line-height:24px;color:#005c9d;font-size:16px;display: block;width:268px;cursor: pointer;top:36px;}
+.info li .licenseCon{position:absolute;left:116px;top:32px;height:40px;display: none;width:268px;z-index: 2;}
+.licenseCon .license{width:40px;height:30px;cursor: pointer;}
+.licenseCon .del{float: right;cursor: pointer;}
+#errorInfoId{font-size:16px;line-height: 40px;height: 40px; text-align:center; color:orangered;font-weight: 600;}
+.info .sub{text-align: center;}
+.info .sub input[type="button"]{width:200px;height:40px;background: #005c9d;color:#fff;font-size: 16px;border: none;font-family: "Microsoft Yahei";}
+
+.copyright{font-size: 12px;color:#fff;width:1004px;margin: 40px auto;text-align: center;line-height: 18px;}
+
+#zzbg{position:fixed;left:0;top:0;width:100%;height:100%;z-index: 999;background: rgba(0,0,0,0.7);display: none;}
+#zzbg .box{width:800px;height:580px;position:absolute;left:50%;top:50%;margin-left: -400px;margin-top: -290px;}
+#zzbg .box .license{width:800px;height:500px;}
+#zzbg .box .close{position:absolute;right:-60px;top:0;cursor: pointer;}
+
+.swiper-container-horizontal>.swiper-pagination-bullets, .swiper-pagination-custom, .swiper-pagination-fraction{bottom:40px;text-align:right;padding-right: 40px;box-sizing: border-box;}
+.swiper-pagination-bullet{width:10px;height:10px;}
+.swiper-pagination-bullet-active{opacity: 1;width:20px;height:10px;border-radius: 5px;-webkit-border-radius: 5px;-moz-border-radius: 5px;-ms-border-radius:5px;background: #0096df;}
+

@@ -1,0 +1,202 @@
+<body>
+	<style type="text/css">
+		body, html,#allmap {width: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+		/*这个位置代码视为了隐藏百度左下角的商标信息,如果有BUG将此处放开即可,如果百度左下角的商标显示了可以修改CLASS类名称继续隐藏*/
+		div .anchorBL a{
+			display:none;
+			
+		}
+		div .anchorBL span{
+			display:none;
+			
+		}
+	</style>
+	<div id="allmap"style="height:90%;"></div>
+	<div id="r-result" style="height:30px;auto;padding-top: 5px;background: navajowhite;">
+		<a id="btnNew" href="javascript:void(0);" onclick="add_newoverlay();" class="easyui-linkbutton" data-options="iconCls:'icon-add'">新增围栏</a>
+		<a id="btnEdit" href="javascript:void(0);"  onclick="add_click();"class="easyui-linkbutton" data-options="iconCls:'icon-edit'">设置坐标</a>
+		<a id="btnDelete" href="javascript:void(0);" onclick="remove_overlay();" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除围栏</a>
+	</div>
+	<script type="text/javascript">
+		var map = new BMap.Map("allmap");
+		var lon = eval("${lon?if_exists}");
+		var lat = eval("${lat?if_exists}");
+		var prelon = eval("${lon?if_exists}");
+		var prelat = eval("${lat?if_exists}");
+		var city = "${city?if_exists}"||"北京";
+		var rails = "${rails?if_exists}";
+		var projectId = "${projectId?if_exists}";
+		//实例化鼠标绘制工具
+	    var drawingManager;
+	    var addPolygons = [];//多个围栏的集合
+		//var str = "116.387112,39.920977|116.385243,39.913063|116.394226,39.917988|116.401772,39.921364|116.41248,39.927893@116.387112,39.920977|116.394226,39.917988,116.401772,39.921364,116.41248,39.927893";
+		//initDzwl("天津", str);
+		//加载已有的覆盖物 cityname@城市中文名称  str@坐标串
+		function initRails(){
+			if(rails){
+				var arrs = [];
+				arrs = rails.split("@");//解析环
+				var xtemp=0;
+				var ytemp=0;
+				var nLen = 0;
+				for (var i=0; i<arrs.length; i++){//解析每个环的点
+					var strpoints = [];
+					strpoints = arrs[i].split("|");
+					nLen = nLen+strpoints.length-1;
+					var mappoint = [];
+					for (var j=0; j<strpoints.length; j++){
+						var x = strpoints[j].split(",")[0];
+						var y = strpoints[j].split(",")[1];
+						if(j>0){
+							xtemp = xtemp+eval(x);
+							ytemp = ytemp+eval(y);
+						}
+						mappoint.push(new BMap.Point(x,y));
+					}
+					var polygon = new BMap.Polygon(mappoint, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});  //创建多边形
+					map.addOverlay(polygon);  
+				}
+				if(0!=nLen){
+					map.centerAndZoom(new BMap.Point(xtemp/nLen,ytemp/nLen), 16);
+				}
+			}
+		}
+		//添加新的覆盖物
+		function add_newoverlay(){
+			drawingManager.setDrawingMode(BMAP_DRAWING_POLYGON);
+			drawingManager.open();
+		}
+		//获取多个围栏的坐标串
+		function get_alloverlayxy(){
+			var pointsStr = "";
+			if (addPolygons.length > 0){
+				for (var i=0; i<addPolygons.length; i++){
+					var lay = addPolygons[i];
+					for (var j=0; j<lay.length; j++){
+						pointsStr += lay[j].lng + "," + lay[j].lat + "|";
+					}
+					pointsStr = pointsStr.substr(0, pointsStr.length - 1);
+					pointsStr += "@";
+				}
+				pointsStr = pointsStr.substr(0, pointsStr.length - 1);
+			}
+			return pointsStr;
+		}
+		function overlaycomplete(e){
+			addPolygons.push(e.overlay.ia);
+	    };
+		//添加已有覆盖物
+		function add_overlay(){
+			//map.addOverlay(polygon); 
+			//添加鼠标绘制工具监听事件，用于获取绘制结果
+		    drawingManager.addEventListener('overlaycomplete', overlaycomplete);//增加多边形
+		    //initDzwl(null,"116.396167,39.921862|116.429368,39.916384|116.40709,39.910683|116.396167,39.921862");
+		}
+		//清除覆盖物
+		function remove_overlay(){
+			map.clearOverlays();   
+			addPolygons.splice(0,addPolygons.length);//清空数组 
+			lon="";
+			lat="";
+			rails="";
+		}
+		//设置坐标事件
+		function add_click(){
+			//单击获取点击的经纬度
+			map.addEventListener("click",setMarker);
+		}
+		//设置坐标
+		function setMarker(e){
+			lon=e.point.lng;
+			lat=e.point.lat;
+			var point = new BMap.Point(lon, lat);
+			map.addControl(new BMap.MapTypeControl());
+			var marker = new BMap.Marker(point);  // 创建标注
+			map.addOverlay(marker);
+			map.removeEventListener("click",setMarker);
+			deletePoint();
+			prelon=e.point.lng;
+			prelat=e.point.lat;
+		}
+		//删除坐标
+		function deletePoint(){
+			var allOverlayPoint = map.getOverlays();
+			for (var i = 0; i < allOverlayPoint.length -1; i++){
+				if(allOverlayPoint[i].point){
+					if(prelat==allOverlayPoint[i].point.lat && prelon==allOverlayPoint[i].point.lng){
+						map.removeOverlay(allOverlayPoint[i]);
+						return;
+					}
+				}
+			}
+		}
+		$(function(){
+			initRails();//初始化围栏
+			if(lon&&lat){
+				var point = new BMap.Point(lon, lat);
+				map.centerAndZoom(point, 16);
+				var marker = new BMap.Marker(point);  // 创建标注
+				map.addOverlay(marker); 
+			}else if((!lon||!lat)&&!rails){
+				map.centerAndZoom(city, 12);
+			}
+			
+			map.enableScrollWheelZoom();
+		    var styleOptions = {
+		        strokeColor:"red",    //边线颜色。
+		        fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。
+		        strokeWeight: 3,       //边线的宽度，以像素为单位。
+		        strokeOpacity: 0.8,	   //边线透明度，取值范围0 - 1。
+		        fillOpacity: 0.6,      //填充的透明度，取值范围0 - 1。
+		        strokeStyle: 'solid' //边线的样式，solid或dashed。
+		    }
+		    drawingManager = new BMapLib.DrawingManager(map, {
+		        isOpen: false, //是否开启绘制模式
+		        enableDrawingTool: false, //是否显示工具栏
+		        drawingToolOptions: {
+		            anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
+		            offset: new BMap.Size(5, 5), //偏离值
+		        },
+		        circleOptions: styleOptions, //圆的样式
+		        polylineOptions: styleOptions, //线的样式
+		        polygonOptions: styleOptions, //多边形的样式
+		        rectangleOptions: styleOptions //矩形的样式
+		    }); 
+			//drawingManager.setDrawingMode(BMAP_DRAWING_POLYGON);
+		   	drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+		   	$("#rails_save_mainbtn").click(function(){
+		   		var railsTe=get_alloverlayxy();
+		   		if(rails&&railsTe){
+		   			railsTe = railsTe +"@"+rails;
+		   		}
+		   		var data = {
+		   			id:projectId+"",
+		   			rails:railsTe+"",
+		   			lon:lon+"",
+		   			lat:lat+""
+		   		}
+		   		$.ajax({
+	                url: "ezfm/baseinfo/project/rails/save",
+	                type: "post",
+	                data: data,
+	                dataType: "json",
+	                async:false,
+	                success: function(result){
+	                	if(result.success){
+							$('#project_process_site_mapid').dialog("close");
+							$('#projectgrid').datagrid('getPager').pagination('select');
+							$.messager.show({
+								title:'提示',
+								msg:'数据已保存',
+								timeout:2000,
+								showType:'slide'
+							});
+						}else{
+							$.messager.alert("提示",rs.message,"warning");
+						}
+	                }
+	            });
+		   	});
+		});
+	</script>
+</body>

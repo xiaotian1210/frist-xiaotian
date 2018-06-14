@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<base href="${basePath?if_exists}">
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="resources/ezfm/all.js"></script>
+    <script type="text/javascript">
+    	var notRoleButtons = "${notRoleButtons?if_exists}";
+    	//显示缓冲信息
+    	function showProcessMessageMode(bool){
+    		if(bool){
+	    		if($("#szw_mask__id").length>0){
+	    			$("#szw_mask__id").show();
+	    		}else{
+	    			$("<div id='szw_mask__id' class=\"datagrid-mask\"></div>").css({display:"block",width:"100%",height:$(window).height()}).appendTo("body"); 
+	    		}
+	    		if($("#szw_mask_message__id").length>0){
+	    			$("#szw_mask_message__id").show();
+	    		}else{
+					$("<div id='szw_mask_message__id' class=\"datagrid-mask-msg\" style='border-color:rgba(255,255,255,0.9)'></div>").html("载入中...").appendTo("body").css({display:"block",left:($(document.body).outerWidth(true) - 85) / 2,top:($(window).height() - 40) / 2}); 
+	    		}
+    		}else{
+    			$("#szw_mask__id").hide();
+    			$("#szw_mask_message__id").hide();
+    		}
+    	}
+    	
+    	function loginErrorfunction(request, textStatus, errorThrown) {
+            var statusCode = request.status;
+			switch(statusCode){
+				case 200:
+					var result = eval("(" + request.responseText + ")");
+					$("#errorInfoId").html(result.message);
+				break;
+				case 400:
+					console.error(request);
+				break;
+				case 404:
+					console.error('404: 页面未找到，请检测请求地址是否正确');
+				break;
+				case 415:
+					console.error('415: 媒体格式错误，请检测请求配置，如: contentType = application/json');
+				break;
+				case 500:
+					console.error('415: 服务端处理错误', statusText);
+				break;
+				default:
+					console.error('未知错误：', statusText, errorThrown);
+			}
+        }
+    	
+    	//登录操作
+		function loginFunction(){
+			showProcessMessageMode(true);
+		 	var username = "${username?if_exists}";
+		 	var password = "${password?if_exists}";
+			var url = "ezfm/login/login";
+			var data = {
+				username:username,
+				password:password
+			};
+				$.ajax({
+	                url: url,
+	                type: "post",
+	                data: data,
+	                dataType: "json",
+	                async:false,
+	                success: resultFunctionForLogin,
+	                error: loginErrorfunction
+	            });
+			showProcessMessageMode(false);
+		}
+    	//跳转到home主页
+		function resultFunctionForLogin(result){
+		 	if(result.success){
+		 		//跳转到呼叫中心界面
+		 		window.location.href = "ezfm/problem/details/index?operation_flag=2";
+		 	}else{
+		 		//这里做登录请求，前后台错误信息提示
+		 		$("#errorInfoId").html(result.message);
+		 	}
+		}
+    	$(function(){
+    		if("${service?if_exists}"==1){
+    			//跳转到呼叫中心界面
+		 		window.location.href = "ezfm/problem/details/index?operation_flag=2";
+    		}else if("${service?if_exists}"==0){
+    			loginFunction();
+    		};
+        });
+    </script>
+</head>
+<body>
+<div id="wrap">
+    <div class="login-box">
+        <div class="con">
+            <div class="tit">
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

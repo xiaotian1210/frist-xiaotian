@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="${basePath?if_exists}">
+		<meta charset="UTF-8">
+		<title>核查任务</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript">
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+			//加载区域
+			function loadArea(){
+				var url = "ezfm/baseinfo/pub/query/dictionary/area/query";
+				var simpleFormat = {valueField: 'pk_area',textField: 'area_name'};
+				initDictionaryCombobox("queray_main_area_id",url,null,simpleFormat);
+			}
+			function areaChange(newValue,oldValue){
+				loadProject(newValue);
+				loadUser(newValue);
+			}
+			
+			//加载项目
+			function loadProject(areaId){
+				var url = "ezfm/baseinfo/pub/query/dictionary/project/query";
+				var param = {areaId:areaId};
+				var simpleFormat = {valueField: 'pk_project',textField: 'project_name'};
+				initDictionaryCombobox("queray_main_project_id",url,param,simpleFormat); 
+			}
+			function projectChange(newValue,oldValue){
+				loadStation(newValue);
+				loadUser(null,newValue);
+			}
+			
+			//加载部门
+			function loadDept(areaId,projectId){
+				var url = "ezfm/baseinfo/pub/query/dictionary/dict/query";
+				var param = {code:"jobDepartment",state:1};
+				//var simpleFormat = {valueField: 'pk_dict_',textField: 'dict_name_'};
+				initDictionaryCombobox("queray_main_dept_id",url,param); 
+			}
+			
+			//加载岗位
+			function loadStation(projectId){
+				var url = "ezfm/baseinfo/pub/query/dictionary/station/query";
+				var param = {projectId:projectId};
+				var simpleFormat = {valueField: 'pk_station',textField: 'station_name'};
+				initDictionaryCombobox("queray_main_station_id",url,param,simpleFormat); 
+			}
+			function stationChange(newValue,oldValue){
+				loadUser(null,null,newValue);
+			}
+			
+			//加载人员
+			function loadUser(areaId,projectId,stationId){
+				var url = "ezfm/baseinfo/pub/query/dictionary/user/query";
+				var param = {areaId:areaId,projectId:projectId,stationId:stationId};
+				var simpleFormat = {valueField: 'pk_user',textField: 'user_name'};
+				initDictionaryCombobox("queray_main_user_id",url,param,simpleFormat); 
+			}
+			//加载专业
+			function loadSecialty(){
+				var url = "ezfm/baseinfo/pub/query/dictionary/dict/query";
+				var param = {code:"qualitySpecialty",state:1};
+				initDictionaryCombobox("query_main_specialty_id",url,param); 
+			}
+			//加载下拉框查询条件
+			function initLoadQueryMainData(){
+				loadArea();
+				loadProject();
+				loadDept();
+				loadUser();
+				loadSecialty();
+			}
+			var jsonData = {};
+			$(function(){
+				var queryUrl = "ezfm/quality/proinspect/inspect/insptask/conditon/query";
+				//初始化grid
+				initLoadGridDataByCustom("yjwy_main_grid",queryUrl,jsonData);
+				
+// 				验证时间区间
+				$('#task_start_time1').datebox({
+					onSelect: function(date){
+						
+						$('#task_start_time2').datebox().datebox('calendar').calendar({
+							validator: function(dateAfter){
+								
+								var startDate = $("#task_start_time1").datebox('getValue');
+								if(startDate == ""){
+									return true;
+								}
+								var s =startDate+' 00:00:00';
+								s = s.replace(/-/g,"/");
+								var dateBefore = new Date(s );
+																
+								return dateBefore <= dateAfter;
+		
+							}
+						});
+						
+						
+						$('#task_end_time1').datebox().datebox('calendar').calendar({
+							validator: function(dateAfter){								
+								var startDate = $("#task_start_time1").datebox('getValue');
+								if(startDate == ""){
+									return true;
+								}
+								var s =startDate+' 00:00:00';
+								s = s.replace(/-/g,"/");
+								var dateBefore = new Date(s );
+																
+								return dateBefore <= dateAfter;		                      						
+							}
+						    
+						});
+						
+						
+
+					}
+				});
+				
+				$('#task_end_time1').datebox({
+					onSelect: function(date){
+						
+						$('#task_end_time2').datebox().datebox('calendar').calendar({
+							validator: function(dateAfter){
+								
+								var startDate = $("#task_end_time1").datebox('getValue');
+								if(startDate == ""){
+									return true;
+								}
+								var s =startDate+' 00:00:00';
+								s = s.replace(/-/g,"/");
+								var dateBefore = new Date(s );
+																
+								return dateBefore <= dateAfter;
+		
+							}
+						});
+
+					}
+				});
+				
+				//查询
+				$("#btn_mainquery").click(function(){
+					jsonData =  $("#yjwy_query_mianform").serializeObject();
+					initLoadGridDataByCustom("yjwy_main_grid",queryUrl,jsonData);
+					//$('#yjwy_main_grid').datagrid('reload');
+				});
+				
+				//查询
+				$("#btn_reserQuery").click(function(){
+					
+					$("#queray_main_area_id").combobox("setValue","");
+				    $("#queray_main_project_id").combobox("setValue","");
+				    $('#queray_main_dept_id').combobox('setValue', '');
+				    
+				    $('#queray_main_station_id').combobox('setValue', '');
+					$("#queray_main_user_id").combobox("setValue","");
+				    $("#queray_main_taskstate_id").combobox("setValue","");
+				    
+					$("#query_main_specialty_id").combobox("setValue","");
+				    $("#queray_main_check_id").combobox("setValue","");
+					$("#queray_main_genmode_id").combobox("setValue","");
+				    $("#queray_main_stancode_id").textbox("setValue","");
+				    
+				    $("#queray_main_taskcode_id").textbox("setValue","");
+					$("#queray_main_taskcq_id").combobox("setValue","");
+				    $("#start_time1").datebox("setValue","");
+				    $("#start_time2").datebox("setValue","");
+				    $("#end_time1").datebox("setValue","");
+				    $("#end_time2").datebox("setValue","");
+				    $("#queray_main_rectify_id").combobox("setValue","");
+					
+					
+					
+					jsonData =  $("#yjwy_query_mianform").serializeObject();
+					initLoadGridDataByCustom("yjwy_main_grid",queryUrl,jsonData);
+					//$('#yjwy_main_grid').datagrid('reload');
+				});
+				//初始化查询条件值
+				initLoadQueryMainData();
+				//关闭任务操作
+				$("#colosetask_mainbtn").click(function(){
+					var closedRecods = $('#yjwy_main_grid').datagrid("getSelections");
+					
+					if(closedRecods.length<1){
+						$.messager.alert('提示','请您先选择关闭的任务!','info');
+						return;
+					}
+					for(var i=0; i<closedRecods.length; i++){
+						var record = closedRecods[i];
+						if("10"!=record.task_state && "20"!=record.task_state){
+							$.messager.alert('提示','您只能关闭待办或待整改的任务!','info');
+							return;
+						}
+					}
+					$.messager.confirm('提示', '您确认关闭选中的任务吗?', function(r){
+						if (r){
+							$.request.restPost({
+								url: "ezfm/quality/proinspect/inspect/insptask/close",
+								data: closedRecods,
+								success: function(rs){
+									$('#yjwy_main_grid').datagrid('reload');
+									$.messager.show({
+										title:'提示',
+										msg:'任务已关闭',
+										timeout:2000,
+										showType:'slide'
+									});
+								}
+							});
+						}
+					});
+				});
+				//导出操作
+				$("#export_mainbtn").click(function(){
+					var url = "ezfm/quality/proinspect/inspect/insptask/export?queryparam="+JSON.stringify(jsonData);
+					window.location.href=url;
+				});
+			});
+			function showSonPage(id){
+				var sonpageUrl = "ezfm/quality/proinspect/inspect/insptask/son/index/"+id;
+				showSonPageEvent("详情",sonpageUrl);
+			}
+			
+			function taskColumnFormatter(value,row,index){
+				return "<a href='javascript:void(0);' onclick='showSonPage(\""+row.pk_task+"\")'>"+value+"</a>"
+			}
+		</script>
+	</head>
+	<body class="easyui-layout szw_page_body">
+		<style type="text/css">
+			#query_main_id form table td select{
+				width:200px;
+			}
+			#query_main_id form table td input{
+				width:200px;
+			}
+			#query_main_id form table td label{
+				    display: inline-table;
+    				width: 80px;
+			}
+		</style>
+		<div id="yjwy_main_grid_tb" style="height:auto">
+			<fieldset id="query_main_id" style="border-color: currentColor;border-width: inherit;border-bottom-width: thin;">
+				<legend style="display:none;">标准查询</legend>
+				<form id ="yjwy_query_mianform"  method="post">
+				<table class="dv-table" style="margin-top:5px;">
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>区域:</label>
+							<select class="easyui-combobox" name="area_id" id="queray_main_area_id" data-options="editable:false,onChange:areaChange">
+								<option value="">请选择</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>项目:</label>
+							<select class="easyui-combobox" name="project_id" id="queray_main_project_id" data-options="editable:false,onChange:projectChange">
+								<option value="">请选择</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>部门:</label>
+							<select class="easyui-combobox" name="dept_id" id="queray_main_dept_id" data-options="editable:false">
+								<option value="">请选择</option>
+							</select>
+						</td>
+						<td style="margin-left: 3px;vertical-align: bottom;" rowspan="5"><a id="btn_mainquery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></td>
+						<td style="margin-left: 3px;vertical-align: bottom;" rowspan="5"><a id="btn_reserQuery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-mini-refresh'">重置</a></td>
+					</tr>
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>岗位:</label>
+							<select class="easyui-combobox" name="station_id" id="queray_main_station_id" style="width:200px;" data-options="editable:false,onChange:stationChange">
+								<option value="">请选择</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>人员:</label>
+							<select class="easyui-combobox" data-options="editable:false" name="user_id" id="queray_main_user_id" style="width:200px;">
+								<option value="">请选择</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>状态:</label>
+							<select class="easyui-combobox" data-options="editable:false" name="taskstate" id="queray_main_taskstate_id" style="width:200px;">
+								<option value="">请选择</option>
+								<option value="10">待办</option>
+								<option value="20">待整改</option>
+								<option value="30">已办</option>
+								<option value="40">正常过期</option>
+								<option value="50">休假关闭</option>
+								<option value="60">手动关闭</option>
+							</select>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>专业:</label>
+							<select class="easyui-combobox" data-options="editable:false" name="specialty_code" id="query_main_specialty_id" style="width:200px;">
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>审阅状态:</label>
+							<select class="easyui-combobox" data-options="editable:false" name="check_code" id="queray_main_check_id" style="width:200px;">
+								<option value="">请选择</option>
+								<option value="1">合格</option>
+								<option value="0">不合格</option>
+								<option value="2">未审阅</option>
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>生成方式:</label>
+							<select class="easyui-combobox" data-options="editable:false" name="genmode_code" id="queray_main_genmode_id" style="width:200px;">
+								<option value="">请选择</option>
+								<option value="1">手机生成</option>
+								<option value="0">达美盛资产云系统生成</option>
+							</select>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>标准编码:</label>
+							<input name="stancode" id="queray_main_stancode_id" class="easyui-textbox" style="width:200px;"></input>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>任务编码:</label>
+							<input name="taskcode" id="queray_main_taskcode_id" class="easyui-textbox" style="width:200px;"></input>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>是否超期:</label>
+							<select class="easyui-combobox" data-options="editable:false" name="taskcq" id="queray_main_taskcq_id" style="width:200px;">
+								<option value="">请选择</option>
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>开始时间:</label>
+							<input class="easyui-datebox" data-options="editable:false,buttons:buttons" name="start_time1" id="task_start_time1" style="width:95px;"></input>~<input class="easyui-datebox" data-options="editable:false,buttons:buttons" name="start_time2" id="task_start_time2" style="width:95px;"></input>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>结束时间:</label>
+							<input class="easyui-datebox" data-options="editable:false,buttons:buttons" name="end_time1" id="task_end_time1" style="width:95px;"></input>~<input class="easyui-datebox" data-options="editable:false,buttons:buttons" name="end_time2" id="task_end_time2" style="width:95px;"></input>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<label>是否整改:</label>
+							<select class="easyui-combobox" data-options="editable:false" name="rectify_code" id="queray_main_rectify_id" style="width:200px;">
+								<option value="">请选择</option>
+								<option value="1">是</option>
+								<option value="0">否</option>
+							</select>
+						</td>
+						<td></td>
+					</tr>
+				</table>
+				</form>
+			</fieldset>
+			<div style="height:28px;margin-bottom:5px;margin-top:5px">
+				<a id="colosetask_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-forbid_action',plain:true">结束任务</a>
+				<a id="export_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-excel_export',plain:true">导出数据</a>
+			</div>
+		</div>
+		
+		<div data-options="region:'center'">	
+			<table id="yjwy_main_grid" class="easyui-datagrid" title="">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'task_state_name',width:160,align:'center'">核查状态</th>
+						<th data-options="field:'task_code',width:160,align:'center', formatter:taskColumnFormatter">任务编码</th>
+						<th data-options="field:'inspstan_code',width:160,align:'center'">标准编码</th>
+						<th data-options="field:'project_name',width:160,align:'center'">项目名称</th>
+						<th data-options="field:'specialty',width:160,align:'center'">专业</th>
+						<th data-options="field:'task_user_name',width:120,align:'center'">核查人</th>
+						<th data-options="field:'task_start_time',width:160,align:'center'">任务开始时间</th>
+						<th data-options="field:'task_end_time',width:160,align:'center'">任务结束时间</th>
+						<th data-options="field:'task_deadline_date',width:160,align:'center'">任务截止时间</th>
+						<th data-options="field:'task_iscq',width:160,align:'center'">是否超期</th>
+						<th data-options="field:'rectify_user_name',width:160,align:'center'">整改人</th>
+						<th data-options="field:'task_rectify_starttime',width:160,align:'center'">整改开始时间</th>
+						<th data-options="field:'task_rectify_finishtime',width:160,align:'center'">整改完成时间</th>
+						<th data-options="field:'task_qualified_time',width:160,align:'center'">整改确认时间</th>
+						<!--<th data-options="field:'task_iscq',width:160,align:'center'">整改是否超期</th>-->
+						<th data-options="field:'task_score',width:160,align:'center'">分值</th>
+						<th data-options="field:'check_state',width:160,align:'center'">审阅状态</th>
+						<!-- 以下为隐藏列 -->
+						<th data-options="field:'pk_task',hidden:true">主键</th>
+						<th data-options="field:'task_state',width:160,align:'center',hidden:true">核查状态</th>
+						<th data-options="field:'task_end_time',width:160,align:'center',hidden:true">任务结束时间(上面是截止日期)</th>
+						<!-- 以上为隐藏列 -->
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<script>
+			$("#yjwy_main_grid").attr("title", parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle);
+		</script>
+	</body>
+</html>

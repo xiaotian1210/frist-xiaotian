@@ -1,0 +1,113 @@
+<body>
+	<style type="text/css">
+		.table_field_label {
+			height: 30px;
+			background-color: #F9F7F9 !important;
+			font-weight: bold;
+			width: 100px;
+			text-align:end;
+		}
+		
+		.table_field_value {
+			height: 30px;
+			background: #FFF;
+			width: "300px";
+		}
+		
+		.yjwy_table_panel {
+			margin: 0 auto;
+			background-color: #ddd;
+			border: 0px;
+			width: 900px;
+		}
+		.yjwy_table_panel tbody tr {
+			height:30px;
+		}
+	</style>
+	<div class="easyui-tabs" data-options="tabWidth:112" style="overflow:hidden;height:100%">
+		<div title="标准详情">
+			<!-- 详细详细 -->
+			<div data-options="region:'center'" style="padding:10px;">
+				<table class="yjwy_table_panel">
+					<tbody>
+						<tr>
+							<td  class="table_field_label" style="width:120px;">标准代码：</td>
+							<td class="table_field_value" style="width:300px;">${mainmodel?if_exists.inspstan_code?if_exists}</td>
+							<td class="table_field_label" style="width:120px;">项目类别：</td>
+							<td class="table_field_value" style="width:300px;">${mainmodel?if_exists.project_category?if_exists}</td>
+						</tr>
+						<tr>
+							<td  class="table_field_label">所属专业：</td>
+							<td class="table_field_value">${mainmodel?if_exists.specialty?if_exists}</td>
+							<td class="table_field_label">所属区域：</td>
+							<td class="table_field_value"></td>
+						</tr>
+						<tr>
+							<td  class="table_field_label">标准类别：</td>
+							<td class="table_field_value" >${mainmodel?if_exists.inspstan_category?if_exists}</td>
+							<td class="table_field_label">分值：</td>
+							<td class="table_field_value">${mainmodel?if_exists.inspstan_scorevalue?if_exists}</td>
+						</tr>
+						<tr>
+							<td  class="table_field_label" rowspan="2">标准类别描述：</td>
+							<td class="table_field_value" colspan="3" rowspan="2">${mainmodel?if_exists.inspstan_category_description?if_exists}</td>
+						</tr>
+						<tr>
+						</tr>
+						<tr>
+							<td  class="table_field_label" rowspan="2">质量绩效指标：</td>
+							<td class="table_field_value" colspan="3" rowspan="2">${mainmodel?if_exists.inspstan_performance_norm?if_exists}</td>
+						</tr>
+						<tr>
+						</tr>
+						<tr>
+							<td  class="table_field_label" rowspan="2">核查方法：</td>
+							<td class="table_field_value" colspan="3" rowspan="2">${mainmodel?if_exists.inspstan_inpectmethod?if_exists}</td>
+						</tr>
+						<tr>
+						</tr>
+						<tr>
+							<td  class="table_field_label">是否强制拍照：</td>
+							<td class="table_field_value" id="inspstan_secretinquiries_son1td"></td>
+							<td class="table_field_label">使用范围：</td>
+							<td class="table_field_value">${mainmodel?if_exists.inspstan_usingscope?if_exists}</td>
+						</tr>
+						<tr>
+							<td  class="table_field_label">对口主管：</td>
+							<td class="table_field_value">${mainmodel?if_exists.inspstan_dkzg_pc?if_exists}</td>
+							<td class="table_field_label">部门经理：</td>
+							<td class="table_field_value">${mainmodel?if_exists.inspstan_bmjl_pc?if_exists}</td>
+						</tr>
+						<tr>
+							<td  class="table_field_label">项目经理：</td>
+							<td class="table_field_value">${mainmodel?if_exists.inspstan_xmjl_pc?if_exists}</td>
+							<td class="table_field_label">区域总助：</td>
+							<td class="table_field_value">${mainmodel?if_exists.inspstan_qyzz_pc?if_exists}</td>
+						</tr>
+						<tr>
+							<td  class="table_field_label">区域总：</td>
+							<td class="table_field_value">${mainmodel?if_exists.inspstan_qyz_pc?if_exists}</td>
+							<td class="table_field_label">总监：</td>
+							<td class="table_field_value">${mainmodel?if_exists.inspstan_zj_pc?if_exists}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<!-- <div title="所属岗位" style="padding:20px;">
+			<p>所属岗位1，所属岗位2</p>
+		</div> -->
+	</div>
+	<script type="text/javascript">	
+		var notRoleButtons = "${notRoleButtons?if_exists}";
+		$(function(){
+			//设置是否拍照选中
+			var inspstan_secretinquiries = "${mainmodel?if_exists.inspstan_secretinquiries?if_exists}";
+			if(inspstan_secretinquiries=="1"){
+				$("#inspstan_secretinquiries_son1td").text("是");
+			}else{
+				$("#inspstan_secretinquiries_son1td").text("否");
+			}
+		});
+	</script>
+</body>

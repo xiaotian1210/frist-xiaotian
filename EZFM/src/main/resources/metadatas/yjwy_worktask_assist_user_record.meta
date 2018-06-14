@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="f6d929572a9e4db38fef051106a31169" package="com.shareworx.ezfm.worktask.assistuser.model" version="20160901-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_worktask_assist_user_record" name="工单协助人表" table="yjwy_worktask_assist_user_record" class="YJWYWorkTaskAssistUserRecordModel" init="false" dynamic="false" location="264,96,120,120">
+    <property id="pk_record_id" name="主键ID" column="pk_record_id" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="fk_details_id" name="工单ID" column="fk_details_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="fk_user_id" name="用户表ID" column="fk_user_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="work_proportion" name="工作百分比" column="work_proportion" type="3" define="decimal" length="0" precision="15" scale="2" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="record_time" name="记录时间" column="record_time" type="1" define="varchar" length="21" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="record_user_id" name="记录人ID" column="record_user_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <index id="pk_record_id" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

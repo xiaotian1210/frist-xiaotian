@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="${basePath?if_exists}">
+<meta charset="UTF-8">
+<title>接单OR拒单OR取消</title>
+<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+<script type="text/javascript" src="resources/ezfm/all.js"></script>
+</head>
+<body>
+	<div class="easyui-tabs" data-options="tabWidth:112"
+		style="overflow: hidden; height: 90%">
+		<div>
+			<!--封装表单-->
+			<div id="dialog_worktaskOrdersOrReduseCancel" class="szw_window">
+				<form id="form_worktaskOrdersOrReduseCancel" method="post" enctype="multipart/form-data">
+					<!-- 处理信息 -->
+					<div>
+						<fieldset id='problem_fieldset'>
+							<legend>详细信息</legend>
+							<table style="padding: 10px 10px 0px 10px;" height="50px">
+								<tr>
+									<th style="float:right;">所属项目：</th>
+									<td>
+										<input style="width: 205px;" type="text" disabled='true' readonly='true' value='${project_name?if_exists}'class="easyui-textbox"/>
+								 		<input style="width: 205px;" type="hidden" name="pk_details_id" value='${pk_details_id?if_exists}'/>
+								 		<input style="width: 205px;" type="hidden" name="operation_type" value='${operation_type?if_exists}'/>
+									</td>
+								</tr>
+								<tr>
+									<th style="float:right;">维修内容：</th>
+									<td>
+										<input style="width: 350px;height:50px;" type="text" multiline="true" disabled='true' readonly='true'
+								 		name="repair_content" class="easyui-textbox" name="repair_content" value='${repair_content?if_exists}'/>
+									</td>
+								</tr>
+								<tr>
+									<th style="float:right;">详情记录：</th>
+									<td>
+									<input style="width: 350px;height:50px;" type="text" multiline="true"
+								 		name="record_remarks" class="easyui-textbox"/>
+									</td>
+								</tr>
+								<tr>
+									<th style="float:right;">图片：</th>
+									<td>
+										<input class="easyui-filebox" name="wroktask_file" data-options="prompt:'请选择一个文件...'" buttonText="选择文件..." style="width: 205px;">
+									</td>
+								</tr>
+							</table>
+						</fieldset>
+					</div>
+				</form>
+			</div>
+			<!--封装表单按钮-->
+		</div>
+	</div>
+	<div id="dialog_worktaskOrdersOrRefuse_tab"style="float:right;margin-right:20px;">
+		<a id="save-btn" class="easyui-linkbutton" onclick="submitFormOrdersOrReduseCancelComplete('workTaskOrdersOrReduseCancelId','form_worktaskOrdersOrReduseCancel','ezfm/worktask/details/save/ordersOrReduseCancel')" data-options="iconCls:'icon-ok'">保&nbsp;存</a>
+		<a class="easyui-linkbutton" onclick="closeDialogProblem('workTaskOrdersOrReduseCancelId')" data-options="iconCls:'icon-cancel'">关&nbsp;闭</a>
+	</div>
+	<script type="text/javascript">
+	var notRoleButtons = "${notRoleButtons?if_exists}";
+	/**
+	 * 提交表单
+	 * @param {Object} datagridName
+	 * @param {Object} dialogName
+	 * @param {Object} formName
+	 * @param {Object} urlName
+	 */
+	  function submitFormOrdersOrReduseCancelComplete(dialogName, formName, urlName) {
+
+		 $('#'+formName).form('submit', {
+				url: urlName,
+             onSubmit: function (_52) {
+                 var result = $(this).form("validate");
+                 if(result){
+                     $("#save-btn").linkbutton('disable');
+                 }
+                 return result;
+             },
+				success: function(result){
+                    $('#save-btn').linkbutton('enable');
+					result = eval('('+result+')');
+					if(result.success){
+						closeDialogProblem(dialogName);
+						$("#datagrid_detailsList").datagrid('reload');
+						$("#datagrid_problemAgency").datagrid('reload');
+						$.messager.show({
+							title:'提示',
+							msg:'保存成功！',
+							timeout:2000,
+							showType:'slide'
+						});
+					}
+				},
+				 error: function(XMLHttpRequest, textStatus, errorThrown){
+					 var result = eval("(" + XMLHttpRequest.responseText + ")");
+					 $.messager.alert('错误', result.message, 'error');
+				}
+			});
+	}
+	</script>
+</body>
+</html>

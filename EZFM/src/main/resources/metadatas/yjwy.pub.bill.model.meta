@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="15fe8cffbe5c428a9712ff1f4bd0d728" package="com.shareworx.ezfm.meta.itf" version="20160718-1" release="2.0">
+  <!--定义接口类型-->
+  <interface id="yjwy_bill_model" name="yjwy单据模型" class="YJWYBillModel" init="true" location="83,144,120,120">
+    <property id="create_user" name="创建人" precision="0" scale="0" type="1" empty="false" value=""/>
+    <property id="create_time" name="创建时间" precision="0" scale="0" type="6" empty="false" value=""/>
+    <property id="last_modify_user" name="最后修改人" precision="0" scale="0" type="1" empty="false" value=""/>
+    <property id="last_modify_time" name="最后修改时间" precision="0" scale="0" type="6" empty="false" value=""/>
+    <property id="update_time" name="更新时间" precision="0" scale="0" type="1" empty="false" value=""/>
+  </interface>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

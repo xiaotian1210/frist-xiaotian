@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="72b26a7119b347a4b19cf41894d04c4d" package="com.shareworx.ezfm.baseinfo.project.model" version="20160719-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_project" name="项目管理" table="yjwy_pub_project" class="YJWYProjectModel" init="true" dynamic="false" location="292,104,120,364">
+    <property id="pk_project" name="主键" column="pk_project_" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="1"/>
+    <property id="pk_crop" name="所属公司" column="pk_crop_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="pk_area" name="所属区域" column="pk_area_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="project_name" name="项目名称" column="project_name_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="project_code" name="项目编码" column="project_code_" type="1" define="" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="project_memo" name="项目描述" column="project_memo_" type="1" define="varchar" length="2000" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="create_user" name="创建人" column="create_user_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <property id="create_time" name="创建时间" column="create_time_" type="6" define="" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <property id="last_modify_user" name="最后修改人" column="last_modify_user_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <property id="last_modify_time" name="最后修改时间" column="last_modify_time_" type="6" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <property id="project_cover_area" name="占地面积" column="project_cover_area_" type="3" define="decimal" length="0" precision="15" scale="4" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="project_build_area" name="建筑面积" column="project_build_area_" type="3" define="decimal" length="0" precision="15" scale="4" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="project_add" name="项目地址" column="project_add_" type="1" define="varchar" length="200" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="update_time" name="更新时间" column="update_time_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <property id="selected" name="选中标识" column="selected_" type="4" define="int" length="0" precision="0" scale="0" empty="true" persist="false" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="delete_flag" name="删除标志，1.已删除，0.未删除" column="delete_flag_" type="0" define="char" length="1" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="0" code="" mode="0"/>
+    <property id="pk_province" name="省份ID" column="pk_province_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_city" name="城市ID" column="pk_city_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="site_lat" name="纬度" column="site_lat_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="site_lon" name="经度" column="site_lon_" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="site_rails" name="围栏" column="site_rails_" type="1" define="" length="1500" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="project_remark" name="项目标记" column="project_remark_" type="1" define="varchar" length="500" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="bim_url" name="bim模型" column="bim_url" type="1" define="varchar" length="255" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <index id="pk_project" type="0"/>
+  </entity>
+  <!--定义引用类型-->
+  <!--type类型： { 0：实体类 | 1：接口 | 2：枚举 }-->
+  <reference id="yjwy_bill_model" type="1" name="yjwy单据模型" package="com.shareworx.ezfm.meta.itf" class="YJWYBillModel" location="96,232,120,120">
+    <property id="create_user" name="创建人" type="1" empty="false"/>
+    <property id="create_time" name="创建时间" type="6" empty="false"/>
+    <property id="last_modify_user" name="最后修改人" type="1" empty="false"/>
+    <property id="last_modify_time" name="最后修改时间" type="6" empty="false"/>
+    <property id="update_time" name="更新时间" type="1" empty="false"/>
+  </reference>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+  <!--实现接口-->
+  <relation type="0" metafrom="yjwy_project" metato="yjwy_bill_model">
+    <property fieldfrom="create_user" fieldto="create_user"/>
+    <property fieldfrom="create_time" fieldto="create_time"/>
+    <property fieldfrom="last_modify_user" fieldto="last_modify_user"/>
+    <property fieldfrom="last_modify_time" fieldto="last_modify_time"/>
+    <property fieldfrom="update_time" fieldto="update_time"/>
+  </relation>
+</metas>

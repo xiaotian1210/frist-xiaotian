@@ -1,0 +1,470 @@
+<head>
+    <meta charset="utf-8" />
+    <base href="${basePath?if_exists}">
+    <meta meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>设备报事报修</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body{
+            margin-top: 0.4rem;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        .line {
+            margin: 0.3rem 5%;
+        }
+
+        table {
+            font-size: 0.25rem;
+            margin: 0 5%;
+        }
+
+        tr {
+            display: block;
+            margin: 0.3rem 0;
+        }
+
+        th {
+            font-size: 0.25rem;
+            width: 1.6rem;
+            vertical-align: top;
+            box-sizing: border-box;
+            text-indent: 0.25rem;
+            border-left: 2px solid rgba(0, 91, 156, 1);
+            text-align: left;
+        }
+
+        #question {
+            resize: none;
+            width: 86%;
+            font-size: 0.25rem;
+            margin: 0 5%;
+        }
+
+        .z_photo {
+            width: 5rem;
+            height: 1.1rem;
+            padding: 0.3rem;
+            overflow: inherit;
+            clear: both;
+            margin: 0 auto;
+        }
+
+        .z_photo img {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .z_addImg {
+            float: left;
+            margin-right: 0.2rem;
+        }
+
+        .z_file {
+            width: 1rem;
+            height: 1rem;
+            background: url(/resources/ezfm/images/mobile/add.png) no-repeat;
+            background-size: 100% 100%;
+            float: left;
+            margin-right: 0.2rem;
+        }
+
+        .z_file input::-webkit-file-upload-button {
+            width: 1rem;
+            height: 1rem;
+            border: none;
+            position: absolute;
+            outline: 0;
+            opacity: 0;
+        }
+
+        .z_file input#file {
+            display: block;
+            width: auto;
+            border: 0;
+            vertical-align: middle;
+        }
+        /*遮罩层*/
+
+        .z_mask {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999;
+            display: none;
+        }
+
+        .z_alert {
+            width: 4rem;
+            height: 2rem;
+            border-radius: 0.2rem;
+            background: #fff;
+            font-size: 0.24rem;
+            text-align: center;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -2rem;
+            margin-top: -2rem;
+        }
+
+        .z_alert p:nth-child(1) {
+            line-height: 1.5rem;
+        }
+
+        .z_alert p:nth-child(2) span {
+            display: inline-block;
+            width: 49%;
+            height: 0.5rem;
+            line-height: 0.5rem;
+            float: left;
+            border-top: 1px solid #ddd;
+        }
+
+        .z_cancel {
+            border-right: 1px solid #ddd;
+        }
+
+        #sub_btn{
+            text-align: center;
+            background: rgba(0, 91, 156, 1);
+            padding: 12px 36% 12px 37%;
+            border: none;
+            color: white;
+            -webkit-border-radius: 30px;
+            -moz-border-radius: 30px;
+            border-radius: 10px;
+        }
+
+        input {
+            -webkit-appearance: none;
+        }
+        /*去除input默认样式*/
+
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"],
+        input {
+            -webkit-appearance: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="wrap">
+    <form action="/ezfm/mobile/save/${eq_id?if_exists}" method="post" id="save" enctype="multipart/form-data">
+        <input type="hidden" value="${hasProblem?if_exists}" id="hasProblem">
+        <input type="hidden" value="${eq_id?if_exists}" name="work_fk_repair_equipment">
+        <input type="hidden" value="00000020161019000003" name="create_user_id">
+        <input type="hidden" value="taskSource11" name="question_source">
+        <input type="hidden" value="0" name="whether_repair">
+
+        <table id="tb1">
+            <tr>
+                <th class="list">设备名称：</th>
+                <td>${name?if_exists}</td>
+            </tr>
+            <tr>
+                <th class="list">维修保障：</th>
+                <td>${service_dept?if_exists}</td>
+            </tr>
+            <tr>
+                <th class="list">设备位置：</th>
+                <td>${room?if_exists}</td>
+            </tr>
+
+        </table>
+        <textarea id="question" rows="5" placeholder="请您描述一下设备的具体问题吧！" name="details_content" style="text-indent:30px;padding-top:5px;padding-bottom:5px;"></textarea>
+        <table>
+            <tr><th>上传图片</th></tr>
+        </table>
+        <div class="container">
+            <!--    照片添加    -->
+            <div class="z_photo">
+                <div class="z_file">
+                    <input type="file" class="files"  id="file" value="" accept="image/*"   onchange="imgChange('z_photo','z_file');">
+                </div>
+
+            </div>
+
+            <!--遮罩层-->
+            <div class="z_mask" style="display: none;">
+                <!--弹出框-->
+                <div class="z_alert">
+                    <p>确定要删除这张图片吗？</p>
+                    <p>
+                        <span class="z_cancel">取消</span>
+                        <span class="z_sure">确定</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <input type="button" class="line" name="" id="sub_btn" value="报事报修" onclick="save()"/>
+    </form>
+    <input type="text" name="compressValue" id="compressValue" style="display:none;" /><br/>
+    <div id='displayValue' style="word-spacing: normal;word-wrap: break-word;"></div>
+
+</div>
+</body>
+
+<script type="text/javascript" src="resources/ezfm/js/pub/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="resources/ezfm/all.js"></script>
+<script type="text/javascript" src="resources/ezfm/js/mobile/exif.js"></script>
+<script type="text/javascript">
+
+
+    var notRoleButtons = "${notRoleButtons?if_exists}";
+
+    var Orientation = null;
+    function save() {
+        var hasProblem = $("#hasProblem").val();
+        if(hasProblem == "0"){
+            window.location.href = 'ezfm/mobile/upload/success#${eq_id?if_exists}'
+            return ;
+        }
+        loading();
+        var formdata = new FormData($('#save')[0]);
+        var arr = $(".imgs");
+        for(var i =0;  i< arr.length;i++){
+            var b= $(arr[i]).attr("src");
+            var blob = dataURLtoBlob(b);
+            formdata.append("problem_files",blob);
+        }
+
+        $.ajax({
+            url: $("#save").attr("action"),
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false
+        }).done(function(res) {
+            loading(true);
+            window.location.href = 'ezfm/mobile/upload/success#${eq_id?if_exists}'
+
+            //alert('提交成功，谢谢您的反馈')
+        }).fail(function(res) {
+
+        });
+
+    }
+    //px转换为rem
+    (function(doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function() {
+                var clientWidth = docEl.clientWidth;
+                if(!clientWidth) return;
+                if(clientWidth >= 640) {
+                    docEl.style.fontSize = '100px';
+                } else {
+                    docEl.style.fontSize = 100 * (clientWidth / 640) + 'px';
+                }
+            };
+
+        if(!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+    })(document, window);
+
+
+
+    function imgChange(obj1, obj2) {
+
+        var fileField = document.getElementById('file');
+        var file = fileField.files[0];
+        if(!file){
+            return ;
+        }
+        if($(".z_addImg").size()>=3){
+            alert("最多上传3张图片！")
+            return;
+        }
+        uploadBtnClick();
+
+    };
+
+    function imgRemove() {
+        var imgList = document.getElementsByClassName("z_addImg");
+        var mask = document.getElementsByClassName("z_mask")[0];
+        var cancel = document.getElementsByClassName("z_cancel")[0];
+        var sure = document.getElementsByClassName("z_sure")[0];
+        for(var j = 0; j < imgList.length; j++) {
+            imgList[j].index = j;
+            imgList[j].onclick = function() {
+                var t = this;
+                mask.style.display = "block";
+                cancel.onclick = function() {
+                    mask.style.display = "none";
+                };
+                sure.onclick = function() {
+                    mask.style.display = "none";
+//                    t.style.display = "none";
+                    $(t).remove()
+                };
+
+            }
+        };
+    };
+
+
+    function uploadBtnClick(){
+        var scope = this;
+        // change pic to base64
+        if(window.File && window.FileReader && window.FileList && window.Blob){
+            //For Ext :
+            //var filefield = me.down('filefield'),
+            //    file = filefield.fileInputEl.dom.files[0];
+            var filefield = document.getElementById('file'),
+                file = filefield.files[0];
+            EXIF.getData(file, function() {
+                // alert(EXIF.pretty(this));
+                EXIF.getAllTags(this);
+                //alert(EXIF.getTag(this, 'Orientation'));
+                Orientation = EXIF.getTag(this, 'Orientation');
+                //return;
+            });
+
+            var compressValue = document.getElementById('compressValue');
+            processfile(file,compressValue,uploadCompressFile,scope);
+        }else{
+            alert("Upload picture is not fully supported in this browser");
+        }
+
+    }
+
+    function processfile(file,compressValue,uploadCompressFile,scope) {
+        if(!file){
+            return ;
+        }
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var blob = new Blob([event.target.result]);
+
+            window.URL = window.URL || window.webkitURL;
+            var blobURL = window.URL.createObjectURL(blob);
+
+            var image = new Image();
+            image.src = blobURL;
+            image.onload = function() {
+                var resized = resizeMe(image);
+                compressValue.value = resized;
+                uploadCompressFile.apply(scope);
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    /**
+     * 压缩
+     * */
+    function resizeMe(img) {
+        //压缩的大小
+        var max_width =1024;
+        var max_height =768;
+
+
+        var width = img.width;
+        var height = img.height;
+
+        if(width > height) {
+            if(width > max_width) {
+                height = Math.round(height *= max_width / width);
+                width = max_width;
+            }
+        }
+        else{
+            if(height > max_height) {
+                width = Math.round(width *= max_height / height);
+                height = max_height;
+            }
+        }
+
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext("2d");
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width,height );
+        //修复ios
+        if (navigator.userAgent.match(/iphone/i)) {
+           if (Orientation){
+               var degree = 1 * 90 * Math.PI / 180;
+               canvas.width = height;
+               canvas.height = width;
+               ctx.rotate(degree);
+               ctx.drawImage(img, 0,-height,width,height);
+           }
+
+        }
+       return  canvas.toDataURL("image/jpeg", 0.8);
+
+    }
+
+
+
+
+        // call back
+    function uploadCompressFile(){
+        //do ajax upload
+
+        var imgUrl =  document.getElementById('compressValue').value;
+        var imgContainer = document.getElementsByClassName('z_photo')[0];
+        var img = document.createElement("img");
+        img.setAttribute("src", imgUrl);
+        img.setAttribute("class","imgs")
+        var imgAdd = document.createElement("div");
+        imgAdd.setAttribute("class", "z_addImg");
+        imgAdd.appendChild(img);
+        imgContainer.appendChild(imgAdd);
+        imgRemove();
+//        document.getElementById('displayValue').innerHTML  = document.getElementById('compressValue').value;
+    }
+
+
+    function dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type:mime});
+    }
+
+
+    /**
+     * 有     可以点击
+     * 没有   禁止点击
+     * @param close_open
+     */
+
+    function loading(close_open){
+        if(close_open){
+            var subBtn = document.getElementById("sub_btn");
+            subBtn.value = "提交成功";
+        }else{
+            var subBtn = document.getElementById("sub_btn");
+            subBtn.value = "正在上传...";
+            subBtn.disabled = true;
+            subBtn.style.backgroundColor = "gray";
+        }
+
+    }
+
+
+
+</script>
+
+</html>

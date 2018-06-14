@@ -1,0 +1,166 @@
+.icon-add{
+	background:url('icons/icon_add.png') no-repeat center center;
+}
+.icon-edit{
+	background:url('icons/icon_edit.png') no-repeat center center;
+}
+.icon-remove{
+	background:url('icons/icon_del.png') no-repeat center center;
+}
+.icon-reload{
+	background:url('icons/icon_refresh.png') no-repeat center center;
+}
+.icon_task{
+	background:url('icons/icon_task.png') no-repeat center center;
+}
+.icon-link{
+	background:url('icons/icon_link.png') no-repeat center center;
+}
+.icon-back{
+	background:url('icons/icon_arrow.png') no-repeat center center;
+}
+.icon-download_01{
+	background:url('icons/icon_download.png') no-repeat center center;
+}
+.icon-download_02{
+	background:url('icons/icon_download1.png') no-repeat center center;
+}
+.icon-authorization_app{
+	background:url('icons/icon_app.png') no-repeat center center;
+}
+.icon-authorization_pc{
+	background:url('icons/icon_system.png') no-repeat center center;
+}
+.icon-excel_export{
+	background:url('icons/icon_export.png') no-repeat center center;
+}
+.icon-excel_import01{
+	background:url('icons/icon_import1.png') no-repeat center center;
+}
+.icon-excel_import02{
+	background:url('icons/icon_import.png') no-repeat center center;
+}
+.icon-user_setup{
+	background:url('icons/icon_job.png') no-repeat center center;
+}
+.icon-user_reset{
+	background:url('icons/icon_reset.png') no-repeat center center;
+}
+.icon-forbid_action{
+	background:url('icons/icon_reject.png') no-repeat center center;
+}
+.icon-accept{
+	background:url('icons/icon_approve.png') no-repeat center center;
+}
+.icon_detail{
+	background:url('icons/icon_detail.png') no-repeat center center;
+}
+.icon_launch{
+	background:url('icons/icon_launch.png') no-repeat center center;
+}
+.icon-lock{
+	background:url('icons/icon_launch.png') no-repeat center center;
+}
+/* --------------------------------------------------------------------- */
+/*ԭ����ͼƬ���� */
+/* --------------------------------------------------------------------- */
+.icon-save{
+	background:url('icons/filesave.png') no-repeat center center;
+}
+.icon-cut{
+	background:url('icons/cut.png') no-repeat center center;
+}
+.icon-ok{
+	background:url('icons/ok.png') no-repeat center center;
+}
+.icon-no{
+	background:url('icons/no.png') no-repeat center center;
+}
+.icon-cancel{
+	background:url('icons/cancel.png') no-repeat center center;
+}
+.icon-clear{
+	background:url('icons/clear.png') no-repeat center center;
+}
+.icon-blank{
+	background:url('icons/blank.gif') no-repeat center center;
+}
+.icon-search{
+	background:url('icons/search.png') no-repeat center center;
+}
+.icon-print{
+	background:url('icons/print.png') no-repeat center center;
+}
+.icon-help{
+	background:url('icons/help.png') no-repeat center center;
+}
+.icon-undo{
+	background:url('icons/undo.png') no-repeat center center;
+}
+.icon-redo{
+	background:url('icons/redo.png') no-repeat center center;
+}
+.icon-sum{
+	background:url('icons/sum.png') no-repeat center center;
+}
+.icon-tip{
+	background:url('icons/tip.png') no-repeat center center;
+}
+.icon-filter{
+	background:url('icons/filter.png') no-repeat center center;
+}
+.icon-man{
+	background:url('icons/man.png') no-repeat center center;
+}
+.icon-more{
+	background:url('icons/more.png') no-repeat center center;
+}
+.icon-mini-add{
+	background:url('icons/mini_add.png') no-repeat center center;
+}
+.icon-mini-edit{
+	background:url('icons/mini_edit.png') no-repeat center center;
+}
+.icon-mini-refresh{
+	background:url('icons/mini_refresh.png') no-repeat center center;
+}
+
+.icon-large-picture{
+	background:url('icons/large_picture.png') no-repeat center center;
+}
+.icon-large-clipart{
+	background:url('icons/large_clipart.png') no-repeat center center;
+}
+.icon-large-shapes{
+	background:url('icons/large_shapes.png') no-repeat center center;
+}
+.icon-large-smartart{
+	background:url('icons/large_smartart.png') no-repeat center center;
+}
+.icon-large-chart{
+	background:url('icons/large_chart.png') no-repeat center center;
+}
+.icon-excel_white{
+	background:url('icons/excel_white.png') no-repeat center center;
+}
+.icon-excel{
+	background:url('icons/excel.png') no-repeat center center;
+}
+.icon-time_start01{
+	background:url('icons/time_start01.png') no-repeat center center;
+}
+.icon-time_start02{
+	background:url('icons/time_start02.png') no-repeat center center;
+}
+.icon-time_start03{
+	background:url('icons/time_start03.png') no-repeat center center;
+}
+.icon-time_stop02{
+	background:url('icons/time_stop02.png') no-repeat center center;
+}
+.icon-time_stop03{
+	background:url('icons/time_stop03.png') no-repeat center center;
+}
+.icon-qrcode {
+    background: url(icons/icon_qrcode.png) no-repeat center center;
+}

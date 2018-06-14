@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="06e3227bda9b4b0bb1c33a61dc64a6ca" package="com.shareworx.ezfm.baseinfo.userstation.model" version="20160721-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_user_station" name="人员岗位关系" table="yjwy_pub_user_station" class="UserStationModel" init="true" dynamic="false" location="289,72,120,120">
+    <property id="pk_user" name="人员" column="pk_user_" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_station" name="岗位" column="pk_station_" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_crop" name="所属公司" column="pk_crop_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="create_user" name="创建人" column="create_user_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <property id="create_time" name="创建时间" column="create_time_" type="6" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <property id="last_modify_user" name="最后修改人" column="last_modify_user_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <property id="last_modify_time" name="最后修改时间" column="last_modify_time_" type="6" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <property id="update_time" name="更新时间" column="update_time_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode=""/>
+    <index id="pk_user" type="0"/>
+    <index id="pk_station" type="0"/>
+  </entity>
+  <!--定义引用类型-->
+  <!--type类型： { 0：实体类 | 1：接口 | 2：枚举 }-->
+  <reference id="yjwy_bill_model" type="1" name="yjwy单据模型" package="com.shareworx.ezfm.meta.itf" class="YJWYBillModel" location="210,263,120,120">
+    <property id="create_user" name="创建人" type="1" empty="false"/>
+    <property id="create_time" name="创建时间" type="6" empty="false"/>
+    <property id="last_modify_user" name="最后修改人" type="1" empty="false"/>
+    <property id="last_modify_time" name="最后修改时间" type="6" empty="false"/>
+    <property id="update_time" name="更新时间" type="1" empty="false"/>
+  </reference>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+  <!--实现接口-->
+  <relation type="0" metafrom="yjwy_user_station" metato="yjwy_bill_model">
+    <property fieldfrom="create_user" fieldto="create_user"/>
+    <property fieldfrom="create_time" fieldto="create_time"/>
+    <property fieldfrom="last_modify_user" fieldto="last_modify_user"/>
+    <property fieldfrom="last_modify_time" fieldto="last_modify_time"/>
+    <property fieldfrom="update_time" fieldto="update_time"/>
+  </relation>
+</metas>

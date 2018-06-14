@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="4aeef306894441ccaba5c8b5a9cdbc0d" package="com.shareworx.ezfm.system.function.model" version="20160712-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_function" name="系统功能" table="yjwy_pub_function" class="YJWYFunctionModel" init="true" dynamic="false" location="136,161,120,120">
+    <property id="id" name="主键" column="id_" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="1"/>
+    <property id="pid" name="上级功能" column="pid_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="name" name="功能名称" column="name_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="code" name="功能编码" column="code_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="url" name="功能链接" column="url_" type="1" length="300" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="type" name="功能类型(menu菜单，function功能，button按钮)" column="type_" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="memo" name="描述" column="memo_" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="icon" name="icon" column="icon_" type="1" define="" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <property id="order" name="排序(整数)" column="order_" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="1"/>
+    <index id="id" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

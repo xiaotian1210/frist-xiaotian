@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="${basePath?if_exists}">
+<meta charset="UTF-8">
+<title>报修</title>
+<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+<script type="text/javascript" src="resources/ezfm/all.js"></script>
+</head>
+<body>
+	<div class="easyui-tabs" data-options="tabWidth:112"
+		style="overflow: hidden; height: 90%">
+		<div title="报修">
+			<div id="dialog_problem_repair" class="szw_window">
+		<form id="form_problem_repair" method="post" enctype="multipart/form-data">
+				<div id="repair_information">
+					<fieldset id='problem_fieldset'>
+						<legend>工单内容</legend>
+						<table  style="padding: 10px 10px 0px 10px;">
+							<tr>
+								<th style="float:right;">所属项目：</th>
+								<td>
+								<input type="hidden" name="pk_details_id" value="${model?if_exists.pk_details_id?if_exists}"/>
+								<input id="fk_project_id_repair" name="fk_project_id" type="hidden" value="${model?if_exists.fk_project_id?if_exists}"/>
+								<input class="easyui-textbox" name="fk_project_name" value ="${model?if_exists.project_name?if_exists}" disabled="true" required="true" style="width: 205px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th style="float:right;">维修类别：</th>
+								<td>
+									<input id="service_type_repair" class="easyui-combobox" name="work_service_type" required="true"  style="width: 205px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th style="float:right;">维修种类：</th>
+								<td>
+									<input id="repair_class_id_repair" class="easyui-combobox" name="work_repair_class_id" required="true"  style="width: 205px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th style="float:right;">维修地点：</th>
+								<td>
+									<!-- <input id="fk_repair_address_repair" class="easyui-combobox" name="work_fk_repair_address" style="width: 205px;"/> -->
+									<input style="width: 205px;" type="hidden" id="fk_repair_address_repair" name="work_fk_repair_address"/>
+									<input style="width: 205px;" type="text" disabled='true' id="fk_repair_address_repair_name" class="easyui-textbox"/>
+									<a onclick="addPlace1()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">地点</a>  
+									<a onclick="eliminateProblemPlace('fk_repair_address_repair')" class="easyui-linkbutton" data-options="iconCls:'icon-undo'">清除</a>
+								</td>
+							</tr>
+							<tr>
+								<th style="float:right;">详细地点：</th>
+								<td><input style="width: 205px;" type="text" id="repair_repair_details" name="work_repair_details" required="true" class="easyui-textbox" /></td>
+							</tr>
+							<tr>
+								<th style="float:right;">维修机房：</th>
+								<td>
+									<input id="fk_repair_equipment_room_repair"  data-options="editable:true" class="easyui-combobox" name="work_fk_repair_equipment_room" style="width: 205px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th style="float:right;">维修设备：</th>
+								<td>
+									<input id="fk_repair_equipment_repair"  data-options="editable:true" class="easyui-combobox" name="work_fk_repair_equipment" style="width: 205px;"/>
+								</td>
+							</tr>
+							<tr>
+								<th style="float:right;">报修人姓名：</th>
+								<td><input style="width: 205px;" type="text" required="true" 
+									name="work_repair_user" id="repair_user_repair" class="easyui-textbox"/></td>
+							</tr>
+							<tr>
+								<th style="float:right;">联系电话：</th>
+								<td><input style="width: 205px;" type="text" id="work_repair_number" required="true"
+									name="work_contact_number" class="easyui-textbox"/></td>
+							</tr>
+							
+							
+							<tr>
+								<th style="float:right;">内容：</th>
+								<td>
+									<input style="width: 205px;height:50px;" type="text" multiline="true"
+								 	name="work_repair_content" class="easyui-textbox" />
+								</td>
+							</tr>
+							<tr>
+								<th style="float:right;">跟进人：</th>
+								<td>
+									<input style="width: 205px;" type="hidden" id="duty_user_type_repair" name="work_duty_user_type"/>
+									<input style="width: 205px;" type="hidden" id="duty_user_id_repair" name="work_duty_user_id"/>
+									<input style="width: 205px;" type="text" id="duty_user_name_repair" name="duty_user_name" class="easyui-textbox"/>
+									<a id="addRepairUserRepair" onclick="addRepairDutyUser(1)" class="easyui-linkbutton" data-options="iconCls:'icon-search'">接口人员</a>  
+									<a id="addRepairUserInterface" onclick="addRepairDutyUser(2)" class="easyui-linkbutton" data-options="iconCls:'icon-search'">维修人员</a>  
+								</td>
+							</tr>
+							<tr>
+								<th style="float:right;">图片：</th>
+								<td>
+								<input class="easyui-filebox" name="problem_file" data-options="prompt:'请选择一个文件...'" buttonText="选择文件..." style="width: 205px;">
+								</td>
+							</tr>
+							<tr>
+								<th style="float:right;">是否预约：</th>
+								<td>
+									<select id="whether_appointment_repair" class="easyui-combobox" name="whether_appointment" style="width: 205px;" >   
+									    <option value="2">否</option>
+									    <option value="1">是</option>    
+									</select> 
+								</td>
+							</tr>
+							<tr id="appointment_time_repair">
+								<th style="float:right;">预约时间：</th>
+								<td>
+									<input class="easyui-datetimebox" name="bookings_time" data-options="required:true,showSeconds:false" value="3/4/2010 2:3" style="width:230px">  
+								</td>
+							</tr>
+							<tr style="display: none">
+							<th style="float:right;">隐藏属性：</th>
+							<td><input type="text" name="pk_crop" class="easyui-textbox"
+								value='${crop?if_exists}' /></td>
+						</tr>
+						</table>
+					</fieldset>
+				</div>
+			</form>
+			</div>
+		</div>
+	</div>
+	<div style="float:right;margin-right:20px;">
+		<a  id="save-btn" class="easyui-linkbutton" onclick="submitFormProblemRepair('problemRepairId','form_problem_repair','ezfm/problem/details/save/repair')" data-options="iconCls:'icon-ok'">保&nbsp;存</a>
+		<a class="easyui-linkbutton" onclick="closeDialogProblem('problemRepairId')" data-options="iconCls:'icon-cancel'">关&nbsp;闭</a>
+	</div>
+	<div id="datagrid_repairUsers">
+		<table id="datagrid_repairUsers_tab">
+			<thead>
+				<tr>
+					<th
+						data-options="field:'pk_user',width:200,hidden:true,align:'center'">人员id</th>
+					<th
+						data-options="field:'em_code',width:60,hidden:false,align:'center'">工号</th>
+					<th
+						data-options="field:'user_name',width:80,hidden:false,align:'center'">人员姓名</th>
+					<th
+						data-options="field:'email',width:100,hidden:false,align:'center'">邮箱</th>
+					<th
+						data-options="field:'phone',width:100,hidden:false,align:'center'">电话</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<script type="text/javascript">
+	var notRoleButtons = "${notRoleButtons?if_exists}";
+	$(function() {
+		var pk_project= $("input[id=fk_project_id_repair]").val();
+		//查询维修类别
+		queryData("service_type_repair","ezfm/baseinfo/pub/query/dictionary/dict/query?code=maintainServiceCate&state=1","dict_code","dict_name");
+		//查询维修种类
+		var urlClass = 'ezfm/orktask/repairclass/queryClassByProject?projectId='+pk_project;
+		queryData("repair_class_id_repair",urlClass,"pk_class_id","class_name");
+		var urlRoom = "ezfm/worktask/details/queryRoomByProject?projectId="+pk_project;
+		queryData("fk_repair_equipment_room_repair",urlRoom,"rm_id","name");
+		var urlResources = "ezfm/worktask/details/queryResourcesByProject?projectId="+pk_project;
+		queryData("fk_repair_address_repair",urlResources,"pk_resources","project");
+		//为是否预约绑定事件
+		$("#whether_appointment_repair").combobox({
+			onSelect: whetheraAppointmentRepair,
+		});
+		//为维修机房绑定事件
+		$("#fk_repair_equipment_room_repair").combobox({
+			onSelect: getVagueEqRepair
+		});
+		//添加列表
+		$("#datagrid_repairUsers").datagrid({
+			onDblClickRow: addRepairUser,
+		});
+		//隐藏时间控件
+		$("#appointment_time_repair").css("display","none");
+		//初始化人员列表
+		datagridInit('datagrid_repairUsers_tab', null, null, null, false,false);
+		//添加事件
+		$("#datagrid_repairUsers_tab").datagrid({
+			onDblClickRow: addRepairUser,
+		});
+	});
+	/**
+	 * 是否预约
+	 * @param record
+	 */
+	function whetheraAppointmentRepair(record){
+		if (record.value==1) {
+			$("#appointment_time_repair").css("display","");
+		}else{
+			$("#appointment_time_repair").css("display","none");
+		}
+	};
+	
+	//根据机房查询设备
+	function getVagueEqRepair(record){
+		var roomId = record.rm_id;
+		var urlEq = "ezfm/worktask/details/queryEqByRoom?roomId="+roomId;
+		queryData("fk_repair_equipment_repair",urlEq,"eq_id","name");
+	}
+	/**
+	 * 打开添加跟进人
+	 * @param node
+	 */
+	function addRepairDutyUser(type){
+		//填充选择人员类型，1：接口人员；2：维修人员
+		$("input[id=duty_user_type_repair]").val();
+		if (type==1) {
+			var projectId = "${model?if_exists.fk_project_id?if_exists}";
+			url = "ezfm/worktask/projectuser/queryProjectByUserAll";
+			$.ajax({
+				async : false,  
+		        cache:false,  
+		        type: 'POST',  
+		        dataType : "json",
+		        data:{'projectId':projectId},
+		        url: url,//请求的action路径  
+				success: function(data) {
+					var rows = data.data;
+					if(rows != null) {
+						$('#datagrid_repairUsers_tab').datagrid('loadData', {
+							rows: rows
+						});
+					}
+				}
+			});
+			openDialog('datagrid_repairUsers', '人员列表(双击选中)', null, 400, 260);
+		}else if(type==2){
+			var areaId = "${model?if_exists.pk_area?if_exists}";
+			url = "ezfm/worktask/areauser/queryAreaByUserRepairAll";
+			$.ajax({
+				async : false,  
+		        cache:false,  
+		        type: 'POST',  
+		        dataType : "json",
+		        data:{'areaId':areaId},
+		        url: url,//请求的action路径  
+				success: function(data) {
+					var rows = data.data;
+					if(rows != null) {
+						$('#datagrid_repairUsers_tab').datagrid('loadData', {
+							rows: rows
+						});
+					}
+				}
+			});
+			openDialog('datagrid_repairUsers', '人员列表(双击选中)', null,385,260);
+		}
+	}	
+	/**
+	 * 添加跟进人
+	 * @param node
+	 */
+	function addRepairUser(rowIndex, rowData){
+		//添加跟进人
+		$("#duty_user_name_repair").textbox('setText',rowData.user_name);
+		$("input[id=duty_user_id_repair]").val(rowData.pk_user);
+		$("#datagrid_repairUsers").window('close');
+	}
+	
+	/**
+	 * 打开地点页面
+	 *  @param {Object} id
+	 */
+	function addPlace1(){
+		 var projectId= $("input[id=fk_project_id_repair]").val();
+		if (projectId!=null&&projectId!=="") {
+			var sonpageUrl = "ezfm/worktask/details/place/"+projectId+"/problemRepair";
+			showSonPageEvent("地点（双击选中）",sonpageUrl,{width:400,height:250,id:'problemRepairPlaceId'});
+			return false;
+		}
+	}
+
+	/**
+	 * 提交表单
+	 * @param {Object} datagridName
+	 * @param {Object} dialogName
+	 * @param {Object} formName
+	 * @param {Object} urlName
+	 */
+	  function submitFormProblemRepair(dialogName, formName, urlName) {
+			var service_type_repair = $("#service_type_repair").combobox("getValue");
+			if(service_type_repair==""){
+				$.messager.alert('提示', '请选择维修类别！', 'info');
+				return;
+			}
+			var repair_class_id_repair = $("#repair_class_id_repair").combobox("getValue");
+			if(repair_class_id_repair==""){
+				$.messager.alert('提示', '请选择维修种类！', 'info');
+				return;
+			}
+			var repair_repair_details = $("#repair_repair_details").textbox("getValue");
+			if(repair_repair_details==""){
+				$.messager.alert('提示', '请输入详细地址！', 'info');
+				return;
+			}
+			var repair_user = $("#repair_user_repair").textbox("getValue");
+			if(repair_user==""){
+				$.messager.alert('提示', '请输入报修人姓名！', 'info');
+				return;
+			}
+			
+// 			var work_repair_number = $("form input[name=work_contact_number]").val();
+            var myreg = /^1[3|4|5|7|8|9]\d{9}$/;
+//             var myreg = /^1\d{10}$/;
+            var work_contact_number = $("#work_repair_number").textbox("getValue");
+			if(!myreg.test(work_contact_number)){
+				$.messager.alert('提示','请输入手机号码以 13,14,15,17,18,19开头的格式');
+				return;
+			}
+
+
+
+        $("#save-btn").linkbutton('disable');
+			 $('#'+formName).form('submit', {
+					url: urlName,
+                     onSubmit: function (_52) {
+                         var result = $(this).form("validate");
+                         if(result){
+                             $("#save-btn").linkbutton('disable');
+                         }
+                         return result;
+                     },
+					success: function(result){
+                        $('#save-btn').linkbutton('enable');
+						result = eval('('+result+')');
+						if(result.success){
+							$("#" + formName).form("clear");
+							closeDialogProblem(dialogName);
+							$("#datagrid_problemAgency").datagrid('reload');
+							$.messager.show({
+								title:'提示',
+								msg:'保存成功！',
+								timeout:2000,
+								showType:'slide'
+							});
+						}
+					},
+					 error: function(XMLHttpRequest, textStatus, errorThrown){
+						 var result = eval("(" + XMLHttpRequest.responseText + ")");
+						 $.messager.alert('错误', result.message, 'error');
+					}
+				});
+	}
+	</script>
+</body>
+</html>

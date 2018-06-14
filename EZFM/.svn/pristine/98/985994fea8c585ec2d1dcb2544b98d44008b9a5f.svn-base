@@ -1,0 +1,95 @@
+<body class="easyui-layout szw_page_body">
+	<div id="yjwy_user_son1_main_grid_tb" style="height: auto">
+		<form id="yjwy_user_son1_query_mianform" method="post">
+			<table class="dv-table" style="margin-top: 5px;">
+				<tr>
+					<td style="text-align: end; padding-right: 20px;"><span>姓名:</span> <input id="user_son1_name_queryid" class="easyui-textbox"></input></td>
+					<td><a id="btn_user_son1_mainquery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<table id="yjwy_user_son1_main_grid" data-options="toolbar:'#yjwy_user_son1_main_grid_tb'" class="easyui-datagrid">
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options="field:'user_name',width:80,align:'center'">姓名</th>
+				<th data-options="field:'user_code',width:120,align:'center'">账号</th>
+				<th data-options="field:'em_code',width:130,align:'center'">工号</th>
+				<th data-options="field:'phone',width:130,align:'center'">电话</th>
+				<th data-options="field:'email',width:150,align:'center'">邮箱</th>
+				<th data-options="field:'add_oprator',width:100,align:'center',formatter:addUserFormatter">操作</th>
+				<th data-options="field:'is_pre_format',width:90,align:'center',formatter:renderPre,hidden:true">系统预置</th>
+				<th data-options="field:'is_able_format',width:80,align:'center',formatter:renderUsable,hidden:true">启用</th>
+				<!-- 以下为隐藏列 -->
+				<th data-options="field:'pk_user',hidden:true">主键</th>
+				<th data-options="field:'password',hidden:true">密码</th>
+				<th data-options="field:'is_able',hidden:true">是否启用</th>
+				<th data-options="field:'is_pre',hidden:true">是否系统预制</th>
+				<th data-options="field:'header_img',hidden:true">头像</th>
+				<th data-options="field:'delete_flag',hidden:true">是否删除</th>
+				<th data-options="field:'pk_crop',hidden:true">所属公司</th>
+				<th data-options="field:'create_user',hidden:true">创建人</th>
+				<th data-options="field:'create_time',hidden:true">创建时间</th>
+				<th data-options="field:'last_modify_user',hidden:true">修改人</th>
+				<th data-options="field:'last_modify_time',hidden:true">修改时间</th>
+				<th data-options="field:'update_time',hidden:true">更新时间戳</th>
+				<!-- 以上为隐藏列 -->
+			</tr>
+		</thead>
+	</table>
+	<script type="text/javascript">
+		$(function() {
+			var recs = $("#rolegrid").datagrid('getSelections');
+			if (!recs.length) {
+				$.messager.alert('提示', '请选择角色');
+				return;
+			}
+			var queryParam = {
+				pk_role : recs[0]['pk_role'],
+				flag : 'not in'
+			}
+			var queryUrl = "ezfm/baseinfo/role/user/roleuser/query";
+			// 初始化grid
+			var options = {
+				singleSelect : true,
+				checkOnSelect : true,
+				selectOnCheck : true
+			}
+			initLoadGridDataByCustom("yjwy_user_son1_main_grid", queryUrl, queryParam, options);
+
+			$("#btn_user_son1_mainquery").click(function() {
+				var user_name = $("#user_son1_name_queryid").val();
+				queryParam.user_name = user_name;
+				$('#yjwy_user_son1_main_grid').datagrid('reload');
+			});
+		});
+
+		function addUserFormatter(value, row, index) {
+			return "<a href='javascript:void(0);' onclick='addUser(\"" + row.pk_user + "\")'>加入</a>"
+		}
+		//加入用户操作
+		function addUser(pk_user) {
+			var recs = $("#rolegrid").datagrid('getSelections');
+			var addUrl = "ezfm/baseinfo/role/user/add/" + recs[0]['pk_role'] + "/" + pk_user;
+			$.ajax({
+				type : 'get',
+				url : addUrl,
+				async : false,
+				success : function(result) {
+					if (result.success) {
+						$.messager.show({
+							title : '提示',
+							msg : '用户加入成功',
+							timeout : 2000,
+							showType : 'slide'
+						});
+					}
+				}
+			})
+			$('#yjwy_user_son1_main_grid').datagrid('reload');
+			$('#yjwy_user_main_grid').datagrid('reload');
+			//此位置还要刷新标准tab
+		}
+	</script>
+</body>

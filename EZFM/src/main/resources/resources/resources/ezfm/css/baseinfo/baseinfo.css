@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+input {width:280px;}
+.base_main_form .base_main_table{
+	padding-top: 5px;
+}
+.base_main_form .base_main_table tr{
+	height: 38px;
+}
+.base_main_form .base_main_table tr td:first-child{
+	width:100px;
+	text-align:end;
+}
+.base_main_form .base_main_table tr td{
+	padding-top:10px;
+}

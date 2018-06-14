@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<base href="${basePath?if_exists}">
+<title>休假备案</title>
+<script type="text/javascript" src="resources/ezfm/all.js"></script>
+<script type="text/javascript" src="resources/ezfm/js/performance/leave.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+<script type="text/javascript" src="resources/ezfm/js/pub/list.commons.js"></script>
+<script type="text/javascript">
+	var notRoleButtons = "${notRoleButtons?if_exists}";
+</script>
+</head>
+
+<body class="easyui-layout" onload="bodyload()">
+	<!--休假备案列表-->
+	<!--工具栏-->
+	<div id="tb" style="height: auto">
+		<fieldset id="query_main_id"
+			style="border-color: currentColor; border-width: inherit; border-bottom-width: thin;">
+			<legend style="display: none;">标准查询</legend>
+			<form id="yjwy_query_mianform" method="post">
+				<table class="dv-table" style="margin-top: 5px;">
+					<tr>
+						<td style="text-align: end; padding-right: 60px;"><label>区域:</label>
+							<select class="easyui-combobox" name="area_id"
+							id="queray_main_area_id" style="width: 205px;"
+							data-options="editable:false,onChange:areaChange">
+								<option value="">请选择</option>
+						</select></td>
+						<td style="text-align: end; padding-right: 60px;"><label>项目:</label>
+							<select class="easyui-combobox" name="project_id"
+							id="queray_main_project_id" style="width: 205px;"
+							data-options="editable:false,onChange:projectChange">
+								<option value="">请选择</option>
+						</select></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td style="text-align: end; padding-right: 60px;"><label>人员:</label>
+							<select class="easyui-combobox" name="user_id"
+							id="queray_main_user_id" style="width: 205px;" data-options="editable:false">
+								<option value="">请选择</option>
+						</select></td>
+						<td style="text-align: end; padding-right: 60px;"><label>状态:</label>
+							<select class="easyui-combobox" name="state"
+							id="queray_main_state_id" style="width: 205px;" data-options="editable:false">
+								<option value="">请选择</option>
+								<option value="0">未确认</option>
+								<option value="1">已批准</option>
+								<option value="2">已拒绝</option>
+								<option value="3">已撤销</option>
+						</select></td>
+						<td style="text-align: end; padding-right: 5px;"><a id="btn_mainquery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></td>
+				        <td><a id="btn_resetQuery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-mini-refresh'">重置</a></td>
+					</tr>
+				</table>
+			</form>
+		</fieldset>
+
+
+		<div style="margin-bottom: 5px; margin-top: 5px">
+			<a id="btnApproval" href="javascript:void(0);"
+				class="easyui-linkbutton" data-options="iconCls:'icon-accept',plain:true" 
+				onclick="updateData('yjwy_main_grid',1)">批量批准</a>
+			<a id="btnReject" href="javascript:void(0);"
+				class="easyui-linkbutton" data-options="iconCls:'icon-forbid_action',plain:true" 
+				onclick="updateData('yjwy_main_grid',2)">批量拒绝</a>
+			<div style="float: right;margin-right: 10px;">
+					<a id="export_mainbtn" href="javascript:void(0);"  
+				class="easyui-linkbutton" data-options="iconCls:'icon-excel_export',plain:true">图表导出</a>
+			</div>
+		</div>
+	</div>
+	<div data-options="region:'center'">
+		<table id="yjwy_main_grid" class="easyui-datagrid"
+			data-options="fit:true,toolbar:'#tb'">
+			<thead>
+				<tr>
+					<th data-options="field:'checkbox',checkbox:true" ></th>
+					<th
+						data-options="field:'lv_submitter_name',width:100,hidden:false,align:'center'">提交人</th>
+					<th
+						data-options="field:'fk_project_name',width:200,hidden:false,align:'center'">所属项目</th>
+					<th
+						data-options="field:'fk_job_name',width:200,hidden:false,align:'center'">所属岗位</th>
+					<th
+						data-options="field:'lv_commitTime',width:150,hidden:false,align:'center'">提交时间</th>
+					<th
+						data-options="field:'lv_confirmTime',width:150,hidden:false,align:'center'">确认时间</th>
+					<th
+						data-options="field:'lv_startTime',width:150,hidden:false,align:'center'">休假开始时间</th>
+					<th
+						data-options="field:'lv_endTime',width:150,hidden:false,align:'center'">休假结束时间</th>
+					<th
+						data-options="field:'lv_days',width:100,hidden:false,align:'center'">休假天数</th>
+					<th
+						data-options="field:'fk_type_name',width:150,hidden:false,align:'center'">休假类型</th>
+					<th
+						data-options="field:'lv_details',width:200,hidden:false,align:'center'">休假详情</th>
+					<th
+						data-options="field:'fk_file',width:100,hidden:false,align:'center',formatter:formatfile">附件</th>
+					<th
+						data-options="field:'lv_operation',width:100,hidden:false,align:'center',formatter:formatOperation">操作</th>
+
+					<!--以下字段不显示-->
+					<th
+						data-options="field:'pk_leave',width:100,hidden:true,align:'center'">主键</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<script>
+		$("#yjwy_main_grid").attr("title", parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle);
+	</script>
+</body>
+
+</html>

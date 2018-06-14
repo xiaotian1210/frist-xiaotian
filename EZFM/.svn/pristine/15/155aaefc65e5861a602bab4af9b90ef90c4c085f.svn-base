@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="4637d936fbc847e8bf733ca7093f35a4" package="com.shareworx.ezfm.baseinfo.resources.model" version="20170628-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_attr_resource" name="资源_属性" table="yjwy_attr_resource" class="AttrResouorceModel" init="false" dynamic="false" location="337,182,120,120">
+    <property id="id" name="主键" column="id" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="true" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="attr_name" name="属性名称" column="attr_name" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="attr_value" name="属性值" column="attr_value" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_resources" name="资源id" column="pk_resources" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <index id="id" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

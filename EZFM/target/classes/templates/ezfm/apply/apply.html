@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<base href="${basePath?if_exists}">
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>达美盛云管理平台</title>
+	<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+	<script type="text/javascript" src="resources/ezfm/all.js"></script>
+	<script type="text/javascript" src="resources/ezfm/js/apply/apply.js"></script>
+	<script type="text/javascript" src="resources/ezfm/js/files/swiper.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="resources/ezfm/css/files/swiper.min.css">
+	<link type="text/css" rel="stylesheet" href="resources/ezfm/css/register/register.css">
+    <script type="text/javascript">
+    
+       /* if(navigator.userAgent.indexOf("Chrome")>-1){
+         if(!window.navigator.credentials){
+            alert("推荐使用Google chrome浏览器，版本：50或者以上");
+         }
+       }else{
+        alert("推荐使用Google chrome浏览器，版本：50或者以上");
+       } */
+    
+    	var notRoleButtons = "${notRoleButtons?if_exists}";
+
+    	//显示缓冲信息
+    	function showProcessMessageMode(bool){
+    		if(bool){
+	    		if($("#szw_mask__id").length>0){
+	    			$("#szw_mask__id").show();
+	    		}else{
+	    			$("<div id='szw_mask__id' class=\"datagrid-mask\"></div>").css({display:"block",width:"100%",height:$(window).height()}).appendTo("body"); 
+	    		}
+	    		if($("#szw_mask_message__id").length>0){
+	    			$("#szw_mask_message__id").show();
+	    		}else{
+					$("<div id='szw_mask_message__id' class=\"datagrid-mask-msg\" style='border-color:rgba(255,255,255,0.9)'></div>").html("登录中...").appendTo("body").css({display:"block",left:($(document.body).outerWidth(true) - 85) / 2,top:($(window).height() - 40) / 2}); 
+	    		}
+    		}else{
+    			$("#szw_mask__id").hide();
+    			$("#szw_mask_message__id").hide();
+    		}
+    	}
+    	
+    	function errorfunction(request, textStatus, errorThrown) {
+    		alert(request);
+    		alert(textStatus);
+            alert(errorThrown);
+        }
+    	
+    	//申请操作
+		function applyFunction(){
+			if(check()){
+    			$('#apply_from').form('submit', {
+    				url: "/ezfm/system/crop/presave",
+    				onSubmit: function(){		
+    					// do some check		
+    					// return false to prevent submit;    
+    				},
+    				success: function(result){
+
+    					result = eval('('+result+')');
+    					if(result.success){
+    						alert("申请成功，请等待管理人员审核。");
+    						window.location.href='ezfm/login/index';
+    					}
+
+    				},
+    				 error: function(XMLHttpRequest, textStatus, errorThrown){
+    					 var result = eval("(" + XMLHttpRequest.responseText + ")");
+    					 alert(request);
+    			    	 alert(textStatus);
+    			         alert(errorThrown);
+    				}
+    			});
+    		}
+			
+			/*var crop_code = $("form input[name=crop_code]").val();
+		 	var crop_name = $("form input[name=crop_name]").val();
+		 	var crop_address = $("form input[name=crop_address]").val();
+		 	var crop_phone = $("form input[name=crop_phone]").val();
+		 	var postcode = $("form input[name=postcode]").val();
+		 	var crop_contact = $("form input[name=crop_contact]").val();
+		 	var crop_email = $("form input[name=crop_email]").val();
+		 	*/
+		 	/*if(!username){
+		 		$("#errorInfoId").html("请输入账号");
+		 		showProcessMessageMode(false);
+		 		return;
+		 	}
+		 	if(!password){
+		 		$("#errorInfoId").html("请输入密码");
+		 		showProcessMessageMode(false);
+		 		return;
+		 	}*/
+		 	/*var url = "/ezfm/system/crop/save";
+			var data = {
+				"crop_code":crop_code,
+				"crop_name":crop_name,
+				"crop_address":crop_address,
+				"crop_phone":crop_phone,
+				"postcode":postcode,
+				"crop_contact":crop_contact,
+				"crop_email":crop_email
+			};
+			data = JSON.stringify(data);
+			$.ajax({
+                url: url,
+                type: "post",
+                data: data,
+                dataType: "json",
+                contentType:"application/json",
+                async:true,
+                success: successFunctionForApply,
+                error: errorfunction
+            });*/
+			
+			
+		}
+    	
+		function successFunctionForAuthorize(result){
+			alert(result.message);
+		}
+    	
+    	//跳转到home主页
+		function successFunctionForApply(result){
+
+			alert(result.message);
+
+		 	/*var authorize_count = $("form input[name=authorize_count]").val();
+
+			var url = "/system/authorize/save";
+			var data = {
+				"pk_crop":result.data[0].pk_crop,
+				"authorize_count":authorize_count
+			};
+			data = JSON.stringify(data);
+			$.ajax({
+                url: url,
+                type: "post",
+                data: data,
+                dataType: "json",
+                contentType:"application/json",
+                async:true,
+                success: successFunctionForAuthorize,
+                error: errorfunction
+            });*/
+		}
+
+        //读取企业执照图片
+        function reads(obj) {
+            var reader = new FileReader();
+            reader.readAsDataURL(obj.files[0]);
+            reader.onload = function () {
+                $(".licenseCon").show();
+                $(".licenseCon .license").attr("src", reader.result);
+                $("#zzbg .license").attr("src", reader.result);
+            };
+        }
+        
+        
+      //监听ie浏览器就要提示
+      $(function(){
+            //企业执照图片点击事件
+            $(".licenseCon").delegate(".license","click",function(){
+                $("#zzbg").show();
+            })
+            //弹窗关闭事件
+            $("#zzbg .close").click(function(){
+                $("#zzbg").hide();
+            })
+            //企业执照图片删除事件
+            $(".licenseCon .del").click(function(){
+                $(".info .licenseCon").hide();
+            })
+            var swiper = new Swiper('.swiper-container',{
+                loop:true,
+                autoplay:5000,
+                pagination: '.swiper-container .swiper-pagination',
+                paginationClickable: true,
+                autoplayDisableOnInteraction:false
+            });
+         	//键盘监听事件
+         	//只监听输入区域$("#wrap").keydown(function(me)
+			$(document).keyup(function(me){
+				if(!$("#szw_mask__id").is(":visible")){
+					//回车事件 13==Enter
+					if("13"==me.keyCode){
+						loginFunction();
+					}
+				}
+			});
+         	
+			
+         	
+        });
+    </script>
+</head>
+<body>
+<div class="con">
+    <div class="con-left">
+        <img class="dms-logo" src="resources/ezfm/images/register/dms_logo.png">
+        <div class="swiper-container" >
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><a><img src="resources/ezfm/images/register/banner01.jpg"></a></div>
+                <div class="swiper-slide"><a><img src="resources/ezfm/images/register/banner02.jpg"></a></div>
+                <div class="swiper-slide"><a><img src="resources/ezfm/images/register/banner03.jpg"></a></div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+    <div class="con-right">
+        <div class="info">
+            <h4>达美盛资产云平台注册</h4>
+            <form id="apply_from" method="post" enctype="multipart/form-data">
+                <ul>
+                    <li>
+                        <span class="tit">企业编码</span>
+                        <input type="text" name="code"/>
+                    </li>
+                    <li>
+                        <span class="tit">企业名称</span>
+                        <input type="text" name="name"/>
+                    </li>
+                    <li>
+                        <span class="tit">联系地址</span>
+                        <input type="text"  name="address"/>
+                    </li>
+                    <li>
+                        <span class="tit">邮政编码</span>
+                        <input type="text" name="post_code"/>
+                    </li>
+                    <li>
+                        <span class="tit">联系人</span>
+                        <input type="text" name="contact"/>
+                    </li>
+                    <li>
+                        <span class="tit">联系电话</span>
+                        <input type="text"  name="phone"/>
+                    </li>
+                    <li>
+                        <span class="tit">邮箱</span>
+                        <input type="text"  name="email"/>
+                    </li>
+                    <li>
+                        <span class="tit">企业执照</span>
+                        <span class="upload">上传</span>
+                        <input type="file" value="上传" id="inputs" name="crop_file" onchange="reads(this)">
+                        <div class="licenseCon">
+                            <img class="license" src="resources/ezfm/images/register/banner1.jpg">
+                            <img class="del" src="resources/ezfm/images/register/icon_del.png">
+                        </div>
+                    </li>
+                </ul>
+                <div id="errorInfoId">
+                </div>
+                <div class="sub">
+                    <input type="button" value="注&nbsp;&nbsp;册" onclick="applyFunction();" >
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<p class="copyright">版权所有：北京达美盛软件股份有限公司 京ICP备15041897号-2</p>
+<div id="zzbg">
+    <div class="box">
+        <img class="license"  src="resources/ezfm/images/register/license.jpg">
+        <img class="close" src="resources/ezfm/images/register/icon_close.png">
+    </div>
+</div>
+<!--<div id="wrap">
+    <div class="login-box">
+        <div class="con">
+            <div class="tit">
+                &lt;!&ndash;<img src="resources/ezfm/images/login/login_03.png">&ndash;&gt;
+                <span>达美盛资产云</span>
+            </div>
+            <form id="apply_from" method="post" enctype="multipart/form-data">
+                <p>
+                    <input type="text" placeholder="企业编码" name="code"/>
+                </p>
+                <p>
+                    
+                    <input type="text" placeholder="企业名称" name="name"/>
+                </p>
+                
+                <p>
+                   
+                    <input type="text" placeholder="联系地址" name="address"/>
+                </p>
+                <p>
+                    
+                    <input type="text" placeholder="联系电话" name="phone"/>
+                </p>
+                <p>
+                   
+                    <input type="text" placeholder="邮政编码" name="post_code"/>
+                </p>
+                 <p>
+                    
+                    <input type="text" placeholder="联系人" name="contact"/>
+                </p>
+                <p>
+                    
+                    <input type="text" placeholder="邮箱" name="email"/>
+                </p>
+                
+                 <p>
+				<input class="easyui-filebox" name="crop_file" data-options="prompt:'请选择一张图片...'" buttonText="上传企业执照..." style="width: 205px;">
+			    </p>
+                &lt;!&ndash;<p>
+                    
+                    <input type="text" placeholder="授权项目数" name="authorize_count"/>
+                </p>&ndash;&gt;
+                <div id="errorInfoId" style="font-size:16px; margin-top:10px; text-align:center; color:orangered;font-weight: 600;">
+                   
+                </div>
+                <input type="button" onclick="applyFunction();" value="注册" class="sub" style="margin-top:10px;"/>
+            </form>
+        </div>
+    </div>
+</div>-->
+
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="${basePath?if_exists}">
+<meta charset="UTF-8">
+<title>数据字典</title>
+<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css">
+<script type="text/javascript" src="resources/ezfm/all.js"></script>
+<script type="text/javascript" src="resources/ezfm/js/pub/list.commons.js"></script>
+<script type="text/javascript" src="resources/ezfm/js/system/dict.js"></script>
+<script type="text/javascript">
+	var pc = '${project?if_exists}';
+	var notRoleButtons = "${notRoleButtons?if_exists}";
+</script>
+</head>
+<body class="easyui-layout">
+	<!--字典表单-->
+	<div id="tb" style="height: auto">
+		<fieldset style="border-color: currentColor; border-width: inherit; border-bottom-width: thin;">
+			<span>编码：</span> <input id="textcode" class="easyui-textbox" style="width: 120px;"> <span>名称：</span> <input id="textname" class="easyui-textbox" style="width: 120px;"> <a id="btnselect" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+		</fieldset>
+		<div style="margin-bottom: 5px; margin-top: 5px">
+			<a id="btnNew" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a> <a id="btnEdit" onclick="updateDictFather()" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">编辑</a>
+		</div>
+	</div>
+	<div data-options="region:'center'">
+		<table id="dictgrid" class="easyui-datagrid" data-options="fit:true,title:'数据字典>数据字典管理',singleSelect:true,collapsible:true,toolbar:'#tb'">
+			<thead>
+				<tr>
+					<th data-options="field:'pk_project',checkbox:true"></th>
+					<th data-options="field:'dict_code',hidden:false, formatter:go,width:200" align="center">字典编码</th>
+					<th data-options="field:'dict_name',width:200" align="center">字典名称</th>
+					<th data-options="field:'dict_describe',width:200" align="center">字典描述</th>
+					<th data-options="field:'dict_creator',width:200" align="center">创建者</th>
+					<th data-options="field:'dict_creationTime',width:200" align="center">创建时间</th>
+					<!--隐藏列-->
+					<th data-options="field:'pk_dict',hidden:true">主键</th>
+					<th data-options="field:'dict_sort',hidden:true">排序</th>
+					<th data-options="field:'dict_node',hidden:true">节点</th>
+					<th data-options="field:'dict_parent',hidden:true">父级编码</th>
+					<th data-options="field:'dict_modifier',hidden:true">修改者</th>
+					<th data-options="field:'dict_modificationTime',hidden:true">修改时间</th>
+					<th data-options="field:'pk_crop',hidden:true">公司</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<!--封装字典详情表单-->
+	<div id="win" class="easyui-window" data-options="region:'center',closed:'false',maximizable:'true'" title="字典详情编辑" style="padding-top: 30px;background-color: #f5f5f5;">
+		<div class="datagrid-toolbar" style="position: absolute;top: 29px;width: 680px;z-index: 2;">
+					<a id="btnNewdetails" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a> 
+					<a id="btnEditdetails" onclick="updateDictSon()" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">编辑</a> 
+					<a id="btnDeletedetails" onclick="deleteDictDetails()" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+		</div>
+		<table id="dictdetailsgrid" class="easyui-datagrid" data-options="singleSelect:true">
+			<thead>
+				<tr>
+					<th data-options="field:'pk_project',checkbox:true"></th>
+					<th data-options="field:'dict_code',hidden:false,width:200" align="center">字典详情编码</th>
+					<th data-options="field:'dict_name',width:200" align="center">字典详情名称</th>
+					<th data-options="field:'dict_describe',width:200" align="center">字典详情描述</th>
+					<th data-options="field:'dict_creator',width:200" align="center">创建者</th>
+					<th data-options="field:'dict_creationTime',width:200" align="center">创建时间</th>
+					<th data-options="field:'dict_sort',width:100" align="center">排序</th>
+					<!--隐藏列-->
+					<th data-options="field:'pk_dict',hidden:true">主键</th>
+					<th data-options="field:'dict_node',hidden:true">节点</th>
+					<th data-options="field:'dict_parent',hidden:true">父级编码</th>
+					<th data-options="field:'dict_modifier',hidden:true">修改者</th>
+					<th data-options="field:'dict_modificationTime',hidden:true">修改时间</th>
+					<th data-options="field:'pk_crop',hidden:true">公司</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+
+
+	<!--字典详情编辑表单-->
+	<div id="dictdetailsdlg" class="easyui-dialog " style=" height: 300px; padding: 2px;" data-options="closed:true" align="center">
+		<form id="dictdetailsform" class="x-form" method="post">
+			<input type="hidden" name="pk_dict"> <input id='pk_project' type="hidden" name="pk_project" value="${project?if_exists}">
+			<table style="height:200px;padding-top:10px;">
+				<tr>
+					<th class="x-label"><label for="dict_code">字典详情编码：</label></th>
+					<td class="x-field"><input id="dictcode" class="easyui-textbox" type="text" name="dict_code" data-options="required:true,validType:['validLetterNumberUnderline','length[1,50]']" /></td>
+				</tr>
+				<tr>
+					<th class="x-label"><label for="dict_name">字典详情名称：</label></th>
+					<td class="x-field"><input class="easyui-textbox" type="text" name="dict_name" data-options="required:true" /></td>
+				</tr>
+				<tr>
+					<th class="x-label"><label for="dict_sort">字典详情排序：</label></th>
+					<td class="x-field"><input class="easyui-numberbox" type="number" name="dict_sort" /></td>
+				</tr>
+				<tr>
+					<th class="x-label"><label for="dict_describe">字典详情描述：</label></th>
+					<td class="x-field"><input class="easyui-textbox" data-options="multiline:true" style="height: 80px; width: 300px" type="text" name="dict_describe" /></td>
+				</tr>
+				<!--隐藏列-->
+				<tr style="display: none">
+					<th class="x-label"><label for="dict_node">节点</label></th>
+					<td class="x-field"><input class="easyui-textbox" type="text" name="dict_node" /></td>
+				</tr>
+				<tr style="display: none">
+					<th class="x-label"><label for="dict_parent">父级编码</label></th>
+					<td class="x-field"><input class="easyui-textbox" type="text" name="dict_parent" id="dict_parent" /></td>
+				</tr>
+				<tr style="display: none">
+					<th class="x-label"><label for="dict_creator">创建者</label></th>
+					<td class="x-field"><input class="easyui-textbox" type="text" name="dict_creator" /></td>
+				</tr>
+				<tr style="display: none">
+					<th class="x-label"><label for="dict_creationTime">创建时间</label></th>
+					<td class="x-field"><input class="easyui-textbox" type="text" name="dict_creationTime" /></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<!--字典编辑表单-->
+	<div id="dictdlg" class="easyui-dialog" style="width: 300px; height: 300px; padding: 2px;" data-options="closed:true" align="center">
+		<form id="dictform" class="x-form" method="post">
+			<input type="hidden" name="pk_dict"> <input id='pk_project' type="hidden" name="pk_project" value="${project?if_exists}">
+			<table style="height:180px;padding-top:10px;">
+				<tr>
+					<th class="x-label"><label for="dict_code">字典编码：</label></th>
+					<td class="x-field"><input id="dictcode1" class="easyui-textbox" type="text" name="dict_code" data-options="required:true,validType:['validLetterNumberUnderline','length[1,50]']" /></td>
+				</tr>
+				<tr>
+					<th class="x-label"><label for="dict_name">字典名称：</label></th>
+					<td class="x-field"><input class="easyui-textbox" type="text" name="dict_name" data-options="required:true,validType:'length[4,50]'" /></td>
+				</tr>
+				<tr>
+					<th class="x-label"><label for="dict_describe">字典描述：</label></th>
+					<td class="x-field"><input class="easyui-textbox" data-options="multiline:true" style="height: 80px; width: 300px" type="text" name="dict_describe" /></td>
+				</tr>
+				<!--隐藏列-->
+				<tr style="display: none">
+					<th class="x-label"><label for="dict_node">节点</label></th>
+					<td class="x-field"><input class="easyui-textbox" type="text" name="dict_node" /></td>
+				</tr>
+				<tr style="display: none">
+					<th class="x-label"><label for="dict_creator">创建者</label></th>
+					<td class="x-field"><input class="easyui-textbox" type="text" name="dict_creator" /></td>
+				</tr>
+				<tr style="display: none">
+					<th class="x-label"><label for="dict_creationTime">创建时间</label></th>
+					<td class="x-field"><input class="easyui-textbox" type="text" name="dict_creationTime" /></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+
+</body>
+</html>

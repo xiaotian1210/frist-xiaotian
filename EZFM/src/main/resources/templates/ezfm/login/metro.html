@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="${basePath?if_exists}">
+<base id="contextPath" data-path="${contextPath}">
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>eZFM达美盛资产云管理平台</title>
+<link type="text/css" rel="stylesheet" href="${contextPath}/resources/ezfm/css/login/dms_c.css">
+<script type="text/javascript" src="${contextPath}/resources/ezfm/js/pub/jquery-1.4.4.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$.ajax({
+            dataType:"json",
+            cache:false,
+            url:"${contextPath}/ezfm/system/function/loginuser/func/query",
+            success:function(data){
+            	if(data.success==true) {
+            		for(var i=0;i<data.data.length;i++) {
+            			addMenu(data.data[i]);
+            		}
+            	}
+            }
+        });
+		
+		function sortMenu(a,b){
+			return a.order - b.order;
+		}
+		
+		function addMenu(menu) {
+			var str = "";
+			if(menu.childs!=undefined&&menu.childs.length>0) {
+				menu.childs = menu.childs.sort(sortMenu);
+				str = '<li><h2>'+menu.name+'</h2>';
+				str += '<ul class="task-list">';
+				str += addChild(menu);
+				str += '</ul></li>';
+			}
+			$("#ul-list").append(str);
+		}
+		
+		function addChild(menu) {
+			var str = '';
+			for(var i=0;i<menu.childs.length;i++) {
+				var child = menu.childs[i];
+				if(child.type.indexOf("function")>=0) {
+					str += '<li><a href="${contextPath}/ezfm/home/metrofunc?funcId='+child.id+'" target="_self">'+child.name+'</a></li>';
+				} else {
+					
+				}
+				if(child.childs!=undefined&&child.childs.length>0) {
+					child.childs = child.childs.sort(sortMenu);
+					str += addChild(child);
+				}
+			}
+			return str;
+		}
+	});
+	
+	function exitLogin() {
+		var r =  confirm("您确认退出吗");
+		if (r) {
+			var data = {
+				id : "${currentUser.pk_user}"
+			};
+			$.ajax({
+				url : "${contextPath}/ezfm/home/exit",
+				type : "post",
+				data : data,
+				dataType : "json",
+				success : function(result) {
+					if (result.success) {
+						window.location.href = "${contextPath}/ezfm/login/index";
+					} else {
+						alert("提示", result.message, "warn");
+					}
+				},
+				error : function(request, textStatus, errorThrown) {
+					alert("提示", "退出失败", "warn");
+				}
+			});
+		} 
+	}
+</script>
+<body>
+<div class="top">
+	<div class="top-menu">
+		<p>
+			<span class="role">欢迎您：${currentUser.user_name}</span>
+			<span class="role"><a style="color: inherit;" href="${contextPath}/ezfm/home/dashboard">我的面板</a></span>
+			<span class="role" onclick="exitLogin();">退出</span>
+		</p>
+	</div>
+	<div class="logo_box">
+		<img class="logo" src="${contextPath}/resources/ezfm/images/login/yun_logo.png">
+		<p>达美盛云</p>
+	</div>
+</div>
+<div class="module-list">
+	<ul class="clearfix" id="ul-list">
+		
+	</ul>
+</div>
+</body>
+</html>

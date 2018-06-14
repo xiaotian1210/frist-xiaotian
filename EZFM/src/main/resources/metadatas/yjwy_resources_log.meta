@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="7201b1cc0b5040908af9e28aa3a411a1" package="com.shareworx.ezfm.baseinfo.resourceslog.model" version="20170116-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_resources_log" name="记录资源空间日志表" table="yjwy_resources_log" class="YJWYResourcesLogModel" init="false" dynamic="false" location="143,129,316,231">
+    <property id="pk_resources_log" name="记录操作的资源空间ID" column="pk_resources_log" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="operate_type" name="资源空间操作类型(1代表 新增 2代表 删除 3代表更新)" column="operate_type" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="operate_date" name="操作的时间" column="operate_date" type="5" define="char" length="10" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <index id="pk_resources_log" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<base href="${basePath?if_exists}">
+<title>计费单</title>
+<script type="text/javascript" src="resources/ezfm/all.js"></script>
+<script type="text/javascript" src="resources/ezfm/js/chargepayment/charge.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+<script type="text/javascript">
+	var notRoleButtons = "${notRoleButtons?if_exists}";
+</script>
+</head>
+
+<body class="easyui-layout">
+	<div id="tb" style="height: auto">
+		<fieldset id="query_main_id"
+			style="border-color: currentColor; border-width: inherit; border-bottom-width: thin;">
+				<table class="dv-table" style="margin-right: 5px;">
+					<tr>
+						<td style="text-align: end; padding-right: 60px;"><label>计费单统计（不包括最新金额）:</label>
+						<label id="all_charge"></label></td>
+						<td style="text-align: end; padding-right: 60px;"><label>最新计费单金额:</label>
+						<label id="last"></label></td>
+						<td style="text-align: end; padding-right: 60px;"><label>剩余金额:</label>
+						<label id="surplus"></label></td>
+						<td style="text-align: end; padding-right: 60px;"><label>总金额:</label>
+						<label id="all_amount"></label></td>
+						<td></td>
+					</tr>
+					
+				</table>
+		</fieldset>
+
+	</div>
+	<div data-options="region:'center'">
+		<table id="yjwy_main_grid" class="easyui-datagrid"
+			data-options="fit:true,title:'计费缴费>计费单',singleSelect:false,collapsible:true,toolbar:'#tb'">
+			<thead>
+				<tr>
+					<th data-options="field:'checkbox',checkbox:true" ></th>
+					<th
+						data-options="field:'charge_begin',width:200,hidden:false,align:'center'">计费开始日期</th>
+					<th
+						data-options="field:'charge_end',width:200,hidden:false,align:'center'">计费结束日期</th>
+					<th
+						data-options="field:'charge_base',width:150,hidden:false,align:'center'">计费基数</th>
+					<th
+						data-options="field:'charge_amount',width:150,hidden:false,align:'center'">金额</th>
+					<th
+						data-options="field:'authorize_count',width:150,hidden:false,align:'center'">最大授权数</th>
+					<th
+						data-options="field:'remark',width:150,hidden:false,align:'center'">备注</th>
+					<!--以下字段不显示-->
+					<th
+						data-options="field:'pk_charge',width:100,hidden:true,align:'center'">主键</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+
+</body>
+
+</html>

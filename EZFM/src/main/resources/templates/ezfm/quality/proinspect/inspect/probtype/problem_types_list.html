@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="${basePath?if_exists}">
+		<meta charset="UTF-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>问题类型</title>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript">
+			var pc = '${crop?if_exists}';
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+			$(function(){
+				var queryUrl = "${basePath?if_exists}ezfm/quality/proinspect/inspect/probtype/query";
+				var queryParam = { 
+						metas: ['yjwy_quality_problemtype']
+					}
+				initLoadGridData("yjwy_main_grid",queryUrl,queryParam);
+				
+				//添加
+				$("#add_mainbtn").click(function(){
+					var addUrl = "${basePath?if_exists}ezfm/quality/proinspect/inspect/probtype/mainformpage/null";
+					addMainBtnEvent("新增问题类型",addUrl,{height:205,width:468});
+				});
+				
+				//修改
+				$("#edit_mainbtn").click(function(){
+					var updateUrl = "${basePath?if_exists}ezfm/quality/proinspect/inspect/probtype/mainformpage";
+					editMainBtnEvent("修改问题类型",updateUrl,"pk_problem",{height:205,width:468});
+				});
+				
+				//删除
+				$("#delete_mainbtn").click(function(){
+					var deleteUrl = "${basePath?if_exists}ezfm/quality/proinspect/inspect/probtype/delete";
+					deleteMainBtnEvent(deleteUrl);
+				});
+			});	
+				
+		</script>
+	</head>
+	<body class="easyui-layout szw_page_body">
+		<div id="yjwy_main_grid_tb" style="height:28px;">
+			<div style="margin-bottom:5px;margin-top:5px">
+				<a id="add_mainbtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>
+				<a id="edit_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+				<a id="delete_mainbtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+			</div>
+		</div>
+		
+		<div data-options="region:'center'">	
+			<table id="yjwy_main_grid" class="easyui-datagrid" title="">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'problem_name',width:160,align:'center'">问题类型名称</th>
+						<th data-options="field:'problem_rectify_days',width:120,align:'center'">整改期限</th>
+						<th data-options="field:'create_username',width:120,align:'center'">创建人</th>
+						<th data-options="field:'create_time',width:160,align:'center'">创建时间</th>
+						<th data-options="field:'update_username',width:120,align:'center'">修改人</th>
+						<th data-options="field:'update_time',width:160,align:'center'">修改时间</th>
+						<!-- 以下为隐藏列 -->
+						<th data-options="field:'pk_problem',hidden:true">主键</th>
+						<th data-options="field:'pk_crop',hidden:true">所属公司</th>
+						<!-- 以上为隐藏列 -->
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<script>
+			$("#yjwy_main_grid").attr("title", parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle);
+		</script>
+	</body>
+</html>

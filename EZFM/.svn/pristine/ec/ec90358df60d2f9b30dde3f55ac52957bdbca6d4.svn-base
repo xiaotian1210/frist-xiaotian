@@ -1,0 +1,127 @@
+package com.shareworx.ezfm.quality.proinspect.inspect.stanedition.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
+
+import com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionModel;
+import com.shareworx.platform.exception.ShareworxServiceException;
+import com.shareworx.platform.persist.Delete;
+import com.shareworx.platform.persist.Query;
+import com.shareworx.platform.persist.Update;
+import com.shareworx.platform.persist.dao.ObjectPersistDao;
+
+/**
+ * 标准版本持久化操作实现
+ *
+ * @author dms
+ * @version since Shareworx platform 2.0
+ *
+ */
+@Repository(StandardEditionDao.ID)
+public class StandardEditionDaoImpl implements StandardEditionDao {
+
+	public final static String ID = "demoMainEntityDao";
+	
+	@Autowired
+	@Qualifier(ObjectPersistDao.ID)
+	private ObjectPersistDao dao;
+	
+	public void setDao(ObjectPersistDao dao) {
+		this.dao = dao;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#saveModels(com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionModel[])
+	 */
+	@Override
+	public int[] saveModels(StandardEditionModel[] models) throws ShareworxServiceException {
+		return dao.saveModels(StandardEditionModel.META_ID, models);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#updateModels(com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionModel[])
+	 */
+	@Override
+	public int[] updateModels(StandardEditionModel[] models) throws ShareworxServiceException {
+		return dao.updateModels(StandardEditionModel.META_ID, models);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#updateModels(com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionModel[], java.lang.String[], java.lang.String[])
+	 */
+	@Override
+	public int[] updateModels(StandardEditionModel[] models, String[] include, String[] notIclude) throws ShareworxServiceException {
+		return dao.updateModels(StandardEditionModel.META_ID, models, include, notIclude);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#updateModelsByCondition(com.shareworx.platform.persist.Update)
+	 */
+	@Override
+	public int updateModelsByCondition(Update update) throws ShareworxServiceException {
+		return dao.updateModelsByCondition(update);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#deleteModels(com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionModel[])
+	 */
+	@Override
+	public int deleteModels(StandardEditionModel[] models) throws ShareworxServiceException {
+		return dao.deleteModels(StandardEditionModel.META_ID, models);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#deleteByCondition(com.shareworx.platform.persist.Delete)
+	 */
+	@Override
+	public int deleteByCondition(Delete delete) throws ShareworxServiceException {
+		return dao.deleteByCondition(delete);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#queryById(java.io.Serializable)
+	 */
+	@Override
+	public StandardEditionModel queryById(Serializable id) throws ShareworxServiceException {
+		return dao.queryById(StandardEditionModel.META_ID, id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#queryListByCondition(com.shareworx.platform.persist.Query)
+	 */
+	@Override
+	public List<StandardEditionModel> queryListByCondition(Query query) throws ShareworxServiceException {
+		return dao.queryListByCondition(query);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#countListByCondition(com.shareworx.platform.persist.Query)
+	 */
+	@Override
+	public Long countListByCondition(Query query) throws ShareworxServiceException {
+		return dao.countListByCondition(query);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.shareworx.ezfm.quality.proinspect.inspect.stanedition.model.StandardEditionDao#queryOneByCondition(com.shareworx.platform.persist.Query)
+	 */
+	@Override
+	public StandardEditionModel queryOneByCondition(Query query) throws ShareworxServiceException {
+		return dao.queryOneByCondition(query);
+	}
+
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="c8c1a0f8140e49a08f07a32623972f31" package="com.shareworx.ezfm.problem.record.model" version="20160727-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_problem_record" name="报事记录" table="yjwy_problem_record" class="YJWYProblemRecordModel" init="false" dynamic="false" location="137,109,120,120">
+    <property id="pk_record_id" name="主键ID" column="pk_record_id" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="fk_details_id" name="报事详情ID" column="fk_details_id" type="1" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="record_content" name="记录内容" column="record_content" type="1" define="varchar" length="500" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="record_time" name="记录时间" column="record_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="record_user_id" name="记录人ID" column="record_user_id" type="0" define="char" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="record_user_name" name="记录人姓名" column="record_user_name" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="duty_user_id" name="跟进人ID" column="duty_user_id" type="0" define="char" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="duty_user_name" name="跟进人姓名" column="duty_user_name" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="operate_type" name="操作类型（字典）" column="operate_type" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="operate_state" name="操作时状态（字典）" column="operate_state" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="evaluate_content" name="评价内容" column="evaluate_content" type="1" define="varchar" length="500" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="evaluate_type" name="评价类型" column="evaluate_type" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="attitude" name="服务态度" column="attitude" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="quality" name="服务及时性" column="quality" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="effect" name="服务机能" column="effect" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <index id="pk_record_id" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

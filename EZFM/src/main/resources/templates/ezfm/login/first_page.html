@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="${basePath?if_exists}">
+		<meta charset="UTF-8">
+		<title>核查任务</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="${basePath?if_exists}resources/ezfm/all.css"></link>
+		<script type="text/javascript" src="${basePath?if_exists}resources/ezfm/all.js"></script>
+		<script type="text/javascript" src="${basePath?if_exists}resources/ezfm/fusioncharts/js/fusioncharts.js"></script>
+		<script type="text/javascript" src="${basePath?if_exists}resources/ezfm/fusioncharts/js/themes/fusioncharts.theme.fint.js"></script>
+		
+		<style type="text/css">
+			.panel-header, .panel-body {
+			    border-top: "";
+			}
+			#firt_page_tabel_id tr td:nth-child(1){
+				width:100px;
+				vertical-align: initial;
+				text-align: -webkit-right;
+				font-weight:600;
+			}
+		</style>
+		<script type="text/javascript">
+		var notRoleButtons = "${notRoleButtons?if_exists}";
+		var data = [];
+		var isZero = true;//因为futioncharts数值全为0的时候不显示图标，所以做一步显示处理z
+        var revenueChart;
+		function loadData() {
+            $.ajax({
+                url: "ezfm/home/dbtask/count",
+                type: "post",
+                dataType: "json",
+                async:false,
+                success: function(result){
+                    if(result.success){
+
+                        if(JSON.stringify(data)==JSON.stringify(result.data)){
+                            return;
+						}else {
+                            $.messager.show({
+                                title:'',
+                                msg:'数据已经更新.',
+                                timeout:3000,
+                                showType:'slide'
+                            });
+						}
+                        data = result.data;
+                        for(var i=0;i<data.length;i++){
+                            if(data[i].value && "0"!=data[i].value && 0!=data[i].value){
+                                isZero=false;
+                            }
+                        }
+
+                        $("#db_task_datagrid_id").datagrid("loadData",data);
+                        revenueChart = new FusionCharts({
+                            type: 'doughnut3d',
+                            renderAt: 'chart-container',
+                            width: '450',
+                            height: '250',
+                            dataFormat: 'json',
+                            dataSource: {
+                                "chart": {
+                                    "caption": "您的待办任务数",
+                                    "paletteColors": "#0075c2,#1aaf5d,#f2c500,#f45b00,#8e0000",
+                                    "bgColor": "#ffffff",
+                                    "showBorder": "0",
+                                    "use3DLighting": "0",
+                                    "showShadow": "0",
+                                    "enableSmartLabels": "0",
+                                    "startingAngle": "310",
+                                    "showLabels": "0",
+                                    "showPercentValues": "0",
+                                    "showNames":"1",
+                                    "formatNumberScale":"0",
+                                    "formatNumber":"0",
+                                    "showLegend": "1",
+                                    "legendShadow": "0",
+                                    "legendBorderAlpha": "0",
+                                    "decimals": "0",
+                                    "captionFontSize": "14",
+                                    "subcaptionFontSize": "14",
+                                    "subcaptionFontBold": "0",
+                                    "toolTipColor": "#ffffff",
+                                    "toolTipBorderThickness": "0",
+                                    "toolTipBgColor": "#000000",
+                                    "toolTipBgAlpha": "80",
+                                    "toolTipBorderRadius": "2",
+                                    "toolTipPadding": "5",
+                                    "showZeroPies":"1",
+                                    "showValues":"1",
+                                    "skipOverlapLabels":"1"
+                                },
+                                "data": data
+                            }
+                        }).render();
+                    }
+                }
+            });
+        }
+
+		$(function(){
+			loadData();
+
+		});
+		//次时间因为新版本的FUSIONCHARTS不能与html<base>并存
+		eve.on('raphael.new', function () {
+		    this.raphael._url = this.raphael._g.win.location.href.replace(/#.*?$/, '');
+		});
+		FusionCharts.ready(function () {
+			if(isZero){
+				for(var i=0;i<data.length;i++){
+        			data[i].value="1";
+        		}
+		    }
+			 revenueChart = new FusionCharts({
+		        type: 'doughnut3d',
+		        renderAt: 'chart-container',
+		        width: '450',
+		        height: '250',
+		        dataFormat: 'json',
+		        dataSource: {
+		            "chart": {
+		                "caption": "您的待办任务数",
+		                "paletteColors": "#0075c2,#1aaf5d,#f2c500,#f45b00,#8e0000",
+		                "bgColor": "#ffffff",
+		                "showBorder": "0",
+		                "use3DLighting": "0",
+		                "showShadow": "0",
+		                "enableSmartLabels": "0",
+		                "startingAngle": "310",
+		                "showLabels": "0",
+		                "showPercentValues": "0",
+		                "showNames":"1",
+		                "formatNumberScale":"0",
+		                "formatNumber":"0",
+		                "showLegend": "1",
+		                "legendShadow": "0",
+		                "legendBorderAlpha": "0",                                
+		                "decimals": "0",
+		                "captionFontSize": "14",
+		                "subcaptionFontSize": "14",
+		                "subcaptionFontBold": "0",
+		                "toolTipColor": "#ffffff",
+		                "toolTipBorderThickness": "0",
+		                "toolTipBgColor": "#000000",
+		                "toolTipBgAlpha": "80",
+		                "toolTipBorderRadius": "2",
+		                "toolTipPadding": "5",
+		                "showZeroPies":"1",
+		                "showValues":"1",
+		                "skipOverlapLabels":"1" 
+		            },
+		            "data": data
+		        }
+		    }).render();
+
+			revenueChart.addEventListener("Rendered", function (evt, args) {
+				if(isZero){
+			    	$("svg .raphael-group-12-dataset text tspan").html("0");
+			    }
+			}); 
+		});
+		</script>
+	</head>
+	<body>
+		<div class="easyui-layout" data-options="border:false,fit:true">
+			<div data-options="region:'north',height:250,border:false" title="属性信息">
+				<div class="easyui-layout" data-options="fit:true,border:false">
+					<div data-options="region:'west',split:true" style="width:75%;padding-left: 20px;">
+						<div style="font-family: verdana, sans-serif;font-size: 14px;letter-spacing: 1.1pt;word-spacing: 0.8pt;line-height: 1.4;">
+							<table id="firt_page_tabel_id" style="margin-top: 10px;">
+								<tr>
+									<td>登录用户：</td>
+									<td>${current_user?if_exists.user_name?if_exists}</td>
+								<tr/>
+								<tr>
+									<td>所属公司：</td>
+									<td>${cropname?if_exists}</td>
+								<tr/>
+								<tr>
+									<td>所属项目：</td>
+									<td>${projects?if_exists}</td>
+								<tr/>
+								<tr>
+									<td>所属岗位：</td>
+									<td>${stations?if_exists}</td>
+								<tr/>
+								<tr>
+									<td>登录时间：</td>
+									<td>${current_user?if_exists.logintime?if_exists}</td>
+								<tr/>
+								<tr>
+									<td>登录人数：</td>
+									<td>${logincount?if_exists}</td>
+								<tr/>
+								<tr>
+									<td>系统版本：</td>
+									<td>V2.0</td>
+								<tr/>
+							</table>
+						</div>
+					</div>
+					<div data-options="region:'center'">
+						<div class="easyui-calendar" data-options="fit:true"></div>
+					</div>
+				</div>
+			</div>
+			<div data-options="region:'center'" title="任务信息">
+				<div class="easyui-layout" data-options="fit:true">
+					<div data-options="region:'west',split:true,border:false" style="width:50%">
+						<table id="db_task_datagrid_id" class="easyui-datagrid" data-options="fit:true,singleSelect:true">   
+						    <thead>   
+						        <tr>   
+						            <th data-options="field:'label',width:180,align:'center',halign:'center'">任务名称</th>   
+						            <th data-options="field:'value',width:180,align:'center'">待办任务数</th>   
+						        </tr>   
+						    </thead>   
+						</table>
+					</div>
+					<div data-options="region:'center',border:false">
+						<div id="chart-container" style="margin:auto;text-align:center;">您的各项待办任务数</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

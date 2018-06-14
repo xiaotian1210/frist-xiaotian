@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<base href="${basePath?if_exists}">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>能耗表统计</title>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/device/deviceUtil.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/energyloss/energy_statistics.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<script type="text/javascript">
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+
+			$(function() {
+				var task_type = getQueryString("type");
+				$("#task_type").attr("value",task_type);
+				
+				//数据导出
+				$("#export_mainbtn").click(function() {
+					var jsonData = $("#yjwy_query_mianform").serializeObject();
+					var url = "ezfm/energyloss/statistics/export/statistics?param="+JSON.stringify(jsonData)+"&task_type="+task_type;
+					window.location.href = url;
+				});
+				//初始化数据表格
+//				datagridInit('datagrid_regularly', 'ezfm/energyloss/statistics/query?task_type='+task_type, '', 'toolbar_datagrid_regularly', true, true);
+
+				var first = "0";
+                $('#datagrid_regularly').treegrid({
+                    url:'ezfm/energyloss/statistics/query?task_type='+task_type,
+
+                    method:'post',          //请求方式
+                    idField:'eq_id',           //定义标识树节点的键名字段
+                    treeField:'name',       //定义树节点的字段
+                    fit:true,               //网格自动撑满
+                    fitColumns:true,        //设置为 true，则会自动扩大或缩小列的尺寸以适应网格的宽度并且防止水平滚动。
+                     pageList:[5,10,15,20],//每页显示个数可选项
+                    loadMsg: "正在加载数据...", // 数据加载中显示信息
+                    rownumbers: true, //显示行号列
+                    striped: true, // 显示斑马线效果
+                    pagination: true, // 显示分页工具栏
+                    toolbar: "#toolbar_datagrid_regularly", // 顶部工具栏
+                    border: false,
+                    onLoadSuccess:function (row, data) {
+						if(first!="0"){
+                            $('#datagrid_regularly').treegrid('append',{
+                                parent: row.eq_id,  // 节点有一个'id'值,定义是通过'idField'属性
+                                data: data.rows
+                            });
+						}else{
+						    first = '1';
+						}
+
+                    }
+//                    onExpand:function (row) {
+//						console.log(row)
+//                    }
+
+                });
+				//初始化下拉框
+				initAreaProject('combobox_area', 'combobox_project');
+
+			});
+			
+			
+		</script>
+	</head>
+
+	<body>
+		<!--<table id="datagrid_regularly" class="easyui-treegrid">-->
+			<!--<thead>-->
+				<!--<tr>-->
+					<!--<th data-options="field:'area',width:200,hidden:false,align:'center'">区域名称</th>-->
+					<!--<th data-options="field:'project',width:200,hidden:false,align:'center'">项目名称</th>-->
+					<!--<th data-options="field:'name',width:200,hidden:false,align:'center'">设备编码</th>-->
+					<!--<th data-options="field:'code',width:200,hidden:false,align:'center'">设备编码</th>-->
+					<!--<th data-options="field:'install_area',width:300,hidden:false,align:'center'">安装位置</th>-->
+					<!--<th data-options="field:'date',width:200,hidden:false,align:'center'">能耗值</th>-->
+					<!--<th data-options="field:'eq_id',width:200,true:false,align:'center'">设备id</th>-->
+				<!--</tr>-->
+			<!--</thead>-->
+		<!--</table>-->
+		<table id="datagrid_regularly" class="easyui-treegrid">
+			<thead>
+				<tr>
+					<th data-options="field:'area',width:200,hidden:false,align:'center'">区域名称</th>
+					<th data-options="field:'project',width:200,hidden:false,align:'center'">项目名称</th>
+					<th data-options="field:'name',width:200,hidden:false,align:'left'">设备名称</th>
+					<th data-options="field:'code',width:200,hidden:false,align:'center'">设备编码</th>
+					<th data-options="field:'install_area',width:300,hidden:false,align:'center'">安装位置</th>
+					<th data-options="field:'date',width:200,hidden:false,align:'center'">能耗值</th>
+					<th data-options="field:'eq_id',width:200,true:false,align:'center'">设备id</th>
+				</tr>
+			</thead>
+		</table>
+		<!--工具栏-->
+		<div id="toolbar_datagrid_regularly">
+			<form id="yjwy_query_mianform" method="post">
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<select class="easyui-combobox" name="pk_area" id="combobox_area" data-options="editable:false,width:210">
+					<option value="default">区域选择</option>
+				</select>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<select class="easyui-combobox" name="pk_project" id="combobox_project"  data-options="editable:false,width:210">
+					<option value="default">项目选择</option>
+				</select>
+				<select class="easyui-combobox" name="end_time" id="combobox_year"  data-options="editable:false,width:210">
+					<option value="default">年份选择</option>
+          		  <option value="2017">2017</option>
+	          	  <option value="2016">2016</option>
+	          	  <option value="2015">2015</option>
+	     	   </select>
+	     	  	 <input id="task_type" name="task_type" style="display:none" type="text"/>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<a class="easyui-linkbutton" onclick="querySubmit()" data-options="iconCls:'icon-search',plain:'true'">查询</a>
+				<a class="easyui-linkbutton" onclick="resetSubmit()" data-options="iconCls:'icon-mini-refresh',plain:'true'">重置</a>
+				<a id="export_mainbtn"  href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-excel_export',plain:true">图表导出</a>
+				
+			</form>
+			
+		</div>
+	</body>
+
+</html>

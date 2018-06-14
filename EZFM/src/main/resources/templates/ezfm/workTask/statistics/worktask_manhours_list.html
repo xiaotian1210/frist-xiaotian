@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<base href="${basePath?if_exists}">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>维修单量工时统计表</title>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/device/deviceUtil.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/workTask/statistics/manhours.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<script type="text/javascript">
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+			$(function() {
+				//根据条件导出excel
+				$("#export_mainbtn").click(function() {
+					var jsonData = $("#yjwy_query_mianform").serializeObject();
+					var url = "ezfm/worktask/manhours/export?param=" + JSON.stringify(jsonData);
+					window.location.href = url;
+				});
+				//调用浏览器打印
+				$("#print_mainbtn").click(function() {
+					window.print();
+				});
+				//初始化数据表格
+				$("#datagrid_manhours").datagrid({
+					onLoadSuccess: function(rowData) {
+						MergeCells("datagrid_manhours", "class_name");
+					}
+				});
+				datagridInit('datagrid_manhours', 'ezfm/worktask/manhours/query', parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle, 'toolbar_datagrid_manhours', true, false);
+
+				//初始化下拉框
+				initAreaProject('combobox_area', 'combobox_project');
+
+
+// 				验证时间
+				$('#datebox_start_time').datebox({
+					onSelect: function(date){
+						
+						$('#datebox_end_time').datebox().datebox('calendar').calendar({
+							validator: function(dateAfter){
+								
+								var startDate = $("#datebox_start_time").datebox('getValue');
+								if(startDate == ""){
+									return true;
+								}
+								var s =startDate+' 00:00:00';
+								s = s.replace(/-/g,"/");
+								var dateBefore = new Date(s );
+																
+								return dateBefore <= dateAfter;
+		
+							}
+						});
+
+					}
+				});
+
+			});
+		</script>
+
+	</head>
+
+	<body>
+		<table id="datagrid_manhours" class="easyui-datagrid">
+			<thead>
+				<tr>
+					<th data-options="field:'class_name',width:150,hidden:false,align:'center'">维修类型</th>
+					<th data-options="field:'project_name',width:200,hidden:false,align:'center'">项目/片区</th>
+					<th data-options="field:'task_total',width:60,hidden:false,align:'center'">总单数</th>
+					<th data-options="field:'apiece_day_avg',width:80,hidden:false,align:'center'">人均日单数</th>
+					<th data-options="field:'all_workmins',width:80,hidden:false,align:'center'">总工时(分钟)</th>
+					<th data-options="field:'all_workhours',width:80,hidden:false,align:'center'">总工时(小时)</th>
+					<th data-options="field:'order_total',width:60,hidden:false,align:'center'">接单量</th>
+					<th data-options="field:'completion_total',width:80,hidden:false,align:'center'">接单完成量</th>
+					<th data-options="field:'twentyfour_comptotal',width:110,hidden:false,align:'center'">24小时完成工单量</th>
+					<th data-options="field:'order_rate',width:100,hidden:false,align:'center'">接单完成率(%)</th>
+					<th data-options="field:'workhours_avg',width:90,hidden:false,align:'center'">每单平均工时</th>
+					<th data-options="field:'apiece_workhours_avg',width:70,hidden:false,align:'center'">人均工时</th>
+					<th data-options="field:'apiece_day_workhours_avg',width:70,hidden:false,align:'center'">人均日工时</th>
+					<th data-options="field:'maint_rate',width:80,hidden:false,align:'center'">维修量占比</th>
+					<!--以下为隐藏字段-->
+					<th data-options="field:'user_total',width:100,hidden:true,align:'center'">总人数</th>
+					<th data-options="field:'days',width:100,hidden:true,align:'center'">天数</th>
+					<th data-options="field:'pk_class_id',width:100,hidden:true,align:'center'">维修类型id</th>
+					<th data-options="field:'classtask_total',width:100,hidden:true,align:'center'">维修分类工单总数</th>
+					<th data-options="field:'pk_project',width:200,hidden:true,align:'center'">项目id</th>
+					<th data-options="field:'pk_area',width:200,hidden:true,align:'center'">区域id</th>
+					<th data-options="field:'area_name',width:200,hidden:true,align:'center'">区域名称</th>
+				</tr>
+			</thead>
+		</table>
+		<!--工具栏-->
+		<div id="toolbar_datagrid_manhours">
+			<form id="yjwy_query_mianform" method="post">
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<select class="easyui-combobox" name="pk_area" id="combobox_area" data-options="editable:false,width:210">
+					<option value="default">区域选择</option>
+				</select>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<select class="easyui-combobox" name="pk_project" id="combobox_project"  data-options="editable:false,width:210">
+					<option value="default">项目选择</option>
+				</select>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<span>生成时间:</span>
+				<input style="width: 100px;" name="start_time" id="datebox_start_time" type="text" class="easyui-datebox" data-options="editable:false,buttons:buttons"></input>
+				-
+				<input style="width: 100px;" name="end_time" id="datebox_end_time" type="text" class="easyui-datebox" data-options="editable:false,buttons:buttons"></input>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<a class="easyui-linkbutton" onclick="querySubmit()" data-options="iconCls:'icon-search',plain:'true'">查询</a>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<a class="easyui-linkbutton" onclick="resetSubmit()" data-options="iconCls:'icon-mini-refresh',plain:'true'">重置</a>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+			</form>
+			<hr />
+			<a id="print_mainbtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-print',plain:true">报表打印</a>
+			<a id="export_mainbtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-excel_export',plain:true">图表导出</a>
+		</div>
+	</body>
+
+</html>

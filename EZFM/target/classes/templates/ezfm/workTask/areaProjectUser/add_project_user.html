@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<base href="${basePath?if_exists}">
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>关联人员</title>
+	<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+	<script type="text/javascript" src="resources/ezfm/all.js"></script>
+	<script type="text/javascript" src="resources/ezfm/js/pub/list.commons.js"></script>
+</head>
+<body>
+	<div class="easyui-tabs" data-options="tabWidth:112" style="overflow:hidden;height:100%">
+		<div title="用户列表">
+			<div id="yjwy_addProjectUser_son_grid_tb" style="height:auto">
+				<form id ="yjwy_query_user"  method="post">
+				<table class="dv-table" style="margin-top:5px;">
+					<tr>
+						<td style="text-align: end;padding-right: 20px;">
+							<span>用户姓名:</span>
+							<input name="inspstan_code" id="user_name" class="easyui-textbox"></input>
+						</td>
+						<td><a id="btn_son_project_user" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></td>
+					</tr>
+				</table>
+				</form>
+			</div>
+			<table id="yjwy_addProjectUser_son_grid" class="easyui-datagrid" title="用户列表">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'user_name',width:300,align:'center'">姓名</th>
+						<th data-options="field:'user_code',width:300,align:'center'">账户</th>
+						<th data-options="field:'yjwy_oprator',width:120,align:'center',formatter:standardOperationFormatter">操作</th>
+						<th data-options="field:'pk_user',hidden:true">主键</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<script type="text/javascript">
+	var notRoleButtons = "${notRoleButtons?if_exists}";
+	var queryParamAddProjectUser = { 
+			metas: ['yjwy_worktask_area_user_nexus'],
+			'andList': [{
+	            key: 'projectId',
+				operator: 'eq',
+				value: "${projectId?if_exists}"
+			}]
+		}
+		$(function(){
+			var queryUrl = queryUrl = "ezfm/worktask/projectuser/queryProjectByUser";
+			//初始化grid
+			initLoadGridData("yjwy_addProjectUser_son_grid",queryUrl,queryParamAddProjectUser);
+			//关联事件
+			$("#btn_son_project_user").click(function(){
+				queryUserName();
+			});
+		});
+	function standardOperationFormatter(value,row,index){
+		if(row.fk_standardedition){
+			return "已关联";
+		}else{
+			return "<a href='javascript:void(0);' onclick='addStandard(\""+row.pk_user+"\")'>关联</a>";
+		}
+	}
+	function addStandard(user_id){
+		var projectId = "${projectId?if_exists}";
+		var url = "ezfm/worktask/projectuser/save";
+		$.ajax({
+			async : false,  
+			cache:false,  
+			type: 'POST',  
+			dataType : "json",
+			data:{projectId:projectId,user_id:user_id},
+			url: url,//请求的action路径  
+			error: function () {//请求失败处理函数  
+				alert('请求失败');  
+			},  
+			success:function(data){ 
+	        	if(data.success){
+	        		$.messager.show({
+						title:'提示',
+						msg:'加入成功',
+						timeout:2000,
+						showType:'slide'
+					});
+	        	}
+	        }
+	    })
+	    $('#yjwy_addProjectUser_son_grid').datagrid('reload');
+		$('#datagrid_areaProjectUserList').datagrid('reload');
+	}
+	function queryUserName(){
+		var andList = [];
+		var user_name = $("#user_name").val();
+		var condition1 ={
+			key: 'projectId',
+			operator: 'eq',
+			value: "${projectId?if_exists}"
+		}
+		andList.push(condition1);
+		if(user_name){
+			var condition3={
+				key: 'user_name_',
+				operator: 'like',
+				value: user_name
+			}
+			andList.push(condition3);
+		}
+		queryParamAddProjectUser.andList=andList;
+		$('#yjwy_addProjectUser_son_grid').datagrid('reload');
+	}
+	
+	//datagrid加载
+	function initLoadGridData(datagrid_id,queryUrl,queryParam){
+		$('#'+datagrid_id).datagrid({
+			url:queryUrl,
+			singleSelect:false,
+			checkOnSelect:true,
+			selectOnCheck:true,
+			striped:true,
+			rownumbers:true,
+			loadMsg:"数据加载中...",
+			pagination:true,
+			pagePosition:"bottom",
+			pageNumber:1,
+			pageSize:5,
+			pageList:[5,10,20],
+			toolbar:'#'+datagrid_id+"_tb",
+			fit:true,
+			loader:function(param, success, error){
+				param = param || {};
+				var extraParam = queryParam;
+				if(param.rows){
+					extraParam.limit = param.rows;
+					if(param.page){
+						extraParam.start = (param.page - 1) * param.rows;
+					}
+				}
+				$.extend(param, extraParam);
+				$.request.httpPost({
+					url: queryUrl,
+					data: { param: JSON.stringify(param)},
+					success: function(respose){
+						success({
+							total: respose.total,
+							rows: respose.data
+						});
+					}
+				});
+				return true;
+			}
+		});
+		
+		var pager_info = $('#'+datagrid_id).datagrid('getPager'); 
+	    $(pager_info).pagination({
+	    	displayMsg: '当前显示 第{from} - {to} 条     共{total}条记录'
+	    });
+	}
+	</script>
+</body>
+</html>

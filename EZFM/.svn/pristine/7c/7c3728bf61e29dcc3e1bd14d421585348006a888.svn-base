@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="${basePath?if_exists}">
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>关联地点</title>
+    <link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+    <script type="text/javascript" src="resources/ezfm/all.js"></script>
+</head>
+<body>
+<style type="text/css">
+    #toolbar_classAndProjectInfo {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+    }
+</style>
+<div id="dialog_repairPlaceInfo">
+    <form id="form_repairPlaceInfo" method="post">
+        <ul id="sys_tree" class="ztree"></ul>
+    </form>
+</div>
+<script type="text/javascript">
+    var notRoleButtons = "${notRoleButtons?if_exists}";
+    var zTreeObj;
+
+    var zNodes;
+    //操作符，save 和 update;
+    var operation;
+    // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+    var setting = {
+        edit : {
+            enable : true,
+            showRemoveBtn : false,
+            showRenameBtn : false
+        },
+        data : {
+            simpleData : {
+                enable : true,
+            }
+        },
+        callback : {
+            onDblClick : zTreeOnDblClick
+        },
+        view : {
+            selectedMulti : false
+        }
+    };
+    //tree查询展示
+    function showClassAdmintTree() {
+        var param = {
+            metas : [ 'yjwy_device_fmdata_eq_sys' ],
+        }
+        var params = {param : JSON.stringify(param),
+            isWindow:'true'
+        }
+        $.ajax({
+            async : false,
+            cache : false,
+            type : 'POST',
+            dataType : "json",
+            data : params,
+            url : "ezfm/device/fmdata_eq/query",//请求的action路径
+            error : function() {//请求失败处理函数
+                alert('请求失败');
+            },
+            success : function(data) { //请求成功后处理函数。
+                zNodes = data.rows; //把后台封装好的简单Json格式赋给treeNodes
+            }
+        });
+        zTreeObj = $.fn.zTree.init($("#sys_tree"), setting,
+            zNodes);
+    }
+    $(function() {
+        showClassAdmintTree();
+    });
+
+    function zTreeOnDblClick(event, treeId, treeNode) {
+//     	if (!treeNode.isParent) {
+            var pNode = zTreeObj.getSelectedNodes();
+            var zNode = pNode[0];
+            var name;
+            var level = zNode.level + 1;
+            var site_id;
+            var fk_sys_all_ids ;
+            for (var i = 1; i <= level; i++) {
+                if (i == 1) {
+                    name = zNode.name;
+                    fk_sys_all_ids= zNode.id;
+                } else {
+                    zNode = zNode.getParentNode();
+                    name = zNode.name + "|" + name;
+                    fk_sys_all_ids = zNode.id+"|"+fk_sys_all_ids;
+                }
+                if (i == level - 1) {
+//                     $("#site_id").val(zNode.id);
+                }
+            }
+            $("input[id=fk_eq_sys_id]").val(treeNode.id);
+            $("input[id=fk_sys_all_ids]").val(fk_sys_all_ids);
+            $("#eq_sys_name").textbox('setText', name);
+            $("#eq_sys_name").textbox('setValue', name);
+            $("#sys_id").window('close');
+           // $("input[name=eq_sys_name]").textbox('setValue', name);
+//          }
+    };
+</script>
+</body>
+</html>

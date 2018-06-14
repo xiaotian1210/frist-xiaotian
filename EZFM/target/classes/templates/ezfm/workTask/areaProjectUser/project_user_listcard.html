@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<base href="${basePath?if_exists}">
+		<title>人员定义</title>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/workTask/areaProjectUser/areaProjectUser.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/workTask/workTaskUtil.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/css/problem/classAdmin.css"></link>
+		<script type="text/javascript">
+		var notRoleButtons = "${notRoleButtons?if_exists}";
+		var roleButtons = "${roleButtons?if_exists}";
+			var queryParam = { 
+					metas: ['yjwy_worktask_project_user'],
+					'andList': [{
+			            key: 'project_id',
+						operator: 'eq',
+						value: "1111"
+					}]
+				}
+			//页面加载完成，加载项目tree
+			$(function() {
+				//行列样式设置
+				$("td,th").attr("valign", "top");
+				showprojectInfotTree('${crop?if_exists}');
+				initLoadGridDatas('datagrid_areaProjectUserList', 'ezfm/worktask/projectuser/query','toolbar_datagrid_areaProjectUserList','项目人员',queryParam);
+				//格式化分页工具
+				//formatPager('datagrid_areaProjectUserList');
+				//判断是否有按钮权限
+				if(roleButtons==""){
+					document.getElementById("toolbar_datagrid_area_project_user_button").style.display="none";
+				} 
+				//关联事件
+				$("#add_project_user").click(function(){
+					userList();
+				});
+				$("#delete_project_user").click(function(){
+					deleteUser("datagrid_areaProjectUserList");
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+	<!--工具栏-->
+	<div data-options="region:'north'" style="height:auto;overflow: hidden;" id="toolbar_datagrid_area_project_user_button">
+		<div id="treebar" style="height:28px;" class="datagrid-toolbar">
+			<a class="easyui-linkbutton"  id="add_project_user" data-options="iconCls:'icon-add',plain:true" >关联人员</a>
+			<a class="easyui-linkbutton"  id="delete_project_user" data-options="iconCls:'icon-remove',plain:true" >移除人员</a>
+		</div>
+	</div>
+	<div class="easyui-layout" data-options="fit:true">
+		<div data-options="region:'west',split:true" title="区域项目架构"
+			style="width: 200px;">
+			<ul id="projectInfo_tree" class="ztree"></ul>
+		</div>
+		<!--列表-->
+		<div data-options="region:'center',iconCls:'icon-ok'">
+			<table id="datagrid_areaProjectUserList" class="easyui-datagrid">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'user_name',width:300,align:'center'">姓名</th>
+						<th data-options="field:'user_code',width:300,align:'center'">账户</th>
+						<th data-options="field:'pk_nexus_id',hidden:true">主键</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</body>
+

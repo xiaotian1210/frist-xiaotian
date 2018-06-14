@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="228f69c1ce0245e79326717ae80ac855" package="com.shareworx.ezfm.device.patrol.plan.model" version="20160729-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_patrol_plan" name="巡检维保计划" table="yjwy_patrol_plan" class="YJWYPlanModel" init="false" dynamic="false" location="196,18,120,120">
+    <property id="plan_id" name="计划id" column="plan_id" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="plan_name" name="计划名称" column="plan_name" type="1" define="varchar" length="200" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_area" name="区域id" column="pk_area" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_project" name="项目id" column="pk_project" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="start_time" name="开始时间" column="start_time" type="5" define="char" length="23" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="end_time" name="结束时间" column="end_time" type="5" define="char" length="23" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="group_id" name="人员组id" column="group_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="frequency" name="频次" column="frequency" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="plan_type" name="计划类型；0：巡检；1： 维保" column="plan_type" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="is_enable" name="是否启用；0：禁用；1：启用" column="is_enable" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="next_time" name="下次任务生成时间" column="next_time" type="5" define="char" length="23" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_crop" name="所属公司" column="pk_crop" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="create_time" name="创建时间" column="create_time" type="6" define="char" length="23" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="create_user" name="创建人id" column="create_user" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="update_time" name="修改时间" column="update_time" type="0" define="char" length="13" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="update_user" name="修改人id" column="update_user" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="csis" name="所有分类" column="csis_" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="false" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="eqs" name="所有设备" column="eqs_" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="false" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="rooms" name="所有机房" column="rooms_" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="false" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="frequency_num" name="频次数量" column="frequency_num_" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="false" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="frequency_unit" name="频次单位" column="frequency_unit_" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="false" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <index id="plan_id" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

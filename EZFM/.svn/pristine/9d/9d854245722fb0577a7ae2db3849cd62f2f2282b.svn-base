@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<base href="${basePath?if_exists}" />
+		<title>签到管理</title>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/performance/sign.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>	
+		<!--获取百度地图密钥-->
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=kbu2j75aBq5wi0qsxaiFdBbZf3QL4Djh">
+		</script>
+		<script type="text/javascript">
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+		</script>
+	</head>
+
+	<body class="easyui-layout">
+		<!--签到管理列表-->
+		<div id="tb" style="height:auto">
+		<fieldset style="border-color: currentColor;border-width: inherit;border-bottom-width: thin;">	
+		<form id="yjwy_query_mianform" method="post">
+				<table class="dv-table" style="margin-top: 5px;">
+					<tr>
+						<td style="text-align: end; padding-right: 60px;"><label>区域:</label>
+							<select class="easyui-combobox" name="area_id"
+							id="queray_main_area_id" style="width: 205px;"
+							data-options="editable:false,onChange:areaChange">
+								<option value="">请选择</option>
+						</select></td>
+						<td style="text-align: end; padding-right: 60px;"><label>项目:</label>
+							<select class="easyui-combobox" name="project_id"
+							id="queray_main_project_id" style="width: 205px;"
+							data-options="editable:false,onChange:projectChange">
+								<option value="">请选择</option>
+						</select></td>
+						<td style="text-align: end;padding-right: 60px;">
+							<label>提交时段:</label>
+							<input class="easyui-datebox" data-options="editable:false,buttons:buttons" style="width:92px;" name="start_date" id="rectification_startTime"></input>
+							<input style="width:11px;border:none;text-align: center;background-color: #F5F5F5;" value="~" ></input>
+							<input class="easyui-datebox" data-options="editable:false,buttons:buttons" style="width:92px;" name="end_date" id="rectification_EndTime"></input>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: end; padding-right: 60px;"><label>岗位:</label>
+							<select class="easyui-combobox" name="station_id"
+							id="queray_main_station_id" style="width: 205px;"
+							data-options="editable:false,onChange:stationChange">
+								<option value="">请选择</option>
+						</select></td>
+						<td style="text-align: end; padding-right: 60px;"><label>部门:</label>
+							<select class="easyui-combobox" name="fk_department"
+							id="queray_main_dept_id" style="width: 205px;" data-options="editable:false">
+								<option value="">请选择</option>
+						</select></td>
+						<td style="text-align: end;padding-right: 60px;">
+							<label>规定时间:</label>
+							<input class="easyui-timespinner" data-options="editable:false,showSeconds:true" style="width:92px;" name="start_time" id="rectification_startTime1" ></input>
+							<input style="width:11px;border:none;text-align: center;background-color: #F5F5F5;" value="~" ></input>
+							<input class="easyui-timespinner" data-options="editable:false,showSeconds:true" style="width:92px;" name="end_time" id="rectification_EndTime1" ></input>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: end; padding-right: 60px;"><label>人员:</label>
+							<select class="easyui-combobox" name="user_id"
+							id="queray_main_user_id" style="width: 205px;" data-options="editable:false">
+								<option value="">请选择</option>
+						</select></td>
+						<td><a id="btn_mainquery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="margin-right:10px;">查询</a>
+						    <a id="btn_resetQuery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-mini-refresh'">重置</a>						
+						</td>
+						<td></td>
+					</tr>
+				</table>
+			</form>
+			
+		</fieldset>
+			<div style="margin-bottom:5px;margin-top:5px">			
+				&nbsp;&nbsp;<a id="export_mainbtn" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-excel_export',plain:true">图表导出</a>		
+			</div>
+			
+		</div>
+		
+		<div data-options="region:'center'">
+		<table id="yjwy_main_grid" class="easyui-datagrid" data-options="fit:true,singleSelect:true,collapsible:true,toolbar:'#tb'">
+			<thead>
+				<tr>
+					<!-- <th data-options="field:'checkbox',checkbox:true"></th> -->
+					<th data-options="field:'user_name',width:200,hidden:false,align:'center'">签到人</th>
+					<th data-options="field:'sign_commitTime',width:200,hidden:false,align:'center'">提交时间</th>	
+					<th data-options="field:'sign_action',width:200,hidden:false,align:'center',formatter:action">动作</th>	
+					<th data-options="field:'project_name',width:200,hidden:false,align:'center'">签到项目</th>
+					<th data-options="field:'sign_location',width:200,hidden:false,align:'center',formatter:formatlocation">定位</th>	
+					<!--以下字段不显示-->
+					<th data-options="field:'pk_sign',width:100,hidden:true,align:'center'">主键</th>
+					<th data-options="field:'fk_project',width:100,hidden:true,align:'center'">外键项目</th>
+					<th data-options="field:'fk_department',width:100,hidden:true,align:'center'">外键部门</th>			
+					<th data-options="field:'fk_job',width:100,hidden:true,align:'center'">外键岗位</th>
+					<th data-options="field:'sign_region',width:100,hidden:true,align:'center'">签到区域</th>
+				</tr>
+			</thead>
+		</table>
+		</div>
+		<div id="allmap"></div>
+		<script>
+			$("#yjwy_main_grid").attr("title", parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle);
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base href="${basePath?if_exists}">
+<meta charset="UTF-8">
+<title>功能管理</title>
+	<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+	<link rel="stylesheet" type="text/css" href="resources/ezfm/css/home/fun-icons.css"></link>
+	<link rel="stylesheet" type="text/css" href="resources/ezfm/css/system/function.css"></link>
+	<script type="text/javascript" src="resources/ezfm/all.js"></script>
+	<script type="text/javascript" src="resources/ezfm/js/pub/easyui.tree.defaults.loadfilter.js"></script>
+	<script type="text/javascript">
+		var pc = '${crop?if_exists}';
+		var notRoleButtons = "${notRoleButtons?if_exists}";
+		//加载功能菜单树
+		function loadFunctonTree(treeId,nodes){
+			$("#"+treeId).tree({
+				animate:true,
+				dataPlan:true,
+				data:nodes,
+				onClick:treeOnClick
+			});
+		}
+		function treeOnClick(node){
+			formReadOnly(true);
+			$("#main_function_formid").form("load",node.attributes);
+		}
+		function initLoadFunctionTree(){
+			//var treeUrl = "ezfm/system/function/all/query/root/openroot";
+	       	var treeUrl = "ezfm/system/function/plan/query";
+			$.request.httpGet({
+				url: treeUrl,
+				async:false,
+				data:{types:"menu,function,button"},
+				success:function(result){
+		        	if(result.success){
+		        		loadFunctonTree("function_tree_id",result.data);
+		        	}
+		        }
+			});
+		}
+		//将form只读
+		function formReadOnly(bool){
+			var inputs = $("#main_function_formid td>input");
+			for(var i=0;i<inputs.length;i++){
+				$(inputs[i]).textbox('readonly',bool);
+			}
+			if(bool){
+				$("#form_btn_id").hide();
+				$("#main_function_formid").form("disableValidation");
+			}else{
+				$("#form_btn_id").show();
+				$("#main_function_formid").form("enableValidation");
+				$("#main_function_formid tr:first").find(".textbox-text").eq(0).focus();
+			}
+		}
+		$(function(){
+			initLoadFunctionTree();
+			$("#type_id").combobox({
+				onChange:function(newValue, oldValue){
+					if("function"!=newValue && "corp_function"!=newValue && "other"!=newValue && "dms_function"!=newValue){
+						$("#input_url_id").textbox("clear");
+						$("#tr_url_id").hide();
+					}else{
+						$("#tr_url_id").show();
+					}
+				}
+			});
+			formReadOnly(true);
+		});
+		//删除按钮
+		function deleteTreeNode(){
+			var selectedNode = $("#function_tree_id").tree("getSelected");
+			if(!selectedNode){
+				$.messager.alert("提示","请选择删除的节点");
+				return;
+			}
+			$.messager.confirm('提示', '您确认删除吗?', function(r){
+				if (r){
+					var deletenodes = $('#function_tree_id').tree('getChildren',selectedNode.target);
+					var deleteRs = [];
+					for(var i=0; i<deletenodes.length; i++){
+						deleteRs.push(deletenodes[i].attributes);
+					}
+					deleteRs.push(selectedNode.attributes);
+					$.request.restPost({
+						url: "ezfm/system/function/delete",
+						data: deleteRs,
+						success: function(rs){
+							if(rs.success){
+								$("#function_tree_id").tree("remove",selectedNode.target);
+								$("#main_function_formid").form("clear");
+								formReadOnly(true);
+								$.messager.show({
+									title:'提示',
+									msg:'数据已删除',
+									timeout:2000,
+									showType:'slide'
+								});
+							}else{
+								$.messager.alert("提示",rs.message,"warning");
+							}
+						}
+					});
+				}
+			});
+		}
+		//刷新按钮
+		function reloadTreeNode(){
+			$("#main_function_formid").form("clear");
+			initLoadFunctionTree();
+			formReadOnly(true);
+		}
+		//添加按钮
+		function addTreeNode(){
+			$("#main_function_formid").form("clear");
+			formReadOnly(false);
+		}
+		//修改按钮
+		function editTreeNode(){
+			var node = $("#function_tree_id").tree("getSelected");
+			if(!node){
+				$.messager.alert("提示","请选择修改的节点");
+				return;
+			}
+			$("#main_function_formid").form("load",node.attributes);
+			formReadOnly(false);
+		}
+		//保存按钮
+		function saveTreeNode(isAdd){
+			if(!($("#main_function_formid").form('enableValidation').form('validate'))){
+				return;
+			}
+			var saveUrl = "${basePath?if_exists}ezfm/system/function/save";
+			var updateUrl = "${basePath?if_exists}ezfm/system/function/update";
+			var formdata =  $("#main_function_formid").serializeObject();
+			if(formdata.id){
+				var result = save(updateUrl,formdata);
+				if(result.success){
+					var node = $("#function_tree_id").tree("getSelected");
+					var newNode = result.data[0];
+					if (node){
+						newNode.target = node.target;
+						$('#function_tree_id').tree('update', newNode);
+					}
+					formReadOnly(true);
+				}
+			}else{
+				var pnode = $("#function_tree_id").tree("getSelected");
+				if(pnode){
+					formdata.pid=pnode.id;
+				}else{
+					formdata.pid="root";
+				}
+				var result = save(saveUrl,formdata);
+				if(result.success){
+					var newChildNode = result.data[0];
+					var newChildAttributes = newChildNode.attributes;
+					var childs = [];
+					if(pnode){
+						childs = pnode.children?pnode.children:[];
+					}else{
+						childs = $("#function_tree_id").tree("getRoots");
+					}
+					if(childs && childs.length>0){
+						var flag = false;
+						for(var i=0; i<childs.length; i++){
+							var childAttributes = childs[i].attributes;
+							if(childAttributes.order>newChildAttributes.order){
+								$('#function_tree_id').tree('insert', {
+									before: $('#function_tree_id').tree("find",childAttributes.id).target,
+									data: [newChildNode]
+								});
+								flag = "true";
+								break;
+							}
+							if(i==childs.length-1){
+								$('#function_tree_id').tree('insert', {
+									after: $('#function_tree_id').tree("find",childAttributes.id).target,
+									data: [newChildNode]
+								});
+							}
+						}
+					}else{
+						$('#function_tree_id').tree('append', {
+							parent: pnode.target,
+							data:[newChildNode] 
+						});
+						$('#function_tree_id').tree('collapse', pnode.target);
+						$('#function_tree_id').tree('expand', pnode.target);
+					}
+					formReadOnly(true);
+				} 
+			} 
+		}
+		
+		function save(actionUrl,formJosn){
+			var rs={};
+			$.request.restPost({
+				url: actionUrl,
+				data:formJosn,
+				async:false,
+				success: function(result){
+					if(result.success){
+						$.messager.show({
+							title:'提示',
+							msg:'数据已保存',
+							timeout:2000,
+							showType:'slide'
+						});
+			    	}else{
+			    		$.messager.alert("提示",result.message);
+			    	}
+					rs = result;;
+				}
+			});
+			return rs;
+		}
+	</script>
+</head>
+<body class="easyui-layout">
+	<div class="easyui-layout" data-options="region:'center'" style="border:0;">
+		<div data-options="region:'center', title: '功能详情',fit:true">
+			<div class="easyui-panel" style="width:600px;border:0">
+				<div style="padding:20px 60px 20px 60px;">
+				    <form id="main_function_formid" class="base_main_form easyui-form" data-options="novalidate:true">
+						<table class="base_main_table">
+				    		<tr>
+				    			<th style="float:right;">名称：</th>
+				    			<td><input id="inputId" class="easyui-textbox" type="text" name="name" data-options="height:28,width:300,required:true"></input></td>
+				    		</tr>
+				    		<tr>
+				    			<th style="float:right;">编码：</th>
+				    			<td><input class="easyui-textbox" type="text" name="code" data-options="height:28,width:300,required:true"></input></td>
+				    		</tr>
+				    		<tr>
+				    			<th style="float:right;">类型：</th>
+				    			<td style="height:28px;">
+				    				<input id="type_id" name="type" class="easyui-combobox" style="height:30px;" data-options="editable:false,height:28,required:true,fit:true,valueField: 'value',textField: 'label',
+									data: [{
+										label: '菜单',
+										value: 'menu'
+									},{
+										label: '功能',
+										value: 'function'
+									},{
+										label: '按钮',
+										value: 'button'
+									},{
+										label: '企业菜单',
+										value: 'corp_menu'
+									},{
+										label: '企业功能',
+										value: 'corp_function'
+									},{
+										label: '达美盛菜单',
+										value: 'dms_menu'
+									},{
+										label: '达美盛功能',
+										value: 'dms_function'
+									},{
+										label: '其他',
+										value: 'other'
+									}]" />
+				    			</td>
+				    		</tr>
+				    		<tr id="tr_url_id">
+				    			<th style="float:right;">URL：</th>
+				    			<td><input class="easyui-textbox" id="input_url_id" type="text" name="url" data-options="height:28,width:300"></input></td>
+				    		</tr>
+				    		<tr>
+				    			<th style="float:right;">iconCls：</th>
+				    			<td><input class="easyui-textbox" type="text" name="icon" data-options="height:28,width:300"></input></td>
+				    		</tr>
+				    		<tr>
+				    			<th style="float:right;">排序：</th>
+				    			<td><input class="easyui-numberbox" type="text" name="order" data-options="height:28,width:300,min:0,precision:0"></input></td>
+				    		</tr>
+				    		<tr>
+				    			<th rowspan=2 style="float:right;">功能描述：</th>
+				    			<td rowspan=2><input class="easyui-textbox" type="text" name="memo" data-options="multiline:true,fit:true,height:20,width:300"></input></td>
+				    		</tr>
+				    		<tr></tr>
+				    		<tr style="display:none;">
+				    			<th style="float:right;">功能ID</th>
+				    			<td><input class="easyui-textbox" type="text" name="id" data-options="height:28,width:300"></input></td>
+				    		</tr>
+				    		<tr style="display:none;">
+				    			<th style="float:right;">功能父ID</th>
+				    			<td><input class="easyui-textbox" type="text" name="pid" data-options="height:28,width:300"></input></td>
+				    		</tr>
+				    	</table>
+				    </form>
+				    <div id="form_btn_id" style="text-align:center;padding:10px;">
+				    	<a href="javascript:void(0)" id="save_mainbtn" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="saveTreeNode()" style="text-align:center;margin:5px;font-size:18px;">保存</a>
+				    	<a href="javascript:void(0)" id="reset_mainbtn" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="formReadOnly(true);"  style="text-align:center;font-size:18px;margin-left:20px;">取消</a>
+				    </div>
+			    </div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="treepanel" class="easyui-layout" data-options="region:'west',split:true,collapsible:false" style="width:280px;padding:0px;">
+		<div data-options="region:'north'" style="height:auto;overflow: hidden;">
+			<div id="treebar" class="datagrid-toolbar">
+				<a id="add_mainbtn" href="javascript:void(0);" onclick="addTreeNode();" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>
+				<a id="edit_mainbtn" href="javascript:void(0);" onclick="editTreeNode();" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+				<a id="delete_mainbtn" href="javascript:void(0);" onclick="deleteTreeNode();" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+				<a id="reload_mainbtn" href="javascript:void(0);" onclick="reloadTreeNode();" class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true">刷新</a>
+			</div>
+		</div>
+		<div id="treepanel" data-options="region:'west',fit:true">
+			<ul id="function_tree_id" class="easyui-tree" style="padding-bottom: 100px;padding-top:10px;"></ul>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<base href="${basePath?if_exists}">
+		<meta charset="UTF-8">
+		<title>核查标准</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+
+		<style>
+			.tab-left{
+				margin-left: 8px;
+			}
+			.spanPosition{
+				position: relative;top: 5px;right: 1px; left: 5px
+			}
+		</style>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript">
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+			//加载区域
+			function loadArea(){
+				var url = "ezfm/baseinfo/pub/query/dictionary/area/query";
+				var simpleFormat = {valueField: 'pk_area',textField: 'area_name'};
+				initDictionaryCombobox("query_main_area_id",url,null,simpleFormat);
+			}
+			//加载专业
+			function loadSecialty(){
+				var url = "ezfm/baseinfo/pub/query/dictionary/dict/query";
+				var param = {code:"propessional",state:1};
+				initDictionaryCombobox("query_main_specialty_id",url,param); 
+			}
+			//加载下拉框查询条件
+			function initLoadQueryMainData(){
+				loadArea();
+				loadSecialty();
+			}
+			var queryParam = { 
+				metas: ['yjwy_quality_inspectstandard'],
+				'andList': []
+			}
+			$(function(){
+				var queryUrl = "${basePath?if_exists}ezfm/quality/proinspect/inspect/standard/query";
+				
+				//初始化grid
+				initLoadGridData("yjwy_main_grid",queryUrl,queryParam);
+				//新增修改的操作
+				var mainFormOptions = {buttons:[{
+					text:'保存',
+					iconCls:'icon-ok',
+					id:"save_mainbtn"
+				},{
+					text:'重置',
+					iconCls:'icon-mini-refresh',
+					id:"reset_mainbtn"
+				},{
+					text:'关闭',
+					iconCls:'icon-cancel',
+					handler:function(){
+						$("#szw_dlg_mainform_id").dialog('close');
+					}
+				}]};
+				//添加
+				$("#add_mainbtn").click(function(){
+					var addUrl = "${basePath?if_exists}ezfm/quality/proinspect/inspect/standard/mainformpage/null";
+					addMainBtnEvent("新增核查标准",addUrl,mainFormOptions);
+				});
+				
+				//修改
+				$("#edit_mainbtn").click(function(){
+					var updateUrl = "${basePath?if_exists}ezfm/quality/proinspect/inspect/standard/mainformpage";
+					editMainBtnEvent("修改核查标准",updateUrl,"pk_inspstan",mainFormOptions);
+				});
+				
+				//删除
+				$("#delete_mainbtn").click(function(){
+					var deleteUrl = "${basePath?if_exists}ezfm/quality/proinspect/inspect/standard/delete";
+					deleteMainBtnEvent(deleteUrl);
+				});
+				
+				//查询
+				$("#btn_mainquery").click(function(){
+					var andList = [];
+					var inspstan_code = $("#query_main_sinspstan_code_id").textbox("getValue");
+					var specialty =  $("#query_main_specialty_id").combobox("getValue");
+					var areaId =  $("#query_main_area_id").combobox("getValue");
+					if(inspstan_code){
+						var condition={
+							key: 'inspstan_code',
+							operator: 'like',
+							value: inspstan_code
+						}
+						andList.push(condition);
+					}
+					if(specialty){
+						var condition={
+							key: 'specialty',
+							operator: 'eq',
+							value: specialty
+						}
+						andList.push(condition);
+					}
+					if(areaId){
+						var condition={
+							key: 'area_id',
+							operator: 'eq',
+							value: areaId
+						}
+						andList.push(condition);
+					}
+					queryParam.andList=andList;
+					$('#yjwy_main_grid').datagrid('reload');
+				});
+				
+				//重置并查询
+				$("#btn_resetQuery").click(function(){
+					$("#query_main_sinspstan_code_id").textbox("setValue","");
+					$("#query_main_specialty_id").combobox("setValue","");
+					$("#query_main_area_id").combobox("setValue","");
+					var andList = [];
+					var inspstan_code = $("#query_main_sinspstan_code_id").textbox("getValue");
+					var specialty =  $("#query_main_specialty_id").combobox("getValue");
+					var areaId =  $("#query_main_area_id").combobox("getValue");
+					if(inspstan_code){
+						var condition={
+							key: 'inspstan_code',
+							operator: 'like',
+							value: inspstan_code
+						}
+						andList.push(condition);
+					}
+					if(specialty){
+						var condition={
+							key: 'specialty',
+							operator: 'eq',
+							value: specialty
+						}
+						andList.push(condition);
+					}
+					if(areaId){
+						var condition={
+							key: 'area_id',
+							operator: 'eq',
+							value: areaIds
+						}
+						andList.push(condition);
+					}
+					queryParam.andList=andList;
+					$('#yjwy_main_grid').datagrid('reload');
+				});
+				
+				
+				//导入按钮事件
+				$("#import_mainbtn").click(function(){
+					$("#uplaod_excel_dialog_id").dialog("open");
+				});
+				//导出按钮事件
+				$("#export_mainbtn").click(function(){
+					$("#download_setting").dialog({closed:false})
+				});
+				//下载模板按钮事件
+				$("#download_mainbtn").click(function(){
+					window.location.href="ezfm/quality/proinspect/inspect/standard/imptemplete/download";
+				});
+				
+				initLoadQueryMainData();
+			});
+
+            function exportExcel(){
+                var a = $("#downloadExcelFormId").serializeObject()
+                var another  = JSON.stringify(a);
+                window.location.href="ezfm/quality/proinspect/inspect/standard/export/excel?param="+JSON.stringify(queryParam)+"&another="+another;
+
+            }
+			//显示子页面详情
+			function showSonPage(id){
+				var sonpageUrl = "ezfm/quality/proinspect/inspect/standard/sonpage/"+id;
+				showSonPageEvent("详情",sonpageUrl);
+			}
+			
+			function standardColumnFormatter(value,row,index){
+				return "<a href='javascript:void(0);' onclick='showSonPage(\""+row.pk_inspstan+"\")'>"+value+"</a>"
+			}
+			
+			//Excel文件导入
+			function submitImportExcel(){
+			    $.messager.progress();
+				$('#importExcelFormId').form('submit', {
+					url: "ezfm/quality/proinspect/inspect/standard/import/excel",
+					success: function(result){
+						result = eval('('+result+')');
+						$.messager.progress('close');// 如果提交成功则隐藏进度条
+						if(result.success){
+							$.messager.alert("提示","数据导入成功,请刷新查看","info");
+							$("#uplaod_excel_dialog_id").dialog("close");
+						}else{
+							if(result.message!="") {
+								$.messager.alert('提示','请导入Excel文件,'+result.message,'warning');
+							} else {
+								$.messager.alert('提示','数据导入失败,请检查导入数据是否符合要求','warning');
+							}
+						}
+					}
+				});
+
+			}
+		</script>
+	</head>
+	<body class="easyui-layout szw_page_body">
+		<div id="yjwy_main_grid_tb" style="height:auto">
+			<fieldset style="border-color: currentColor;border-width: inherit;border-bottom-width: thin;">
+				<legend style="display:none;">标准查询</legend>
+				<form id ="yjwy_query_mianform"  method="post">
+				<table class="dv-table" style="margin-top:5px;">
+					<tr>
+						<td style="text-align: end;padding-right: 20px;">
+							<span>标准编码:</span>
+							<input name="inspstan_code" id="query_main_sinspstan_code_id" class="easyui-textbox"></input>
+						</td>
+						<td style="text-align: end;padding-right: 20px;">
+							<span>专业:</span>
+							<select class="easyui-combobox" name="specialty" id="query_main_specialty_id" style="width:200px;" data-options="editable:false">
+							</select>
+						</td>
+						<td style="text-align: end;padding-right: 10px;">
+							<span>区域:</span>
+							<select class="easyui-combobox" name="area_id" id="query_main_area_id" style="width:200px;" data-options="editable:false">
+							</select>
+						</td>
+						<td><a id="btn_mainquery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></td>
+						<td><a id="btn_resetQuery" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-mini-refresh'">重置</a></td>
+					</tr>
+				</table>
+				</form>
+			</fieldset>
+			<div style="height:28px;margin-bottom:5px;margin-top:5px">
+				<a id="add_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>
+				<a id="edit_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+				<a id="delete_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+				<div style="float: right;margin-right: 10px;">
+					<a id="export_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-excel_export',plain:true">导出标准</a>
+					<a id="import_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-excel_import01',plain:true">导入标准</a>
+					<a id="download_mainbtn" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-download_02',plain:true">模板下载</a>
+				</div>
+			</div>
+		</div>
+		
+		<div data-options="region:'center'">	
+			<table id="yjwy_main_grid" class="easyui-datagrid" title="">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'inspstan_code',width:160,align:'center', formatter:standardColumnFormatter">标准编码</th>
+						<th data-options="field:'specialty',width:160,align:'center'">专业</th>
+						<th data-options="field:'inspstan_category',width:120,align:'center'">标准类别</th>
+						<th data-options="field:'inspstan_category_description',width:220,align:'center'">标准类别描述</th>
+						<th data-options="field:'inspstan_scorevalue',width:80,align:'center'">分值</th>
+						<th data-options="field:'create_time',width:160,align:'center'">创建时间</th>
+						<!-- 以下为隐藏列 -->
+						<th data-options="field:'pk_inspstan',hidden:true">主键</th>
+						<!-- 以上为隐藏列 -->
+					</tr>
+				</thead>
+			</table>
+		</div>
+		
+		<div id="uplaod_excel_dialog_id" class="easyui-dialog" title="标准导入" data-options="closed:true" style="width:350px;height:200px;padding:10px">
+			<form id="importExcelFormId" action="ezfm/quality/proinspect/inspect/standard/import/excel" enctype="multipart/form-data" method="post">
+				<div style="margin-top: 30px;margin-bottom: 10px;">
+					<input class="easyui-filebox" name="excleFile" id="export_excle_id" style="width:100%" data-options="buttonText:'选择文件',height:25">
+				</div>
+			</form>
+			<div>
+				<a href="javascript:void(0)" class="easyui-linkbutton" style="width:100%" onclick="submitImportExcel();">导入</a>
+			</div>
+		</div>
+
+		<div id="download_setting" class="easyui-dialog" title="导出设置" data-options="closed:true" style="width:350px;height:350px;padding:10px">
+			<form id="downloadExcelFormId" >
+				<table class="dv-table" style="margin-top:5px;">
+					<tr style="margin: 5px" >
+
+						<td  style="height: 30px" colspan="4">
+							<span>导出范围 :</span>
+							<span style="width:80%;">
+                				<input type="radio" name="page" value="0" checked>本页数据</input>
+								<input type="radio" name="page" value="1">全部数据</input>
+            				</span>
+						</td>
+					</tr>
+					<tr style="margin: 5px">
+
+						<td width="10">
+
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_code" checked onclick="return false;"/></span><span class="tab-left">标准编码 </span>
+						</td>
+						<td>
+
+						</td>
+						<td>
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_code" checked  onclick="return false;"></span><span  class="tab-left">项目类别 </span>
+						</td>
+						<td>
+						</td>
+
+					</tr>
+					<tr style="margin: 5px">
+
+						<td>
+							<span class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="specialty" checked  onclick="return false;"></span><span class="tab-left">专业 </span>
+						</td>
+						<td>
+
+						</td>
+						<td>
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_scorevalue" checked  onclick="return false;"></span><span class="tab-left">分值 </span>
+						</td>
+						<td>
+
+						</td>
+					</tr>
+
+					<tr style="margin: 5px">
+
+						<td width="">
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_category" checked  onclick="return false;"></span><span class="tab-left">标准类别 </span>
+						</td>
+						<td>
+
+						</td>
+						<td>
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_category_description" checked  onclick="return false;"></span><span class="tab-left">标准类别描述 </span>
+
+						</td>
+						<td>
+
+						</td>
+					</tr>
+
+					<tr style="margin: 5px">
+
+						<td width="">
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_performance_norm" class="selective"></span><span class="tab-left">质量绩效指标 </span>
+
+
+						</td>
+						<td>
+
+						</td>
+						<td>
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_usingscope" class="selective"></span><span class="tab-left">使用范围 </span>
+
+						</td>
+						<td>
+						</td>
+					</tr>
+
+					<tr style="margin: 5px">
+
+						<td width="110">
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_inpectmethod" class="selective"></span><span class="tab-left">是否强制拍照 </span>
+						</td>
+						<td>
+
+						</td>
+						<td>
+							<span class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_secretinquiries" class="selective"></span><span class="tab-left">对口主管频次 </span>
+						</td>
+						<td>
+
+						</td>
+
+
+					</tr>
+
+					<tr style="margin: 5px">
+
+						<td width="110">
+							<span class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_dkzg_pc" class="selective"></span><span class="tab-left">部门经理频次 </span>
+						</td>
+						<td>
+
+						</td>
+						<td>
+							<span class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_bmjl_pc" class="selective"></span><span class="tab-left">项目经理频次 </span>
+						</td>
+						<td>
+
+						</td>
+					</tr>
+
+					<tr style="margin: 5px">
+
+						<td width="110">
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_xmjl_pc" class="selective"></span><span class="tab-left">区域总助频次 </span>
+						</td>
+						<td>
+
+						</td>
+						<td>
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_qyzz_pc" class="selective"></span><span class="tab-left">区域总频次 </span>
+						</td>
+						<td>
+
+						</td>
+					</tr>
+
+					<tr style="margin: 5px">
+
+						<td width="110">
+							<span  class="datagrid-cell-check spanPosition"><input type="checkbox" name="ck" value="inspstan_qyz_pc" class="selective"></span><span class="tab-left">总监频次 </span>
+						</td>
+						<td>
+						</td>
+						<td>
+							<span  class="datagrid-cell-check spanPosition"><input id="all_flag" type="checkbox" onclick="checkAll()" value=""></span><span class="tab-left">全选 </span>
+						</td>
+						<td>
+
+						</td>
+
+					</tr>
+
+				</table>
+			</form>
+			<div style="margin: 10px">
+				<a href="javascript:void(0)" class="easyui-linkbutton" style="width:100%" onclick="exportExcel();">导出</a>
+			</div>
+		</div>
+
+
+		<script>
+			$("#yjwy_main_grid").attr("title", parent.$('#centerTabs').tabs('getSelected').panel('options').headerTitle);
+			function checkAll() {
+
+                var checked = $(".selective").prop("checked");
+                if(checked){
+                    $(".selective").prop("checked",false);
+				}else{
+                    $(".selective").prop("checked",true);
+				}
+            }
+			$(function () {
+
+//                $('#must').combobox('setText', "标准编码，项目类别，专业，分值，标准类别，标准类别描述");
+            })
+
+
+           // $('#must').combobox('setText', "标准编码，项目类别，专业，分值，标准类别，标准类别描述");
+		</script>
+	</body>
+</html>

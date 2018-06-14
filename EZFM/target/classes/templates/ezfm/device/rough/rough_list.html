@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<base href="${basePath?if_exists}">
+		<title>设备概况</title>
+		<script type="text/javascript" src="resources/ezfm/all.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/device/deviceUtil.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/device/echarts.js"></script>
+		<script type="text/javascript" src="resources/ezfm/js/device/rough.js"></script>
+		<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+		<script type="text/javascript">
+			var notRoleButtons = "${notRoleButtons?if_exists}";
+			$(function() {
+				//初始化下拉框
+				initAreaProject('combobox_area', 'combobox_project');
+
+				//设置默认时间
+// 				var d = new Date();
+// 				var start_date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-01";
+// 				var end_date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+// 				$("#datebox_start_time").datebox('setValue', start_date);
+// 				$("#datebox_end_time").datebox('setValue', end_date);
+
+                //验证时间区间
+                   $('#datebox_start_time').datebox({
+					onSelect: function(date){
+						
+						$('#datebox_end_time').datebox().datebox('calendar').calendar({
+							validator: function(dateAfter){
+								
+								var startDate = $("#datebox_start_time").datebox('getValue');
+								if(startDate == ""){
+									return true;
+								}
+								var s =startDate+' 00:00:00';
+								s = s.replace(/-/g,"/");
+								var dateBefore = new Date(s );
+																
+								return dateBefore <= dateAfter;
+		
+							}
+						});
+
+					}
+				});
+                
+                
+                
+				requestData();
+			});
+		</script>
+	</head>
+
+	<body class="easyui-layout">
+		<div data-options="region:'north',split:false,border:false" style="height:55%;">
+			<div id="dataFilter" style="margin-left: 10px;margin-top:5px;width: 98%;height:30px;border: solid 0px;">
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<select class="easyui-combobox" name="pk_area" id="combobox_area" data-options="editable:false,width:210">
+					<option value="default">区域选择</option>
+				</select>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<select class="easyui-combobox" name="pk_project" id="combobox_project"  data-options="editable:false,width:210">
+					<option value="default">项目选择</option>
+				</select>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<span>时间选择:</span>
+				<input style="width: 100px;" id="datebox_start_time" type="text" class="easyui-datebox" editable="false" data-options="buttons:buttons"></input>
+				-
+				<input style="width: 100px;" id="datebox_end_time" type="text" class="easyui-datebox" editable="false" data-options="buttons:buttons"></input>
+				<span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+				<a class="easyui-linkbutton" onclick="requestData()" data-options="iconCls:'icon-search',plain:'true'">查询</a>
+			    <span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+			    <a class="easyui-linkbutton" onclick="resetSubmit()" data-options="iconCls:'icon-mini-refresh',plain:'true'">重置</a>
+		        <span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+			</div>
+			<div id="gaugeList" style="margin-left: 10px;margin-top:5px;width: 98%;height:84%;border: solid 0px;">
+				<div id="intactGauge" style="display:inline-block;margin-left: 0px;width: 32%;height:98%;border: solid 0px;"></div>
+				<div id="checkGauge" style="display:inline-block;margin-left: 10px;width: 32%;height:98%;border: solid 0px;"></div>
+				<div id="maintGauge" style="display:inline-block;margin-left: 10px;width: 32%;height:98%;border: solid 0px;"></div>
+			</div>
+		</div>
+		<div data-options="region:'south',split:false,border:true" style="height:45%;">
+			<div id="barList" style="margin-left: 10px;margin-top:5px;width: 98%;height:97%;border: solid 0px;">
+				<div id="intactBar" style="display:inline-block;margin-left: 0px;width: 32%;height:98%;border: solid 0px;"></div>
+				<div id="checkBar" style="display:inline-block;margin-left: 10px;width: 32%;height:98%;border: solid 0px;"></div>
+				<div id="maintBar" style="display:inline-block;margin-left: 10px;width: 32%;height:98%;border: solid 0px;"></div>
+			</div>
+		</div>
+	</body>
+
+</html>

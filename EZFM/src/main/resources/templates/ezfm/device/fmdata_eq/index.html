@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="${basePath?if_exists}">
+    <meta charset="UTF-8">
+    <title>设备所属系统</title>
+    <link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+    <script type="text/javascript" src="resources/ezfm/all.js"></script>
+
+
+    <script type="text/javascript" src="resources/ezfm/js/device/eq_sys.js"></script>
+    <script type="text/javascript">
+        var pc = '${crop?if_exists}';
+        var notRoleButtons = "${notRoleButtons?if_exists}";
+    </script>
+    <style>
+        .sys_discrip:focus{
+            outline: none;
+        }
+    </style>
+</head>
+<body class="easyui-layout">
+<!--<div id="center_info" class="easyui-layout" data-options="region:'center'" style="border: 0;">-->
+    <!--<div data-options="region:'center', title: '岗位信息'">-->
+        <!--<table id="station-propertygrid" class="easyui-propertygrid" style="width: 500px" scrollbarSize="0" data-options="showGroup:false,showHeader:false"></table>-->
+    <!--</div>-->
+
+<!--</div>-->
+<div id="north_treebar" data-options="region:'north'" style="overflow: hidden;">
+    <div id="treebar" style="height:28px;" class="datagrid-toolbar">
+        <a onclick="window.location.reload()"  class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:'true'">刷新</a>
+        <a id="btnNew" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增</a>
+        <a id="btnEdit" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+        <a id="btnDelete" href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+    </div>
+</div>
+<div id="treepanel" data-options="region:'west',title:'设备所属系统',split:true,collapsible:false" style="width: 280px; padding: 0px;">
+    <ul id="stationtree" class="ztree" style="margin-left: 5px;"></ul>
+</div>
+<div data-options="region:'center', title: '设备系统信息'">
+    <table id="station-propertygrid" class="easyui-propertygrid" style="width: 500px" scrollbarSize="0" data-options="showGroup:false,showHeader:false"></table>
+</div>
+
+<div id="stationdlg" class="szw_window" data-options="closed:true">
+    <form id="form" class="base_main_form" method="post">
+        <input type="hidden" name="eq_sys_id">
+        <input type="hidden" name="parent_id">
+        <input type="hidden" name="delete_flag">
+        <input type="hidden" name="all_ids">
+        <table style="margin: 10px 30px;" border="0" cellspacing="0" cellpadding="0" width="500px" height="250px">
+            <tr>
+                <th style="float:right;">父节点 D：</th>
+                <td colspan="3">
+                    <select style="width: 300px;" id="node_now" name="node_now">
+                        <option value="0" > 当前节点</option>
+                        <option value="1"> 根节点</option>
+                    </select>
+
+                    <span style="color:red;">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th style="float:right">系统编码：</th>
+                <td colspan="3">
+                    <input style="width: 300px;" type="text" name="code" id="form_textbox_name" class="easyui-textbox" required="true" maxlength="50" />
+                    <span style="color:red;">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th style="float:right">系统名称：</th>
+                <td colspan="3">
+                    <input style="width: 300px;" type="text" name="name" id="form_textbox_code" maxlength="10"  class="easyui-textbox" required="true" />
+                    <span style="color:red;">*</span>
+                </td>
+            </tr>
+            <tr>
+                <th style="float:right">系统排序：</th>
+                <td colspan="3">
+
+                    <input style="width: 300px;"   required="true" maxlength="10" type="text" name="sort_no" id="form_textbox_room" class="easyui-numberbox"/>
+
+                </td>
+            </tr>
+            <tr>
+                <th style="float:right">模型关联ID：</th>
+                <td colspan="3">
+
+                    <input style="width: 300px;" maxlength="10" type="text" name="eq_class" id="eq_class" class="easyui-textbox"/>
+
+                </td>
+            </tr>
+            <tr>
+                <th style="float:right">系统描述：</th>
+                <td colspan="3" >
+                    <textarea rows="10" class="easyui-textbox" data-options="multiline:true,validType:'length[0,300]'" name="description" maxlength="3" style="width:300px;height:100px"></textarea>
+                </td>
+            </tr>
+        </table>
+
+    </form>
+</div>
+<script>
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+#szw_dlg_form_id,#szw_dlg_sonpage_id {
+    text-align: center;
+}
+#szw_dlg_form_id>div,#szw_dlg_sonpage_id>div {
+    margin: auto;
+    text-align: center;
+}
+.datagrid-row-selected {
+    background: #cccccc;
+    color: #fff;
+}
+/******此段代码是为点击左侧菜单在tabs里显示的样式顶部没有下划线，可以注释掉查看效果*******/
+.panel-header, .panel-body {
+    border-top: none;
+}
+/*表格 title样式*/
+.datagrid-header, .datagrid-td-rownumber {
+    background-color: #F2F2F2;
+    background: -webkit-linear-gradient(top,#ffffff 0,#F2F2F2 100%);
+    background: -moz-linear-gradient(top,#ffffff 0,#F2F2F2 100%);
+    background: -o-linear-gradient(top,#ffffff 0,#F2F2F2 100%);
+	background: linear-gradient(to bottom,#f5f5f5 0,#ddd 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff,endColorstr=#F2F2F2,GradientType=0);
+}
+
+.datagrid-header, .datagrid-toolbar, .datagrid-pager, .datagrid-footer-inner {
+    border-color: #bbbbbb;
+}

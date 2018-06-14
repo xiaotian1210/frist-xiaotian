@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<base href="${basePath?if_exists}">
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>关联项目</title>
+	<link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"></link>
+	<script type="text/javascript" src="resources/ezfm/all.js"></script>
+</head>
+<body>
+	<div class="easyui-tabs" data-options="tabWidth:112" style="overflow:hidden;height:100%">
+		<div title="项目列表">
+			<div id="yjwy_sonProject_grid_tb" style="height:auto">
+				<div style="margin-bottom:5px;margin-top:5px">
+					<a id="add_sonProject" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">关联项目</a>
+					<a id="delete_sonProject" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">移除项目</a>
+				</div>
+			</div>
+			<table id="yjwy_sonProject_grid" class="easyui-datagrid">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'pk_nexus_id',hidden:true">主键</th>
+						<th data-options="field:'project_name',width:300,align:'center'">项目名称</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div title="片区主管">
+			<div id="yjwy_sonDirector_grid_tb" style="height:auto">
+				<div style="margin-bottom:5px;margin-top:5px">
+					<a id="add_sonDirector" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">关联主管</a>
+					<a id="delete_sonDirector" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">移除主管</a>
+				</div>
+			</div>
+			<table id="yjwy_sonDirector_grid" class="easyui-datagrid">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'pk_nexus_id',hidden:true">主键</th>
+						<th data-options="field:'user_name',width:300,align:'center'">人员姓名</th>
+						<th data-options="field:'user_code',width:300,align:'center'">账号</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div title="维修人员">
+			<div id="yjwy_sonRepair_grid_tb" style="height:auto">
+				<div style="margin-bottom:5px;margin-top:5px">
+					<a id="add_sonRepair" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">关联维修人员</a>
+					<a id="delete_sonRepair" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">移除维修人员</a>
+				</div>
+			</div>
+			<table id="yjwy_sonRepair_grid" class="easyui-datagrid">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'pk_nexus_id',hidden:true">主键</th>
+						<th data-options="field:'user_name',width:300,align:'center'">人员姓名</th>
+						<th data-options="field:'user_code',width:300,align:'center'">账号</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div title="调度人员">
+			<div id="yjwy_sonDispatch_grid_tb" style="height:auto">
+				<div style="margin-bottom:5px;margin-top:5px">
+					<a id="add_sonDispatch" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">关联调度人员</a>
+					<a id="delete_sonDispatch" href="javascript:void(0);"  class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">移除调度人员</a>
+				</div>
+			</div>
+			<table id="yjwy_sonDispatch_grid" class="easyui-datagrid">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'pk_nexus_id',hidden:true">主键</th>
+						<th data-options="field:'user_name',width:300,align:'center'">人员姓名</th>
+						<th data-options="field:'user_code',width:300,align:'center'">账号</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+<script type="text/javascript">
+var notRoleButtons = "${notRoleButtons?if_exists}";
+var queryParamProject = { 
+		metas: ['yjwy_worktask_area_project_nexus'],
+		'andList': [{
+            key: 'area_id',
+			operator: 'eq',
+			value: "${pk_area_id?if_exists}"
+		}]
+	}
+var queryParamDirector = { 
+		metas: ['yjwy_worktask_area_user_nexus'],
+		'andList': [{
+            key: 'area_id',
+			operator: 'eq',
+			value: "${pk_area_id?if_exists}"
+		},{
+			key: 'user_type',
+			operator: 'eq',
+			value: "1"
+		}]
+	}
+var queryParamDispatch = { 
+		metas: ['yjwy_worktask_area_user_nexus'],
+		'andList': [{
+            key: 'area_id',
+			operator: 'eq',
+			value: "${pk_area_id?if_exists}"
+		},{
+			key: 'user_type',
+			operator: 'eq',
+			value: "3"
+		}]
+	}
+var queryParamRepair = { 
+		metas: ['yjwy_worktask_area_user_nexus'],
+		'andList': [{
+            key: 'area_id',
+			operator: 'eq',
+			value: "${pk_area_id?if_exists}"
+		},{
+			key: 'user_type',
+			operator: 'eq',
+			value: "2"
+		}]
+	}
+$(function(){
+	//查询已关联项目Url
+	var queryProjectUrl = "ezfm/worktask/areaproject/query";
+	//查询已关联主管Url
+	var queryUserUrl = "ezfm/worktask/areauser/query";
+	//初始化已关联项目列表
+	initLoadGridData("yjwy_sonProject_grid",queryProjectUrl,queryParamProject);
+	//初始化已关联主管列表
+	initLoadGridData("yjwy_sonDirector_grid",queryUserUrl,queryParamDirector);
+	//初始化已关联调度列表
+	initLoadGridData("yjwy_sonDispatch_grid",queryUserUrl,queryParamDispatch);
+	//初始化已关联维修人员列表
+	initLoadGridData("yjwy_sonRepair_grid",queryUserUrl,queryParamRepair);
+	//事件关联项目
+	$("#add_sonProject").click(function(){
+		showAddProjectPage("${pk_area_id?if_exists}");
+	});
+	//事件移除项目
+	$("#delete_sonProject").click(function(){
+		 deleteProject();
+	});
+	//事件关联主管
+	$("#add_sonDirector").click(function(){
+		showAddUserPage("${pk_area_id?if_exists}","1","yjwy_sonDirector_grid","关联主管");
+	});
+	//事件移除主管
+	$("#delete_sonDirector").click(function(){
+		deleteUser("yjwy_sonDirector_grid");
+	});
+	//事件关联调度
+	$("#add_sonDispatch").click(function(){
+		showAddUserPage("${pk_area_id?if_exists}","3","yjwy_sonDispatch_grid","关联调度人员");
+	});
+	//事件移除调度
+	$("#delete_sonDispatch").click(function(){
+		deleteUser("yjwy_sonDispatch_grid");
+	});
+	
+	
+	//事件关联维修
+	$("#add_sonRepair").click(function(){
+		showAddUserPage("${pk_area_id?if_exists}","2","yjwy_sonRepair_grid","关联维修人员");
+	});
+	//事件移除维修
+	$("#delete_sonRepair").click(function(){
+		deleteUser("yjwy_sonRepair_grid");
+	});
+});
+	
+	
+	
+/**
+ * 打开子页面
+ *  @param {Object} id
+ */
+function showAddProjectPage(id){
+	var addProjectUrl = "ezfm/worktask/areaproject/sonAddProject/"+id;
+	showSon1SonPageInfo("关联项目",addProjectUrl);
+}
+ 
+ /**
+  * 打开子页面
+  *  @param {Object} id
+  */
+ function showAddUserPage(id,user_type,gridId,title){
+ 	var addProjectUrl = "ezfm/worktask/areauser/sonAddUser/"+id+"/"+user_type+"/"+gridId;
+ 	showSon1SonPageInfo(title,addProjectUrl);
+ }
+//SONPAGE EVENT 显示子页面
+var showSonPageEvent = function(title,actionUrl,options){
+ 	closewin_flg = false;
+ 	showSonPageInfo(title,actionUrl,options);
+}	
+
+function deleteProject(){
+	var removeUrl = "ezfm/worktask/areaproject/delete";
+	var removeRecods = $('#yjwy_sonProject_grid').datagrid("getSelections");
+	if(removeRecods.length<1){
+		$.messager.alert('提示','请您先选择移出的项目!','warning');
+		return;
+	}
+	$.messager.confirm('提示', '您确认移出选中的项目吗?', function(r){
+		if (r){
+			$.request.restPost({
+				url: removeUrl,
+				data: removeRecods,
+				success: function(rs){
+					if(rs.success){
+						$('#yjwy_sonProject_grid').datagrid('reload');
+						$.messager.show({
+							title:'提示',
+							msg:'已移出项目',
+							timeout:2000,
+							showType:'slide'
+						});
+					}
+				}
+			});
+		}
+	});
+}
+
+
+function deleteUser(grid){
+	var removeUrl = "ezfm/worktask/areauser/delete";
+	var removeRecods = $('#'+grid).datagrid("getSelections");
+	if(removeRecods.length<1){
+		$.messager.alert('提示','请您先选择移出的项!','warning');
+		return;
+	}
+	$.messager.confirm('提示', '您确认移出选中的项吗?', function(r){
+		if (r){
+			$.request.restPost({
+				url: removeUrl,
+				data: removeRecods,
+				success: function(rs){
+					if(rs.success){
+						$('#'+grid).datagrid('reload');
+						$.messager.show({
+							title:'提示',
+							msg:'已移出',
+							timeout:2000,
+							showType:'slide'
+						});
+					}
+				}
+			});
+		}
+	});
+}
+//datagrid加载
+function initLoadGridData(datagrid_id,queryUrl,queryParam){
+		$('#'+datagrid_id).datagrid({
+			url:queryUrl,
+			singleSelect:false,
+			checkOnSelect:true,
+			selectOnCheck:true,
+			striped:true,
+			rownumbers:true,
+			loadMsg:"数据加载中...",
+			pagination:true,
+			pagePosition:"bottom",
+			pageNumber:1,
+			pageSize:5,
+			pageList:[5,10,20],
+			toolbar:'#'+datagrid_id+"_tb",
+			fit:true,
+			loader:function(param, success, error){
+				param = param || {};
+				var extraParam = queryParam;
+				if(param.rows){
+					extraParam.limit = param.rows;
+					if(param.page){
+						extraParam.start = (param.page - 1) * param.rows;
+					}
+				}
+				$.extend(param, extraParam);
+				$.request.httpPost({
+					url: queryUrl,
+					data: { param: JSON.stringify(param)},
+					success: function(respose){
+						success({
+							total: respose.total,
+							rows: respose.data
+						});
+					}
+				});
+				return true;
+			}
+		});
+		var pager_info = $('#'+datagrid_id).datagrid('getPager'); 
+	    $(pager_info).pagination({
+	    	displayMsg: '当前显示 第{from} - {to} 条     共{total}条记录'
+	    });
+	} 
+	
+//分类tree查询展示
+function showClassAdmintTree(project_id) {
+	//设置分类tree属性
+	var projectZTreeObj;
+	var projectZNodes;
+	// zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+	var projectSetting = {
+		check : {
+			enable : true
+		},
+		data : {
+			simpleData : {
+				enable : true,
+			}
+		}, 
+		callback : {
+			onClick : onNodeClick
+		},
+		view : {
+			selectedMulti : false
+		}
+	};
+	$.ajax({
+		async : false,
+		cache : false,
+		type : 'POST',
+		dataType : "json",
+		data : {
+			class_id : project_id
+		},
+		url : "ezfm/worktask/classpro/queryProject",//请求的action路径  
+		error : function() {//请求失败处理函数  
+			alert('请求失败');
+		},
+		success : function(data) { //请求成功后处理函数。
+			projectZNodes = data.rows; //把后台封装好的简单Json格式赋给treeNodes  
+		}
+	});
+	projectZTreeObj = $.fn.zTree.init($("#classAndProjectAdmin_tree"), projectSetting,
+			projectZNodes);
+	var nodes = projectZTreeObj.getNodesByFilter(filter);
+	//遍历每一个节点然后动态更新nocheck属性值  
+	for (var i = 0; i < nodes.length; i++) {
+		var node = nodes[i];
+		//非子节点，checkbox禁用
+		if (node.nocheck) {
+			projectZTreeObj.setChkDisabled(node, false);
+		} else {
+			projectZTreeObj.setChkDisabled(node, true);
+		}
+		if (node.selected) {
+			node.checked = true;
+		}
+		node.nocheck = false; //表示显示checkbox  
+		projectZTreeObj.updateNode(node);
+	}
+}	
+//过滤节点的机制 直接return node表示不做任何过滤  
+function filter(node) {
+	return node;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="7877ab55de854d8f8cf389ca18e42bc9" package="com.shareworx.ezfm.quality.proinspect.inspect.standard.model" version="20161114-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_quality_standard_user" name="核查标准人员中间表" table="yjwy_quality_standard_user" class="StandardUserModel" init="false" dynamic="false" location="165,38,252,288">
+    <property id="pk_standard" name="核查标准主键" column="pk_standard" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="pk_user" name="用户主键" column="pk_user" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="pk_station" name="岗位主键" column="pk_station" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="pk_crop" name="所属公司主键" column="pk_crop" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="last_generate_date" name="最后一次生成任务日期" column="last_generate_date" type="5" define="char" length="10" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="last_deadline_date" name="最后一次生成任务完成期限" column="last_deadline_date" type="5" define="char" length="10" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="create_time" name="创建时间" column="create_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="update_time" name="更新时间" column="update_time" type="0" define="char" length="13" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <index id="pk_standard" type="0"/>
+    <index id="pk_user" type="0"/>
+    <index id="pk_station" type="0"/>
+    <index id="pk_crop" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

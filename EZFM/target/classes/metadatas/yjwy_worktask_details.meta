@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<metas id="77b105c98bfd4d07bfe8fb4dc2010a53" package="com.shareworx.ezfm.worktask.details.model" version="20160802-1" release="2.0">
+  <!--实体定义-->
+  <!--property-type: { 0：定长字符串 | 1：字符串 | 2：整数 | 3：小数 | 4：布尔值 | 5：日期 | 6：日期时间 |  7：大文本 | 8：二进制文件  | 9: 参照 | 10：枚举 | 11：组合  | 12：聚合}-->
+  <!--定义实体类型-->
+  <entity id="yjwy_worktask_details" name="工单详情表" table="yjwy_worktask_details" class="YJWYWorkTaskDetailsModel" init="false" dynamic="false" location="204,75,120,120">
+    <property id="pk_details_id" name="主键ID" column="pk_details_id" type="0" define="char" length="20" precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="GLOBAL" mode="0"/>
+    <property id="fk_project_id" name="项目ID" column="fk_project_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="datails_code" name="维修单号" column="datails_code" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="task_state" name="工单状态" column="task_state" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="service_type" name="服务类型" column="service_type" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="repair_class_id" name="维修种类ID" column="repair_class_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="worktask_type" name="工单来源" column="worktask_type" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="fk_repair_address" name="关联楼址" column="fk_repair_address" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="repair_place" name="维修地点（弃用）" column="repair_place" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="repair_details" name="详细地址" column="repair_details" type="1" define="varchar" length="100" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="fk_repair_equipment" name="维修设备" column="fk_repair_equipment" type="0" define="char" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="repair_user" name="报修人" column="repair_user" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="contact_number" name="联系电话" column="contact_number" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="repair_content" name="维修内容" column="repair_content" type="1" define="varchar" length="500" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="duty_user_id" name="跟进人ID" column="duty_user_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="bookings_time" name="预约时间" column="bookings_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="repair_user_id" name="维修人ID" column="repair_user_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="hlop_user_id" name="协助人ID" column="hlop_user_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="ration_duration" name="额定工时" column="ration_duration" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="finished_duration" name="实际工时" column="finished_duration" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="dispatch_type" name="派单类型" column="dispatch_type" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="orders_time" name="接单时间" column="orders_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="dispatch_time" name="派单时间" column="dispatch_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="finish_time" name="完成时间" column="finish_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="cancel_time" name="取消时间" column="cancel_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="work_number" name="工作数量" column="work_number" type="2" define="int" length="0" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="material_cost" name="材料费用" column="material_cost" type="3" define="decimal" length="0" precision="15" scale="2" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="artificial_cost" name="人工费用" column="artificial_cost" type="3" define="decimal" length="0" precision="15" scale="2" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="count_cost" name="总费用" column="count_cost" type="3" define="decimal" length="0" precision="15" scale="2" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="create_time" name="创建时间" column="create_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="create_user_id" name="创建人ID" column="create_user_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="create_user_name" name="创建人姓名" column="create_user_name" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="update_time" name="最后修改时间" column="update_time" type="6" define="char" length="19" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="update_user_id" name="最后修改人ID" column="update_user_id" type="0" define="char" length="20" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="update_user_name" name="最后修改人姓名" column="update_user_name" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="fk_repair_equipment_room" name="维修机房" column="fk_repair_equipment_room" type="0" define="char" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="pk_crop" name="所属公司" column="pk_crop" type="1" define="" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="feedback_content" name="反馈详情" column="feedback_content" type="1" length="500" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="evaluate" name="评价满意度" column="evaluate" type="1" length="50" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="classids" name="辅助字段" column="classids" type="1" define="varchar" length="50" precision="0" scale="0" empty="true" persist="false" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <property id="eba_report_id" name="EBA报警id" column="eba_report_id" type="1" define="varchar" length="100" precision="0" scale="0" empty="true" persist="true" unique="false" dynamic="false" value="" code="" mode="0"/>
+    <index id="pk_details_id" type="0"/>
+  </entity>
+  <!--关系类型定义：{ 0：实现接口 | 1：继承类 | 2：引用（实体/枚举） | 3：聚合类 | 4：组合类 }-->
+</metas>

@@ -1,0 +1,5 @@
+为避免冲突，前端的页面都写这里面包括html
+
+此文件夹实际为freemarker的模板，虽然扩展名为html但不是真正意义的html
+
+如果需要写静态的html文件，请在src/main/resources/resources或src/main/resources/statics下完成

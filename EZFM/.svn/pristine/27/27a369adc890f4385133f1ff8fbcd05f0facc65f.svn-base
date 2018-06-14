@@ -1,0 +1,88 @@
+spring.aop.proxy-target-class=true
+
+super.user=root
+super.pwd=ezfm!root
+
+system.title=EZFM
+#none create update
+system.metadata.autoPersist=none
+#true false
+system.metadata.rePublish=false
+
+spring.freemarker.defaultEncoding=UTF-8
+spring.freemarker.cache=false
+spring.freemarker.settings.locale=zh_CN
+spring.freemarker.settings.datetime_format=yyyy-MM-dd HH:mm:ss
+spring.freemarker.settings.date_format=yyyy-MM-dd
+spring.freemarker.settings.number_format=#.##
+spring.freemarker.templateLoaderPath=classpath:/templates/
+
+app.cache=dmsRedisCachemanager
+
+system.mail.from=eamadmin@dms365.com
+spring.mail.host=webmail.dms365.com
+spring.mail.password=dms@888
+spring.mail.port=25
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.debug=true
+spring.mail.properties.mail.smtp.timeout=8500
+spring.mail.test-connection=false
+spring.mail.username=eamadmin
+
+# \u662F\u5426\u542F\u7528\u5927\u5C4F\u670D\u52A1
+
+dv.enable=1
+
+jdbc.write.url=jdbc:mysql://192.168.2.99:3306/ezfmcloud-prod?useUnicode=true&characterEncoding=UTF8
+jdbc.write.initialSize=2
+jdbc.write.username=ezfmcloud
+jdbc.write.password=dms@888
+jdbc.write.filters=stat,log4j
+jdbc.write.maxActive=3000
+jdbc.write.maxWait=60000
+jdbc.write.minIdle=10
+jdbc.write.timeBetweenEvictionRunsMillis=60000
+jdbc.write.minEvictableIdleTimeMillis=300000
+jdbc.write.validationQuery=SELECT 'x'
+jdbc.write.testWhileIdle=true
+jdbc.write.testOnBorrow=false
+jdbc.write.testOnReturn=false
+jdbc.write.poolPreparedStatements=false
+jdbc.write.maxOpenPreparedStatements=20
+jdbc.write.removeAbandoned=true
+jdbc.write.removeAbandonedTimeout=14400
+jdbc.write.logAbandoned=true
+
+jdbc.read.url=jdbc:mysql://192.168.2.99:3306/ezfmcloud-prod?useUnicode=true&characterEncoding=UTF8
+jdbc.read.initialSize=2
+jdbc.read.username=ezfmcloud
+jdbc.read.password=dms@888
+jdbc.read.filters=stat,log4j
+jdbc.read.maxActive=3000
+jdbc.read.maxWait=60000
+jdbc.read.minIdle=10
+jdbc.read.timeBetweenEvictionRunsMillis=60000
+jdbc.read.minEvictableIdleTimeMillis=300000
+jdbc.read.validationQuery=SELECT 'x'
+jdbc.read.testWhileIdle=true
+jdbc.read.testOnBorrow=false
+jdbc.read.testOnReturn=false
+jdbc.read.poolPreparedStatements=false
+jdbc.read.maxOpenPreparedStatements=20
+jdbc.read.removeAbandoned=true
+jdbc.read.removeAbandonedTimeout=14400
+jdbc.read.logAbandoned=true
+
+cache.redis.host=192.168.2.99
+cache.redis.port=6379
+cache.redis.maxidle=10
+
+# \u516C\u6709\u4E91\u6388\u6743\u7801
+license=uVulIjlHzKW5W6UiOUfMpblbpSI5R8yluVulIjlHzKUSJmk2B2mJsg==
+database-license-server=http://localhost:6000
+
+dv.datasync.projectid=00000020170609003O07
+dv.datasync.userid=00000020161019000003
+
+# \u4E3B\u9875\u98CE\u683C default,metro
+homepage.style=metro

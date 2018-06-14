@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Vendor: Pivotal Software, Inc.
+Implementation-Title: EZFM
+Implementation-Version: 1.0
+Implementation-Vendor-Id: com.shareworx.ezfm
+Build-Jdk: 1.7.0_51
+Built-By: Administrator
+Created-By: Maven Integration for Eclipse
+Main-Class: com.shareworx.Application
+

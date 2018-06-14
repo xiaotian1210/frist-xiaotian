@@ -1,0 +1,176 @@
+<body>
+	<style type="text/css">
+		#yjwy_main_form table tr td input{
+			width:200px;
+		}
+		
+		.ztree li span {
+		    line-height: 16px;
+		    margin-right: 2px;
+		    font-weight: 600;
+		}
+	</style>
+	<div class="easyui-panel" data-options="fit:true" id="sdf">
+		<div style="padding:10px 50px 0px 10px">
+	   	<form id="yjwy_main_form" class="easyui-form" data-options="novalidate:true">
+	    	<table  style="margin:0 auto; cellpadding:5;">
+	    		<tr>
+	    			<th>版本名称:</th>
+	    			<td><input class="easyui-textbox" type="text" id="edition_name" name="edition_name" value="${mainmodel?if_exists.edition_name?if_exists}" data-options="required:true,validType:'length[2,50]'" style="width:205px;height:26px;"></input></td>
+	    		</tr>
+	    		<tr>
+	    			<th>所属区域:</th>
+	    			<td>
+	    				<div class="content_wrap" style="height:310px;width:200px;">
+							<div class="zTreeDemoBackground">
+								<ul id="area_tree" class="ztree" style="height:300px;width:200px;background: #ffffff;"></ul>
+							</div>
+						</div>
+	    			</td>
+	    		</tr>
+	    		<tr style="display: none;">
+	    			<th>主键:</th>
+	    			<td><input class="easyui-textbox" type="text" name="pk_edition" value="${mainmodel?if_exists.pk_edition?if_exists}"></input></td>
+	    		</tr>
+	    		<tr style="display: none;">
+	    			<th>版本CODE:</th>
+	    			<td><input class="easyui-textbox" type="text" name="edition_code" value="${mainmodel?if_exists.edition_code?if_exists}"></input></td>
+	    		</tr>
+	    		<tr style="display: none;">
+	    			<th>区域IDS:</th>
+	    			<td><input class="easyui-textbox" type="text" name="area_ids" value="${mainmodel?if_exists.area_ids?if_exists}"></input></td>
+	    		</tr>
+	    		<tr style="display: none;">
+	    			<th>创建人:</th>
+	    			<td><input class="easyui-textbox" type="text" name="create_user" value="${mainmodel?if_exists.create_user?if_exists}"></input></td>
+	    		</tr>
+	    		<tr style="display: none;">
+	    			<th>创建时间:</th>
+	    			<td><input class="easyui-textbox" type="text" name="create_time" value="${mainmodel?if_exists.create_time?if_exists}"></input></td>
+	    		</tr>
+	    		<tr style="display: none;">
+	    			<th>修改人:</th>
+	    			<td><input class="easyui-textbox" type="text" name="update_user" value="${mainmodel?if_exists.update_user?if_exists}"></input></td>
+	    		</tr>
+	    		<tr style="display: none;">
+	    			<th>修改时间:</th>
+	    			<td><input class="easyui-textbox" type="text" name="update_time" value="${mainmodel?if_exists.update_time?if_exists}"></input></td>
+	    		</tr>
+	    		<tr style="display: none;">
+	    			<th>是否有效:</th>
+	    			<td><input class="easyui-textbox" type="text" name="is_valid" value="${mainmodel?if_exists.is_valid?if_exists}"></input></td>
+	    		</tr>
+	    		<tr style="display: none;">
+	    			<th>pk_crop:</th>
+	    			<td><input class="easyui-textbox" type="text" name="pk_crop" value="${crop?if_exists}" data-options="required:true"></input></td>
+	    		</tr>
+	    	</table>
+	    </form>	
+	    <div style="text-align:center;padding:10px;margin-left:50px;">
+	    	<a href="javascript:void(0)" id="save_mainbtn" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" style="text-align:center;margin:5px">保存</a>
+	    	<a href="javascript:void(0)" id="reset_mainbtn" class="easyui-linkbutton"  data-options="iconCls:'icon-mini-refresh'"  style="text-align:center;margin:5px">重置</a>
+	    </div>
+	    </div>
+	</div>
+	<script type="text/javascript">
+		var notRoleButtons = "${notRoleButtons?if_exists}";
+		//加载区域树
+		function loadAreaTree(){
+			function zTreeOnClick(event, treeId, treeNode) {
+				var tree = $.fn.zTree.getZTreeObj(treeId);
+				tree.checkNode(treeNode, !(treeNode.checked),true);
+			};
+			var setting = {
+				view: {
+					selectedMulti: true,
+					showIcon: false,
+					nameIsHTML: true
+				},
+				check: {
+					enable: true
+				},
+				data: {
+					key: {
+						name: "area_name"
+					},
+					simpleData: {
+						enable: true,
+						idKey: "pk_area"
+					}
+
+				},
+				callback: {
+					onClick: zTreeOnClick
+				}
+			};
+
+			var zNodes =[];
+			$.ajax({
+		        type:'get',
+		        url:"ezfm/baseinfo/pub/query/dictionary/area/query",
+		        async:false,
+		        success:function(result){
+		        	zNodes = eval(result.data);
+		        }
+		    })
+			$.fn.zTree.init($("#area_tree"), setting, zNodes);
+		}
+		
+		function initMainFormData(){
+			//设置区域选中
+			var areaids = "${mainmodel?if_exists.area_ids?if_exists}";
+			if(areaids){
+				var areaids = areaids.split(",");
+				for(var i=0; i<areaids.length; i++){
+					function filter(node) {
+					    return areaids[i] == node.pk_area;
+					}
+					var treeObj = $.fn.zTree.getZTreeObj("area_tree");
+					var node = treeObj.getNodesByFilter(filter, true);
+					if(node){
+						treeObj.checkNode(node,true,true);
+					}
+				}
+			}
+		}	
+	
+		$(function(){
+			//加载区域树
+			loadAreaTree();
+			
+			//修改时初始化表单
+			initMainFormData();
+			
+			$("#save_mainbtn").click(function(){
+				if(!($("#yjwy_main_form").form('enableValidation').form('validate'))){
+					return;
+				}
+				var saveUrl = "ezfm/quality/proinspect/inspect/stanedition/save";
+				var updateUrl = "ezfm/quality/proinspect/inspect/stanedition/update";
+				var area_ids = "";
+				var nodes = $.fn.zTree.getZTreeObj("area_tree").getCheckedNodes(true);
+				for(var i=0; i<nodes.length; i++){
+					area_ids += (","+nodes[i].pk_area);
+				}
+				if(area_ids){
+					area_ids = area_ids.substring(1);
+				}
+				$("#yjwy_main_form input[name=area_ids]").val(area_ids);
+				var formdata =  $("#yjwy_main_form").serializeObject();
+				if(formdata.pk_edition){
+					saveMainForm(updateUrl,formdata);
+				}else{
+					saveMainForm(saveUrl,formdata);
+				}
+			});
+			$("#reset_mainbtn").click(function(){
+				//$('#yjwy_main_form').form('clear');;
+				//document.getElementsByName("edition_name")[0].value="";
+				var treeObj = $.fn.zTree.getZTreeObj("area_tree");
+				treeObj.checkAllNodes(false);
+				$('#yjwy_main_form').form('clear');
+			});
+
+		});
+	</script>
+</body>

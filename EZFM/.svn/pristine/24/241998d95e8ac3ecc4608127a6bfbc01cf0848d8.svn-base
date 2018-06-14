@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <base href="${basePath?if_exists}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+
+    <link rel="stylesheet" type="text/css" href="resources/ezfm/all.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/ezfm/css/baseinfo/index.css"/>
+    <style>
+        .table-font{
+            font-size: 12px;
+            font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+            color: #333;
+            line-height: 18px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="content" >
+    <div id="content_left">
+        <div class="bim_head">
+            <a href="javascript:void(0)" onclick="startMove4(event)" class="move_link"></a>
+            <div class="bim_title" id="left_title">空间</div>
+        </div>
+        <div id="content_left_item">
+            <ul id="classAdmin_tree" class="ztree" style="margin-left: 5px;">
+
+            </ul>
+        </div>
+    </div>
+    <div id="content_center" >
+        <div class="bim_head">
+
+            <div class="bim_title">视图模型</div>
+        </div>
+        <div id="content_center_item" style="color: black">
+            <object id="MyObj" Type="application/ezwalker" width="100%" height="100%" style="float: left"/></object>
+        </div>
+
+    </div>
+    <div id="content_right">
+        <div class="bim_head">
+            <a href="javascript:void(0)" onclick="startMove3(event)" class="move_link"></a>
+            <div class="bim_title" id="right_title">空间详情</div>
+        </div>
+        <div id="content_right_item">
+            <div id="project" style="display: none" class="east-close">
+                <table border="0" class="table-font">
+                    <tbody>
+                    <tr style="">
+                        <td width="25%" align="right" class="classAdmin_td_title">项目编码：</td>
+                        <td class="classAdmin_td_con" width="75%" id="project_code"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">项目名称：</td>
+                        <td class="classAdmin_td_con" id="project_name"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">占地面积：</td>
+                        <td class="classAdmin_td_con" id="project_cover_area"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="device" style="display: none" class="east-close" >
+                <table border="0" class="table-font">
+                    <tbody>
+                    <tr style="">
+                        <td width="25%" align="right" class="classAdmin_td_title">设备名称：</td>
+                        <td class="classAdmin_td_con" width="75%" id="eq_name"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">设备编码：</td>
+                        <td class="classAdmin_td_con" id="fm_code"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">设备位置：</td>
+                        <td class="classAdmin_td_con" id="rm_name"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">设备分类：</td>
+                        <td class="classAdmin_td_con" id="csi_name"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">功率KW：</td>
+                        <td class="classAdmin_td_con" id="power"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">品牌名称：</td>
+                        <td class="classAdmin_td_con" id="brand"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">规格型号：</td>
+                        <td class="classAdmin_td_con" id="model"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">厂家：</td>
+                        <td class="classAdmin_td_con" id="factory"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">使用部门：</td>
+                        <td class="classAdmin_td_con" id="use_dept"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">维护部门：</td>
+                        <td class="classAdmin_td_con" id="service_dept"></td>
+                    </tr>
+
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">设备惯用名：</td>
+                        <td class="classAdmin_td_con" id="use_name"></td>
+                    </tr>
+
+
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">设备描述：</td>
+                        <td class="classAdmin_td_con" id="eq_description"></td>
+                    </tr>
+                    <tr>
+                        <td nowrap="nowrap" align="right" class="classAdmin_td_title">所属系统：</td>
+                        <td class="classAdmin_td_con" id="eq_sys_name"></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div id="labels-info"style="display: none" class="east-close">
+                <table  id="table-info" class="easyui-datagrid table-font" data-options="showHeader:false" >
+                    <thead>
+                    <th data-options="field:'name',align:'right',width:80">Name</th>
+                    <th data-options="field:'value',width:220">value</th>
+                    </thead>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div id="dev_info">
+        <div class="bim_head bim_head_sp zoom_div" onmousedown="divZoom2(event,'dev_info')">
+            <a href="javascript:void(0)" onclick="startMove2(event)" onmousedown="stopZoom()" id="devvv" class="move_link"></a>
+            <div class="bim_title">
+                <a href="javascript: changeShowType('0');" onmousedown="stopZoom()"  class="easyui-linkbutton active " data-options="plain:true" style="margin-left: 5px">设备列表</a>
+                <span class="datagrid-btn-separator " style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+                <a href="javascript:changeShowType('1');" onmousedown="stopZoom()" class="easyui-linkbutton" data-options="plain:true">空间列表</a>
+        </div>
+
+        </div>
+
+        <div id="dev_info_item" >
+            <div class="table-list" id="device-list" style="">
+                <div id="toolbar_datagrid_list" style="margin-top: 10px;">
+                    <input id="textbox_eqKey" type="text" prompt="请输入设备编码、名称" class="easyui-textbox" style="width: 400px;"/>
+                    <span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+                    <a class="easyui-linkbutton" onclick="querySubmitSimple()" data-options="iconCls:'icon-search',plain:'true'">查询</a>
+                    <a class="easyui-linkbutton" onclick="querySubmitSimple('clear')" data-options="iconCls:'icon-mini-refresh',plain:'true'">重置</a>
+                </div>
+
+                <table id="datagrid_list" style="">
+                    <thead>
+                    <tr>
+                        <th data-options="field:'checkbox',checkbox:true"></th>
+                        <th data-options="field:'eq_name',width:220,hidden:false,align:'center'">设备名称</th>
+                        <th data-options="field:'fm_code',width:220,hidden:false,align:'center'">设备编码</th>
+                        <th data-options="field:'rm_name',width:450,hidden:false,align:'center'">设备位置</th>
+                        <th data-options="field:'use_dept',width:180,hidden:false,align:'center'">使用部门</th>
+                        <th data-options="field:'service_dept',width:180,hidden:false,align:'center'">维护部门</th>
+                        <th data-options="field:'use_name',width:100,hidden:false,align:'center'">设备惯用名</th>
+                        <!--备用-->
+                        <!--<th data-options="field:'',width:100,hidden:false,align:'center'">操作人</th>-->
+                        <!--<th data-options="field:'',width:100,hidden:false,align:'center'">集团设备名称</th>-->
+                        <!--<th data-options="field:'',width:100,hidden:false,align:'center'" >每日正常工时</th>-->
+
+                        <!--以下字段不显示-->
+                        <th data-options="field:'eq_id',width:200,hidden:true,align:'center'">设备id</th>
+                        <th data-options="field:'csi_id',width:200,hidden:true,align:'center'">分类编码</th>
+                        <th data-options="field:'rm_id',width:200,hidden:true,align:'center'">房间编号（位置编号）</th>
+                        <th data-options="field:'site_id',width:200,hidden:true,align:'center'">项目代码</th>
+                        <th data-options="field:'pk_crop',width:200,hidden:true,align:'center'">所属公司</th>
+                        <th data-options="field:'create_time',width:200,hidden:true,align:'center'">创建时间</th>
+                        <th data-options="field:'create_user',width:200,hidden:true,align:'center'">创建人</th>
+                        <th data-options="field:'update_time',width:200,hidden:true,align:'center'">修改时间</th>
+                        <th data-options="field:'update_user',width:200,hidden:true,align:'center'">修改人</th>
+                        <th data-options="field:'parameter1',width:200,hidden:true,align:'center'">参数1</th>
+                        <th data-options="field:'parameter2',width:200,hidden:true,align:'center'">参数2</th>
+                        <th data-options="field:'eq_description',width:500,hidden:true,align:'center'">设备描述</th>
+                        <th data-options="field:'active',width:60,hidden:true,align:'center',formatter:formatReject">是否报废</th>
+                        <th data-options="field:'status',width:60,hidden:true,align:'center',formatter:formatStatus">设备状态</th>
+                        <th data-options="field:'factory',width:250,hidden:true,align:'center'">厂家</th>
+                        <th data-options="field:'model',width:80,hidden:true,align:'center'">规格型号</th>
+                        <th data-options="field:'csi_name',width:120,hidden:true,align:'center'">设备分类</th>
+                        <th data-options="field:'power',width:80,hidden:true,align:'center'">功率KW</th>
+                        <th data-options="field:'brand',width:80,hidden:true,align:'center'">品牌名称</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div class="table-list" id="space-list" >
+                <div style="margin-top: 10px;">
+                    <input id="textbox_space_key" type="text" prompt="请输入空间编码、名称" class="easyui-textbox" style="width: 400px;"/>
+                    <span class="datagrid-btn-separator" style="vertical-align: middle; height: 15px;display:inline-block;float:none"></span>
+                    <a class="easyui-linkbutton" onclick="querySubmitSimple2()" data-options="iconCls:'icon-search',plain:'true'">查询</a>
+                    <a class="easyui-linkbutton" onclick="querySubmitSimple2('clear')" data-options="iconCls:'icon-mini-refresh',plain:'true'">重置</a>
+                </div>
+
+                <table id="datagrid_space_list" style="height: 330px" >
+                    <thead>
+                    <tr>
+                        <th data-options="field:'checkbox',checkbox:true"></th>
+                        <th data-options="field:'resources_name',width:220,hidden:false,align:'center'">空间名称</th>
+                        <th data-options="field:'resources_code',width:220,hidden:false,align:'center'">空间编码</th>
+                        <th data-options="field:'rm_name',width:450,hidden:false,align:'center'">空间类型</th>
+                        <th data-options="field:'create_time',width:180,hidden:false,align:'center'">创建时间</th>
+                        <th data-options="field:'create_user',width:180,hidden:false,align:'center'">创建人</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="its_system">
+        <div class="bim_head zoom_div" onmousedown="divZoom1(event,'its_system')">
+            <a href="javascript:void(0)" onclick="startMove1(event)" onmousedown="stopZoom()" id="itesss" class="move_link"></a>
+            <div class="bim_title">所属系统</div>
+        </div>
+        <div id="its_system_item">
+            <ul id="sys_tree" class="ztree" style="margin-left: 5px;">
+
+            </ul>
+        </div>
+    </div>
+</body>
+
+
+<script type="text/javascript" src="resources/ezfm/all.js"></script>
+<script type="text/javascript" src="resources/ezfm/js/device/deviceUtil.js"></script>
+<script type="text/javascript" src="resources/ezfm/js/device/list.js"></script>
+<script type="text/javascript" src="resources/ezfm/js/baseinfo/index.js"></script>
+<script type="text/javascript">
+    var pc = '${crop?if_exists}';
+    var notRoleButtons = "${notRoleButtons?if_exists}";
+</script>
+
+
+<script>
+
+    function querySubmitSimple(clear ){
+        var eqKey;
+        if(clear){//重置
+            var eqKey = "";
+            $("#textbox_eqKey").textbox("setValue", "");
+        }else {//
+            eqKey= $("#textbox_eqKey").val();
+        }
+        //var eqKey = $("#textbox_eqKey").val();
+        var treeObj = $.fn.zTree.getZTreeObj("classAdmin_tree");
+        var tmp = treeObj.getSelectedNodes();
+        var node_name =""
+        tmp = tmp[0];
+        if(tmp){
+            node_name = getName(tmp);
+        }
+
+        $("#datagrid_list").datagrid("load",{
+            eqKey:eqKey,
+            project_name:node_name,
+        });
+    }
+
+    function querySubmitSimple2(clear ){
+        var eqKey;
+        if(clear){//重置
+            var eqKey = "";
+            $("#textbox_space_key").textbox("setValue", "");
+        }else {//
+            eqKey= $("#textbox_space_key").val();
+        }
+        //var eqKey = $("#textbox_eqKey").val();
+        var treeObj = $.fn.zTree.getZTreeObj("classAdmin_tree");
+        var tmp = treeObj.getSelectedNodes();
+        var node_name =""
+        tmp = tmp[0];
+        if(tmp){
+            node_name = getName(tmp);
+            if(tmp.type == '3' || tmp.type == '4'){
+                //重新加载空间
+                $("#datagrid_space_list").datagrid("load",{
+                    id:tmp.id,
+                    type:tmp.type,
+                    keywords:eqKey
+                })
+            }
+        }
+
+
+
+    }
+
+
+    /**
+     * pagination格式化分页工具栏
+     * @param {Object} datagridName
+     */
+    function formatPager(datagridName) {
+        var pager = $("#" + datagridName).datagrid('getPager');
+        $(pager).pagination({
+            showPageList: false, //每页显示数量选择框
+            showRefresh: false, //刷新按钮
+            displayMsg: "",
+        });
+    };
+
+
+    function initTable(){
+
+        //设备列表datagrid_list
+        $("#datagrid_list").datagrid({
+            url: 'ezfm/device/list/query',
+            pageSize: 15, //分页大小
+            pageList:[15,30,45,60],//每页显示个数可选项
+            loadMsg: "正在加载数据...", // 数据加载中显示信息
+            rownumbers: true, //显示行号列
+            singleSelect: true, // 只允许选择一行
+            striped: true, // 显示斑马线效果
+            fit: false, // 使表格铺满容器
+            pagination: true, // 显示分页工具栏
+            border: false,
+            queryParams:{//第一次不加载数据
+                rm_id:'-1',
+            }
+
+        });
+        //空间列表
+        $("#datagrid_space_list").datagrid({
+            url: 'ezfm/baseinfo/resources/query/tree',
+            pageSize: 15, //分页大小
+            pageList:[15,30,45,60],//每页显示个数可选项
+            loadMsg: "正在加载数据...", // 数据加载中显示信息
+            rownumbers: true, //显示行号列
+            singleSelect: true, // 只允许选择一行
+            striped: true, // 显示斑马线效果
+            fit: false, // 使表格铺满容器
+            pagination: true, // 显示分页工具栏
+            border: false,
+            queryParams:{//第一次不加载数据
+                id:'-1',
+                type:'3'
+            }
+        });
+
+
+//        $.ajax({
+//            async : false,
+//            cache:false,
+//            type: 'POST',
+//            dataType : "json",
+//            data:{id:'-1',type:'3'},
+//            url: "ezfm/baseinfo/resources/query/tree",//请求的action路径
+//            error: function () {//请求失败处理函数
+//                alert('请求失败');
+//            },
+//            success:function(data){ //请求成功后处理函数。
+//                console.log(data)
+//            }
+//        });
+
+
+
+        //显示设备
+        changeShowType("0")
+
+//        datagridInit("datagrid_list", "ezfm/device/list/query",null, null, true, 'top');
+//
+//        $('#datagrid_list').datagrid('loadData',{total:0,rows:[]});
+    }
+
+    //    $('#space-list').panel({title: "新title"});
+    var zTreeObj;
+
+    var zNodes;
+    var zFlag ;
+    var dFlag;
+    //操作符，save 和 update;
+    var operation;
+    /**
+     *
+     * 空间树的配置
+     * */
+    var setting = {
+        edit: {
+            enable: true,
+            showRemoveBtn: false,
+            showRenameBtn: false
+        },
+        data: {
+            simpleData: {
+                enable: true,
+            }
+        },
+        callback: {
+            onClick: onNodeClick,
+            onExpand: zTreeOnExpand
+        },
+        view:{
+            selectedMulti:false
+        }
+    };
+
+    /**
+     *
+     * 所属的配置
+     * */
+    var setting2 = {
+        edit: {
+            enable: true,
+            showRemoveBtn: false,
+            showRenameBtn: false
+        },
+        data: {
+            simpleData: {
+                enable: true,
+            }
+        },
+        callback: {
+            onClick: onNodeClick2
+        },
+        view:{
+            selectedMulti:false
+        }
+    };
+    var node_name ;
+    function getName(treeNode){
+        var name =treeNode.name;
+        while(treeNode.getParentNode() != null){
+            treeNode = treeNode.getParentNode();
+            name = treeNode.name  +"|"+name;
+
+        }
+        return name;
+
+    }
+
+
+    //树节点展开事件
+    function zTreeOnExpand(event, treeId, treeNode){
+        var nodes;
+        var treeObj = $.fn.zTree.getZTreeObj("classAdmin_tree");
+        var id = treeNode.id;
+        var type = treeNode.type;
+        var hasParent = treeNode.hasParent;
+        var pId = treeNode.pId;
+        var project_id = treeNode.project_id;
+        treeObj.removeChildNodes(treeNode);
+        $.ajax({
+            async : false,
+            cache:false,
+            type: 'POST',
+            dataType : "json",
+            data:{id:id,type:type},
+            url: "ezfm/baseinfo/resources/query/tree",//请求的action路径
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success:function(data){ //请求成功后处理函数。
+                nodes = data.rows;   //把后台封装好的简单Json格式赋给treeNodes
+//                console.log(nodes)
+            }
+        });
+        nodes = treeObj.addNodes(treeNode, nodes);
+        //解决编辑之后不能刷新的问题
+        if(operation=="update"&&zFlag==0){
+            var zId;
+            var zType;
+            var zTreeNode = treeNode.getParentNode();
+            //假如是没有上级的资源 那么直接刷新项目
+            if(type == "4" && (hasParent == null || hasParent == "" ||hasParent == "0")){
+                zId = project_id;
+                zType = type - 1;
+                //假如有上级的资源 那么直接父级资源
+            }else if(type == "4" && (hasParent != null && hasParent == "1")){
+                zId = pId;
+                zType = type;
+            }
+            treeObj.removeChildNodes(zTreeNode);
+            $.ajax({
+                async : false,
+                cache:false,
+                type: 'POST',
+                dataType : "json",
+                data:{id:zId,type:zType},
+                url: "ezfm/baseinfo/resources/query/tree",//请求的action路径
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success:function(data){ //请求成功后处理函数。
+                    nodes = data.rows;   //把后台封装好的简单Json格式赋给treeNodes
+
+                }
+            });
+            nodes = treeObj.addNodes(zTreeNode, nodes);
+            zFlag=1;
+        }
+
+
+    }
+
+    function sleep(numberMillis) {
+        var now = new Date();
+        var exitTime = now.getTime() + numberMillis;
+        while (true) {
+            now = new Date();
+            if (now.getTime() > exitTime)
+                return;
+        }
+    }
+    /**
+     * 空间节点展示
+     *
+     * type  2 区域
+     * type 3 项目
+     * type 4 资源
+     * */
+    //单击树节点时，展示详细信息
+    function onNodeClick(event, treeId, treeNode) {
+        //获取设备的位置
+        var node_name = getName(treeNode);
+
+
+        if(treeNode.type == '3' || treeNode.type == '4'){
+            //重新加载空间
+            $("#datagrid_space_list").datagrid("load",{
+                id:treeNode.id,
+                type:treeNode.type
+            })
+        }
+        //重新加载数据
+        if(treeNode.type == 3){
+            $("#datagrid_list").datagrid("load",{
+                id:treeNode.id,
+                type:'0'
+            });
+        }else if(treeNode.type == 4){
+            $("#datagrid_list").datagrid("load",{
+                id:treeNode.id,
+                type:'1'
+            });
+        }else if(treeNode.type == 2){
+            $('#datagrid_list').datagrid('loadData',{total:0,rows:[]});
+        }
+
+
+
+
+        if(treeNode.eq_code){
+            fly(treeNode.eq_code)
+        }
+        //点击区域和项目重新加载树
+        if(treeNode.type==2 ||treeNode.type==3){
+
+            var treeObj = $.fn.zTree.getZTreeObj("sys_tree");
+            treeObj.refresh();
+
+        }
+
+        if(treeNode.type==4){
+            //var param = {project_name:node_name};
+
+        }else if(treeNode.type == 3){
+            //打开测试模型
+
+
+            initModel(treeNode.bim_url);
+
+            //加载左侧项目信息
+            loadProject(treeNode.id);
+
+
+
+            var ScriptableObject = document.getElementById('MyObj');
+            ScriptableObject.EventCallback = function(str){
+                addLabels(treeNode.id);
+            }
+            setTimeout(function(){
+
+            },5000);
+
+
+
+
+
+
+
+
+        }else {
+            return;
+        }
+
+    }
+
+    function sleep(numberMillis) {
+        var now = new Date();
+        var exitTime = now.getTime() + numberMillis;
+        while (true) {
+            now = new Date();
+            if (now.getTime() > exitTime)
+                return;
+        }
+    }
+    /**
+     * 查询项目的任务
+     * */
+    function  addLabels(pk_project) {
+        var param = {pk_project:pk_project};
+        $.request.httpPost({
+            url : 'ezfm/device/list/query/labels',
+            data : param,
+            success : function(rs) {
+
+                var ScriptableObject = document.getElementById('MyObj');
+                var count = rs.taskList.length;
+                var labels =  [];
+                for(var i =0 ;i < count; i+=1){
+                    var obj = rs.taskList[i];
+                    var msg = "";
+                    msg+="设备："+obj.name+"\n"
+
+                    msg+="待处理任务："+obj.count+"项\n"
+                    msg+="位置："+obj.place;
+                    var label = {labelname:obj.eq_code_,labeltitle: obj.eq_code_,labelcontent:msg};
+                    labels[i]=label;
+                }
+
+
+                var title = "管道枢纽"
+                if(count >0){
+                    var ls = JSON.stringify(labels);
+                    var label_name = ' {"func":"ScriptEvent_CreatLabelbyeqcode","sta" : {"groupID":1, "labels" : '+ls+'}}';
+                    var result = ScriptableObject.Invoke(label_name);
+                    if(!(ScriptableObject.Invoke||isIE())){
+                        return ;
+                    }
+                    var visibleLow = '{"func":"ScriptEvent_LabelVisibleSection","sta" : {"groupID":1,"VisibleLow":1,"VisibleHigh":8}}'
+                    ScriptableObject.Invoke(visibleLow);
+
+
+                }
+
+
+
+
+            },
+            failure : function(rs) {
+                $.messager.alert('提示', rs.message || '查询失败');
+            }
+        });
+    }
+    /**
+     *暂时不提供防止，已经选了系统。不能进行”不想选系统只选项目“操作
+     * 获取参数
+     * */
+    function getParams() {
+        var treeObj = $.fn.zTree.getZTreeObj("classAdmin_tree");
+        var tmp = treeObj.getSelectedNodes();
+        tmp = tmp[0];
+
+        var node_name = getName(tmp);
+        var param = {name:node_name}
+        return param;
+    }
+    /**
+     *所属系统展示
+     * */
+    //单击树节点时，展示详细信息
+    function onNodeClick2(event, treeId, treeNode) {
+        //todo:获取空间节点
+//        var selected = $('#classAdmin_tree').tree('getSelected');
+        var treeObj = $.fn.zTree.getZTreeObj("classAdmin_tree");
+        var tmp = treeObj.getSelectedNodes();
+        tmp = tmp[0];
+//        var node_name ;
+//        if(tmp){
+//            node_name = getName(tmp);
+//        }
+
+        if(tmp.type == 3){
+            $("#datagrid_list").datagrid("load",{
+                id:tmp.id,
+                type:'0',
+                fk_eq_sys_id:treeNode.id,
+            });
+        }else if(tmp.type == 4){
+            $("#datagrid_list").datagrid("load",{
+                id:tmp.id,
+                type:'1',
+                fk_eq_sys_id:treeNode.id,
+            });
+        }else if(tmp.type == 2){
+            $('#datagrid_list').datagrid('loadData',{total:0,rows:[]});
+        }
+//        //重新加载数据
+//        //todo:获取系统ID
+//        $("#datagrid_list").datagrid("load",{
+//            project_name:node_name,
+//
+//        });
+        selectClass(treeNode.attributes.eq_class);
+
+    }
+    //tree查询展示
+    function showClassAdmintTree(id,type) {
+        $.ajax({
+            async : false,
+            cache:false,
+            type: 'POST',
+            dataType : "json",
+            data:{id:id,type:type},
+            url: "ezfm/baseinfo/resources/query/tree",//请求的action路径
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success:function(data){ //请求成功后处理函数。
+                zNodes = data.rows;   //把后台封装好的简单Json格式赋给treeNodes
+            }
+        });
+        zTreeObj = $.fn.zTree.init($("#classAdmin_tree"), setting, zNodes);
+    }
+    //tree查询展示
+    function showSysTree() {
+        var nodes ;
+        var param = {
+            metas : [ 'yjwy_device_fmdata_eq_sys' ],
+        }
+        var params = {param : JSON.stringify(param),
+            isWindow:'true'
+        }
+        $.ajax({
+            async : false,
+            cache:false,
+            type: 'POST',
+            dataType : "json",
+            data:params,
+            url: "ezfm/device/fmdata_eq/query",//请求的action路径
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success:function(data){ //请求成功后处理函数。
+                nodes = data.rows;   //把后台封装好的简单Json格式赋给treeNodes
+            }
+        });
+        zTreeObj = $.fn.zTree.init($("#sys_tree"), setting2, nodes);
+    }
+
+    $(function(){
+        showClassAdmintTree("root","1");
+        showSysTree()
+//        $.fn.zTree.init($("#orgtree"), setting, zNodes());
+    });
+
+    var filePathLast ;
+
+
+    function isIE() { //ie?
+        if (!!window.ActiveXObject || "ActiveXObject" in window){
+
+            return true;
+        }else {
+            return false;
+        }
+
+
+    }
+
+    function initModel(filePath){
+        var ScriptableObject = document.getElementById('MyObj');
+        if(!(ScriptableObject.Invoke||isIE())){
+            return ;
+        }
+//        var filePath = 'http://127.0.0.1:8088/wlks/B1.wlkx'
+        if(filePath == filePathLast){
+            //  ScriptableObject.Invoke('{"func":"Event_SetTransparent","sta":{"select":false}}');
+            return ;
+        }else {
+            filePathLast = filePath;
+        }
+        var result = ScriptableObject.Invoke('{"func":"ScriptEvent_CloseModelNode"}');
+        ScriptableObject.Invoke('{"func":"Event_SetTransparent","sta":{"select":false}}');
+        var result = ScriptableObject.Invoke('{"func":"Event_LoadModel","sta":[{"file":'+"\""+filePath+"\""+'}]}');
+        //var result = ScriptableObject.Invoke('{"func":"ScriptEvent_LoadLand","sta":"cyxtd.MDL"}');
+        ScriptableObject.EventCallback = function(str){
+            console.log('down');
+        }
+
+    }
+
+    function test2() {
+        var ScriptableObject = document.getElementById('MyObj');
+        var method = '{"func":"Event_ShowWeb","sta":{"url":"http://www.dms365.com","x_pos":60,"y_pos":60,"width":600,"height":400}}';
+        var result = ScriptableObject.Invoke(method);
+//        console.log(result)
+    }
+
+    function test() {
+
+
+        var eq_code = 'sb001';
+        var ScriptableObject = document.getElementById('MyObj');
+        var result = ScriptableObject.Invoke('{"func":"Event_SelectObjects","sta" :[{"name":"eq_code","oper":"=","val":"' + eq_code + '"}]}');
+        var obj = eval("(" + result + ");");
+        var handle = obj.ret_data.selectionid;
+        // 根据handle得到NodeId
+        var result1 = ScriptableObject.Invoke('{"func":"Event_GetNodeIDbyHandle","sta":{"handle":"' + handle + '"}}');
+        var obj1 = eval("(" + result1 + ");");
+        if (obj1.ret_data != null) {
+            var nodeid = obj1.ret_data.nodeid[0];
+            ScriptableObject.Invoke('{"func":"ScriptEvent_CameraFlyToNode","sta":{"handle":"' + handle + '","flytime":2000}}');
+            var test = '{"func":"Event_SetObjsSelection","sta":{"select":true,"handle":["'+handle+'"]}}'
+            ScriptableObject.Invoke(test);
+        }
+
+
+//        $("#space-list").panel({
+//            title:"other title"
+//        });
+        /* var param = {};
+         var extraParam = {
+         metas : [ 'yjwy_project' ],
+         'andList' : [ {
+         key : 'pk_project_',
+         operator : 'eq',
+         value : '00000020170602003NYG'
+         } ]
+         };
+         $.extend(param, extraParam);
+         $.request.httpPost({
+         url : 'ezfm/baseinfo/project/query',
+         data : {
+         param : JSON.stringify(param)
+         },
+         success : function(rs) {
+         console.log(rs)
+         },
+         failure : function(rs) {
+         $.messager.alert('提示', rs.message || '查询失败');
+         }
+         });*/
+    }
+
+
+
+    function loadDevice(data) {
+        $(".east-close").hide()
+        $("#device").show()
+
+        $("#brand").html(data.brand)
+        $("#csi_name").html(data.csi_name)
+        $("#eq_name").html(data.eq_name)
+        $("#eq_sys_name").html(data.eq_sys_name)
+        $("#factory").html(data.factory)
+        $("#fm_code").html(data.fm_code)
+        $("#model").html(data.model)
+        $("#rm_name").html(data.rm_name)
+        $("#service_dept").html(data.service_dept)
+        $("#use_dept").html(data.use_dept)
+        $("#use_name").html(data.use_name)
+        $("#eq_description").html(data.eq_description)
+        $("#power").html(data.power)
+//        $("#eq_description").html(data.eq_description)
+//        $("#eq_description").html(data.eq_description)
+//        $("#eq_description").html(data.eq_description)
+//        $("#eq_description").html(data.eq_description)
+    }
+
+    function loadProject(pk_project) {
+        var param = {};
+        var extraParam = {
+            metas : [ 'yjwy_project' ],
+            'andList' : [ {
+                key : 'pk_project_',
+                operator : 'eq',
+                value : pk_project
+            } ]
+        };
+        $.extend(param, extraParam);
+        $.request.httpPost({
+            url : 'ezfm/baseinfo/project/query',
+            data : {
+                param : JSON.stringify(param)
+            },
+            success : function(rs) {
+                data = rs.data[0];
+                if(data){
+                    $(".east-close").hide()
+                    $("#project").show()
+                    $("#project_name").html(data.project_name);
+                    $("#project_code").html(data.project_code);
+                    $("#project_cover_area").html(data.project_cover_area+' ㎡');
+                }
+            },
+            failure : function(rs) {
+                $.messager.alert('提示', rs.message || '查询失败');
+            }
+        });
+    }
+
+    function fly(eq_code) {
+//        var eq_code = 'sb003';
+        var ScriptableObject = document.getElementById('MyObj');
+        if(!(ScriptableObject.Invoke||isIE())){
+            return ;
+        }
+        var result = ScriptableObject.Invoke('{"func":"Event_SelectObjects","sta" :[{"name":"eq_code","oper":"=","val":"' + eq_code + '"}]}');
+        var obj = eval("(" + result + ");");
+        var handle = obj.ret_data.selectionid;
+        // 根据handle得到NodeId
+        var result1 = ScriptableObject.Invoke('{"func":"Event_GetNodeIDbyHandle","sta":{"handle":"' + handle + '"}}');
+        var obj1 = eval("(" + result1 + ");");
+        if (obj1.ret_data != null) {
+
+            var nodeid = obj1.ret_data.nodeid[0];
+            ScriptableObject.Invoke('{"func":"ScriptEvent_CameraFlyToNode","sta":{"handle":"' + handle + '","flytime":2000}}');
+            //取消上次的
+
+            ScriptableObject.Invoke('{"func":"Event_SetObjsSelection","sta":{"select":false}}');
+
+            var test = '{"func":"Event_SetObjsSelection","sta":{"select":true,"handle":["'+handle+'"]}}'
+            ScriptableObject.Invoke(test);
+        }
+
+
+
+    }
+
+    function selectClass(csi_id){
+        //var csi_id = 'SBSF'
+        var ScriptableObject = document.getElementById('MyObj');
+        if(!(ScriptableObject.Invoke||isIE())){
+            return ;
+        }
+        var resultF =ScriptableObject.Invoke('{"func":"Event_SelectObjects","sta" :[{"name":"eq_class","oper":"=","val":"'+csi_id+'"}]}');
+        var objF=eval("("+resultF+");");
+        var handleF=objF.ret_data.selectionid;
+        ScriptableObject.Invoke('{"func":"Event_SetTransparent","sta":{"select":true}}');
+        ScriptableObject.Invoke('{"func":"Event_SetColor","sta":{"select":true,"handle":["'+handleF+'"],"color":"ffffff00"}}');
+
+    }
+
+
+
+
+    $("#datagrid_list").datagrid({ onClickRow : function(index, row){ //你要写的逻辑
+        loadDevice(row);
+        fly(row.eq_code)
+
+    } });
+
+    function openLabels() {
+        var param = {eq_id:'966993ff-bb2e-453a-a24d-39d8d2736e30'};
+        $.request.httpPost({
+            url : 'ezfm/device/list/query/labels/eq_id',
+            data : param,
+            success : function(rs) {
+                var data = []
+                var list = rs.taskList;
+                for(var i = 0;i< list.length;i++){
+                    var obj = list[i] ;
+                    data[4*i]={};
+                    var tmp = '维保计划名称';
+                    if(obj.task_type == '0'){
+                        tmp = '巡检计划名称';
+                    }
+                    data[4*i+1] = {name:tmp, value:obj.plan_name};
+                    data[4*i+2] = {name:'开始时间', value:obj.begin_time};
+                    data[4*i+3] = {name:'结束时间', value:obj.end_time};
+
+                }
+                $(".east-close").hide()
+                $('#labels-info').show();
+                $("#content").panel({
+                    title:"近期任务"
+                });
+                $('#table-info').datagrid({
+                    data: data
+                });
+            },
+            failure : function(rs) {
+                $.messager.alert('提示', rs.message || '查询失败');
+            }
+        });
+    }
+
+    function fullscreen() {
+        var docElm = window.frameElement;
+        if (docElm.requestFullscreen) {
+            docElm.requestFullscreen();
+        } else if (docElm.mozRequestFullScreen) {
+            docElm.mozRequestFullScreen();
+        } else if (docElm.webkitRequestFullScreen) {
+            docElm.webkitRequestFullScreen();
+        } else if (docElm.msRequestFullscreen) {
+            docElm.msRequestFullscreen();
+        }
+//        var docElm = window.frameElement;
+//        if (docElm.requestFullscreen) {
+//            docElm.requestFullscreen();
+//        } else if (docElm.mozRequestFullScreen) {
+//            docElm.mozRequestFullScreen();
+//        } else if (docElm.webkitRequestFullScreen) {
+//            docElm.webkitRequestFullScreen();
+//        } else if (docElm.msRequestFullscreen) {
+//            docElm.msRequestFullscreen();
+//        }
+//        window.location.reload();
+    }
+
+
+    function changeShowType(device_space) {
+        $(".table-list").hide();
+        if(device_space == '0'){//显示设备
+            $("#device-list").show();
+        }else {//显示空间
+            $("#space-list").show();
+        }
+        resizeDatagrid();
+    }
+
+
+    $(function () {
+        initTable();
+    })
+    
+    $(document).on("bottompanel.resize", function(){
+    	setTimeout(function(){resizeDatagrid()}, 500);
+    });
+    
+    function resizeDatagrid() {
+    	$('#datagrid_list').datagrid('resize', {height:$("#dev_info").height()-70});
+    	$('#datagrid_space_list').datagrid('resize', {height:$("#dev_info").height()-70});
+    }
+</script>
+
+
+</html>
